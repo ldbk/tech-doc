@@ -1,0 +1,721 @@
+\documentclass[a4paper,english,10pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{color} 
+\usepackage{float}
+\usepackage{longtable}
+\usepackage[bottom]{footmisc}
+\usepackage{url}
+\usepackage{natbib}
+\usepackage{authblk}
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage{babel}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{verbose,a4paper,tmargin=3cm,bmargin=2cm,lmargin=2cm,rmargin=3cm}
+\setlength{\parskip}{\medskipamount}
+\setlength{\parindent}{0pt}
+\hypersetup{
+    colorlinks=true,       % false: boxed links; true: colored links
+    linkcolor=blue,        % color of internal links
+    citecolor=red,         % color of links to bibliography
+    filecolor=blue,        % color of file links
+    urlcolor=blue          % color of external links
+}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\title{Stock assessment and management advice with a4a methods \\ DRAFT}
+
+\author[1]{Ernesto Jardim}
+\author[1]{Colin Millar}
+\author[1]{Finlay Scott}
+\affil[1]{European Commission, Joint Research Centre, IPSC / Maritime Affairs Unit, 21027 Ispra (VA), Italy}
+\affil[*]{Corresponding author \href{mailto:ernesto.jardim@jrc.ec.europa.eu}{ernesto.jardim@jrc.ec.europa.eu}}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+\begin{itemize}
+	\item Objectives
+	\item a4a concepts
+	\begin{itemize}
+		\item life history considers parameters to have distributions, it's a kind of Bayesian posteriors informed estimates, but if one runs a Bayesian analysis to estimate growth parameters the posteriors can be used  
+	\end{itemize}
+	\item Workflow diagram
+\end{itemize}
+
+
+<<messages=FALSE, warnings=FALSE>>=
+#==============================================================================
+# libraries and constants 
+#==============================================================================
+
+library(FLa4a)
+library(XML)
+library(reshape2)
+data(rfLen)
+data(ple4)
+data(ple4.indices)
+@
+
+<<messages=FALSE, warnings=FALSE>>=
+#==============================================================================
+# some functions for later 
+#==============================================================================
+# quant 2 quant
+qt2qt <- function(object, id=5, split="-"){
+	qt <- object[,id]
+	levels(qt) <- unlist(lapply(strsplit(levels(qt), split=split), "[[", 2))
+	as.numeric(as.character(qt))
+}
+
+# check import and massage
+cim <- function(object, n, wt, hrv="missing"){
+	v <- object[sample(1:nrow(object), 1),]
+	c1 <- c(n[as.character(v$V5),as.character(v$V1),1,as.character(v$V2)]==v$V6)
+	c2 <- c(wt[as.character(v$V5),as.character(v$V1),1,as.character(v$V2)]==v$V7)
+	if(missing(hrv)){
+		c1 + c2 == 2	
+	} else {
+		c3 <- c(hrv[as.character(v$V5),as.character(v$V1),1,as.character(v$V2)]==v$V8)
+		c1 + c2 + c3 == 3	
+	}
+}
+@
+
+\section{Reading files and building FLR objects}
+
+For this document we'll use the plaice in ICES area IV dataset, provided by FLR, and a length-based simulated dataset based on red fish, using gadget (http://www.hafro.is/gadget), provided by Daniel Howell (Institute of Marine Research, Norway).
+
+\subsection{Red fish length based dataset}
+
+<<>>=
+#==============================================================================
+# Read files
+#==============================================================================
+
+# catch
+cth.orig <- read.table("data/catch.len", skip=5)
+
+# stock
+stk.orig <- read.table("data/red.len", skip=4)
+
+# surveys
+idx.orig <- read.table("data/survey.len", skip=5)
+idxJmp.orig <- read.table("data/jump.survey.len", skip=5)
+idxTrd.orig <- read.table("data/tend.survey.len", skip=5)
+
+#==============================================================================
+# Recode
+#==============================================================================
+
+# catch
+cth.orig[,5] <- qt2qt(cth.orig)
+
+# stock
+stk.orig[,5] <- qt2qt(stk.orig)
+
+# surveys
+idx.orig[,5] <- qt2qt(idx.orig)
+idxJmp.orig[,5] <- qt2qt(idxJmp.orig)
+idxTrd.orig[,5] <- qt2qt(idxTrd.orig)
+@
+
+<<>>=
+#==============================================================================
+# cast
+#==============================================================================
+
+# catch
+cth.n <- acast(V5~V1~1~V2~1~1, value.var="V6", data=cth.orig)
+cth.wt <- acast(V5~V1~1~V2~1~1, value.var="V7", data=cth.orig)
+hrv <- acast(V5~V1~1~V2~1~1, value.var="V8", data=cth.orig)
+
+# stock
+stk.n <- acast(V5~V1~1~V2~1~1, value.var="V6", data=stk.orig)
+stk.wt <- acast(V5~V1~1~V2~1~1, value.var="V7", data=stk.orig)
+
+# surveys
+idx.n <- acast(V5~V1~1~V2~1~1, value.var="V6", data=idx.orig)
+idx.wt <- acast(V5~V1~1~V2~1~1, value.var="V7", data=idx.orig)
+idx.hrv <- acast(V5~V1~1~V2~1~1, value.var="V8", data=idx.orig)
+
+idxJmp.n <- acast(V5~V1~1~V2~1~1, value.var="V6", data=idxJmp.orig)
+idxJmp.wt <- acast(V5~V1~1~V2~1~1, value.var="V7", data=idxJmp.orig)
+idxJmp.hrv <- acast(V5~V1~1~V2~1~1, value.var="V8", data=idxJmp.orig)
+
+idxTrd.n <- acast(V5~V1~1~V2~1~1, value.var="V6", data=idxTrd.orig)
+idxTrd.wt <- acast(V5~V1~1~V2~1~1, value.var="V7", data=idxTrd.orig)
+idxTrd.hrv <- acast(V5~V1~1~V2~1~1, value.var="V8", data=idxTrd.orig)
+@
+
+<<>>=
+#==============================================================================
+# quants
+#==============================================================================
+
+# catch
+dnms <- dimnames(cth.n)
+names(dnms) <- names(dimnames(FLQuant()))
+names(dnms)[1] <- "len"
+cth.n <- FLQuant(cth.n, dimnames=dnms)
+cth.wt <- FLQuant(cth.wt, dimnames=dnms)
+hrv <- FLQuant(hrv, dimnames=dnms)
+units(hrv) <- "f"
+
+# stock
+dnms <- dimnames(stk.n)
+names(dnms) <- names(dimnames(FLQuant()))
+names(dnms)[1] <- "len"
+stk.n <- FLQuant(stk.n, dimnames=dnms)
+stk.wt <- FLQuant(stk.wt, dimnames=dnms)
+
+# stock
+dnms <- dimnames(idx.n)
+names(dnms) <- names(dimnames(FLQuant()))
+names(dnms)[1] <- "len"
+idx.n <- FLQuant(idx.n, dimnames=dnms)
+idx.wt <- FLQuant(idx.wt, dimnames=dnms)
+idx.hrv <- FLQuant(idx.hrv, dimnames=dnms)
+
+dnms <- dimnames(idxJmp.n)
+names(dnms) <- names(dimnames(FLQuant()))
+names(dnms)[1] <- "len"
+idxJmp.n <- FLQuant(idxJmp.n, dimnames=dnms)
+idxJmp.wt <- FLQuant(idxJmp.wt, dimnames=dnms)
+idxJmp.hrv <- FLQuant(idxJmp.hrv, dimnames=dnms)
+
+dnms <- dimnames(idxTrd.n)
+names(dnms) <- names(dimnames(FLQuant()))
+names(dnms)[1] <- "len"
+idxTrd.n <- FLQuant(idxTrd.n, dimnames=dnms)
+idxTrd.wt <- FLQuant(idxTrd.wt, dimnames=dnms)
+idxTrd.hrv <- FLQuant(idxTrd.hrv, dimnames=dnms)
+@
+
+<<>>=
+#==============================================================================
+# check
+#==============================================================================
+
+#------------------------------------------------------------------------------
+# match original data
+#------------------------------------------------------------------------------
+
+# catch
+cim(cth.orig, cth.n, cth.wt, hrv)
+
+# stock
+cim(stk.orig, stk.n, stk.wt)
+
+# surveys
+cim(idx.orig, idx.n, idx.wt, idx.hrv)
+cim(idxJmp.orig, idxJmp.n, idxJmp.wt, idxJmp.hrv)
+cim(idxTrd.orig, idxTrd.n, idxTrd.wt, idxTrd.hrv)
+@
+
+%#------------------------------------------------------------------------------
+%# contents
+%#------------------------------------------------------------------------------
+
+%# length-weight relationship is a bit odd ...
+%xyplot(data~len|year, groups=season, data=cth.wt/cth.n, type="l")
+
+%# length-weight relationship is a bit odd ...
+%xyplot(data~len|year, groups=season, data=stk.wt, type="l")
+
+<<>>=
+#==============================================================================
+# FLR objects
+#==============================================================================
+
+rfLen.stk <- FLStockLen(stock.n=stk.n, stock.wt=stk.wt, stock=quantSums(stk.wt*stk.n), catch.n=cth.n, catch.wt=cth.wt/cth.n, catch=quantSums(cth.wt), harvest=hrv)
+m(rfLen.stk)[] <- 0.05
+mat(rfLen.stk)[] <- m.spwn(rfLen.stk)[] <- harvest.spwn(rfLen.stk)[] <- 0
+mat(rfLen.stk)[38:59,,,3:4] <- 1
+  
+rfTrawl.idx <- FLIndex(index=idx.n, catch.n=idx.n, catch.wt=idx.wt, sel.pattern=idx.hrv) 
+effort(rfTrawl.idx)[] <- 100
+
+rfTrawlJmp.idx <- FLIndex(index=idxJmp.n, catch.n=idxJmp.n, catch.wt=idxJmp.wt, sel.pattern=idxJmp.hrv) 
+effort(rfTrawlJmp.idx)[] <- 100
+
+rfTrawlTrd.idx <- FLIndex(index=idxTrd.n, catch.n=idxTrd.n, catch.wt=idxTrd.wt, sel.pattern=idxTrd.hrv) 
+effort(rfTrawlTrd.idx)[] <- 100
+
+#------------------------------------------------------------------------------
+# save
+#------------------------------------------------------------------------------
+
+save(rfLen.stk, rfTrawl.idx, rfTrawlJmp.idx, rfTrawlTrd.idx, file="rfLen.rdata")
+@
+
+\section{Converting length data to age}
+
+The stock assessment framework is based on age dynamics. To use length information it must be pre-processed before used for assessment. The rationale is that the pre-processing should give the analyst the flexibility to use whatever sources of information, \emph{e.g.} literature or online databases, to grab information about the species growth and the uncertainty about the model parameters.
+
+\subsection{a4aGr - The growth class}
+
+The convertion of length data to age is performed through the usage of a growth model. The implementation is done through the \emph{a4aGr} class. Check the help file for more information.
+
+<<>>=
+showClass("a4aGr")
+@
+
+A simple construction of \emph{a4aGr} objects requires the model and parameters to be provided.
+
+<<>>=
+#------------------------------------------------------------------------------
+# a von Bertalanffy model
+#------------------------------------------------------------------------------
+
+vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","ano-1","ano")))
+
+# a quick check about the model and it's inverse
+lc=20
+predict(vbObj, t=predict(vbObj, len=lc))==lc
+@
+
+The predict method will allow the transformation between age and lengths.
+
+<<>>=
+#------------------------------------------------------------------------------
+# predicting ages from lengths and vice-versa
+#------------------------------------------------------------------------------
+predict(vbObj, len=5:10+0.5)
+predict(vbObj, t=5:10+0.5)
+@
+
+\subsection{Adding multivariate normal parameter uncertainty}
+
+Uncertainty is introduced through parameter's uncertainty. The most traditional multivariate normal approach can be used. The implementation for \emph{a5aGr} makes use of the \emph{vcov} slot to get the parameter's covariance matrix. If the parameters or the covariance matrix have iterations then the medians accross iterations are computed before simulating. Check help for \emph{mvrnorm} for more information.
+
+<<>>=
+# vcov matrix
+mm <- matrix(NA, ncol=3, nrow=3)
+diag(mm) <- c(100, 0.001,0.001)
+mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.1,0.0003)
+# object
+vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","ano-1","ano")), vcov=mm, distr="norm")
+# simulate
+vbObj <- mvrnorm(100,vbObj)
+# predict
+predict(vbObj, len=5:10+0.5)
+@
+
+<<fig=TRUE>>=
+boxplot(t(predict(vbObj, t=0:50+0.5)))
+@
+
+\subsection{Adding parameter uncertainty with triangles and elliptic copulas}
+
+One alternative that may be interesting if one does not believe in assymptotic theory, is to use triangle distributions (\url{http://en.wikipedia.org/wiki/Triangle_distribution}). These distributions are parametrized using min, max and the most frequent value, which make them very interesting if the analyst needs to scrap information from the web or literature and perform some kind of meta-analysis.
+
+<<>>=
+addr <- "http://www.fishbase.org/PopDyn/PopGrowthList.php?ID=501"
+tab <- try(readHTMLTable(addr))
+linf <- as.numeric(as.character(tab$dataTable[,2]))
+k <- as.numeric(as.character(tab$dataTable[,4]))
+t0 <- as.numeric(as.character(tab$dataTable[,5]))
+vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), 
+			   grInvMod=~t0-1/k*log(1-len/linf), 
+			   params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","ano-1","ano")), 
+			   vcov=mm)
+pars <- list(list(a=min(linf), b=max(linf), c=median(linf)), list(a=min(k), b=max(k), c=median(k)), list(a=median(t0, na.rm=T)-IQR(t0, na.rm=T)/2, b=median(t0, na.rm=T)+IQR(t0, na.rm=T)/2))
+vbSim <- mvrtriangle(10000, vbObj, paramMargins=pars)
+@
+
+The marginals will reflect the uncertainty on the parameter values that were scrapped from fishbase, but, as we don't really believe the parameters are multivariate normal we addoppted a more relaxed distribution based on a \emph{t} copula with triangle marginals.
+
+<<fig=TRUE>>=
+par(mfrow=c(3,1))
+hist(c(params(vbSim)["linf",]), main="linf")
+hist(c(params(vbSim)["k",]), main="k", prob=TRUE)
+lines(x. <- seq(min(k), max(k), len=100), dnorm(x., mean(k), sd(k)))
+hist(c(params(vbSim)["t0",]), main="t0")
+@
+
+The shape of the correlation.
+
+<<fig=TRUE>>=
+splom(data.frame(t(params(vbSim)@.Data)), pch=".")
+@
+
+Off course one can still use predict to get the feeling about the growth model uncertainty.
+
+<<fig=TRUE>>=
+boxplot(t(predict(vbSim, t=0:20+0.5)))
+@
+
+If you want to be really geek, you may scrap the entire growth parameters dataset from fishbase and compute the shape of the variance covariance matrix yourself.
+
+\subsection{Adding parameter uncertainty with copulas}
+
+A more general approach is to make use of whatever copula and marginal distribution one wants. Which is possible with \emph{mvrcop}. The example keeps the same parameters and changes only the copula type and family but a lot more can be done. Check the package \emph{copula} for more. 
+
+<<>>=
+vbSim <- mvrcop(10000, vbObj, copula="archmCopula", family="clayton", param=2, margins="triangle", paramMargins=pars)
+@
+
+The shape of the correlation changes.
+
+<<fig=TRUE>>=
+splom(data.frame(t(params(vbSim)@.Data)), pch=".")
+@
+
+As well as the predictions.
+
+<<fig=TRUE>>=
+boxplot(t(predict(vbSim, t=0:20+0.5)))
+@
+
+\subsection{The "l2a" method}
+
+After introducing uncertainty on the growth model it's time to transform the length dataset into an age dataset. The method that deals with this process is \emph{l2a}. The implementation for the \emph{FLQuant} class is the workhorse. There's two other implementations, for \emph{FLStock} and \emph{FLIndex}, which are mainly wrappers that call the \emph{FLQuant} method several times. Note that, for the moment, this method is quite slow. There's a double loop in the code that makes it slow, but we're working on a better solution.
+
+<<>>=
+#--------------------------------------------------------------------
+# growth object
+#--------------------------------------------------------------------
+vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","ano-1","ano")), vcov=mm, distr="norm")
+#--------------------------------------------------------------------
+# converte catch-at-length to catch-at-age
+#--------------------------------------------------------------------
+cth.n <- l2a(catch.n(rfLen.stk), vbObj)
+@
+
+<<fig=TRUE>>=
+# trick
+quant(cth.n) <- "len"
+xyplot(data~len|qname, groups=year, data=(FLQuants(len=catch.n(rfLen.stk), age=cth.n)), type="l", xlab="", ylab="numbers")
+@
+
+Or we can convert all the relevant pieces of information in the stock and index dataset.
+
+<<>>=
+#--------------------------------------------------------------------
+# convertion
+#--------------------------------------------------------------------
+aStk <- l2a(rfLen.stk, vbObj)
+aIdx <- l2a(rfTrawl.idx, vbObj)
+@
+
+When converting there's a number of defaults that the user must be aware. 
+
+All length above Linf are converted to the maximum age. This is not true in most cases, but that's as far as one can go with a age length growth model. There is no information on the model to deal with individuals larger than the maximum length. The variability around Linf is dealt by the randamization of the parameter Linf, and the cappacity to withold all the data depends on how well the analysist matches the variance of the parameter with the variance on the data.
+
+\section{Dealing with natural mortality}
+
+Natural mortality is dealt as an external parameter to the stock assessment model. The rationale is similar to that of growth. One should be able to grab information from whichever sources are available and use that information in a way that it propagates into stock assessment.
+
+The mechanism used by a4a is to build an interface that makes it transparent, flexible and hopefully easy to explore different options. In relation to natural mortality it means that the analyst should be able to use distinct models like Gislasson's, Charnov's, Pauly's, etc in a coherent framework making it possible to compare the outcomes of the assessment. 
+
+The smoother way to insert natural mortality in stock assessment is to use an \emph{a4aM} object and run the method \emph{m} to compute the values. The output is a \emph{FLQuant} that should be directly inserted in the \emph{FLStock} object to be used for assessment.   
+
+\subsection{a4aM - The M class}
+
+Natural mortality is implemented in a class named \emph{a4aM} which has three models of the class \emph{FLModelSim}. Each model represents one effects. An age effect, an year effect and a time trend, named \emph{shape}, \emph{level} and \emph{trend}, respectively. Check the help files for more information.
+
+<<>>=
+showClass("a4aM")
+@
+
+A simple construction of \emph{a4aM} objects requires the models and parameters to be provided. The default method will build each of these models as a constant value of 1. For example the usual "0.2" guessestimate could be set up by  
+
+<<>>=
+mod2 <- FLModelSim(model=~a, params=FLPar(a=0.2))
+m1 <- a4aM(level=mod2)
+@
+
+Off course that would be too much work for the outcome. The interest is in using more knowledge setting M. The following example uses Jensen's second estimator (Kenshington, 2013) $M=1.5K$ and an exponential decay to set up the level and shape of M.
+
+<<>>=
+#--------------------------------------------------------------------
+# models or shape and level
+#--------------------------------------------------------------------
+mod1 <- FLModelSim(model=~exp(-age-0.5))
+mod2 <- FLModelSim(model=~1.5*k, params=FLPar(k=0.4))
+#--------------------------------------------------------------------
+# constructor
+#--------------------------------------------------------------------
+m2 <- a4aM(shape=mod1, level=mod2)
+@ 
+
+In alternative, an external factor may have impact on natural mortality which can be added through the \emph{trend} model. Suppose M depends on NAO through some mechanism that results in having lower M when NAO is negative and higher when it's positive. The impact is represented by the NAO value on the quarter before spawning, which occurs in the second quarter. 
+
+<<>>=
+#--------------------------------------------------------------------
+# get NAO
+#--------------------------------------------------------------------
+nao.orig <- read.table("http://www.cdc.noaa.gov/data/correlation/nao.data", skip=1, nrow=62, na.strings="-99.90")
+dnms <- list(quant="nao", year=1948:2009, unit="unique", season=1:12, area="unique")
+nao.flq <- FLQuant(unlist(nao.orig[,-1]), dimnames=dnms, units="nao")
+# build covar
+nao <- seasonMeans(nao.flq[,,,1:3]) 
+nao <- nao>0
+#--------------------------------------------------------------------
+# the trend model M increases 50% if NAO is positive on the first quarter
+#--------------------------------------------------------------------
+mod3 <- FLModelSim(model=~1+b*nao, params=FLPar(b=0.5))
+#--------------------------------------------------------------------
+# constructor
+#--------------------------------------------------------------------
+mod1 <- FLModelSim(model=~exp(-age-0.5))
+mod2 <- FLModelSim(model=~1.5*k, params=FLPar(k=0.4))
+m3 <- a4aM(shape=mod1, level=mod2, trend=mod3)
+@
+
+\subsection{Adding multivariate normal parameter uncertainty}
+
+Uncertainty is added through error on parameters. In the case of this class it makes use of the \emph{FLModelSim} "mvr" methods. A wrapper for \emph{mvrnorm} was implemented, but all the other options must be carried out in each sub-model at the time.
+
+<<>>=
+#--------------------------------------------------------------------
+# the same exponential decay for shape
+#--------------------------------------------------------------------
+mod1 <- FLModelSim(model=~exp(-age-0.5))
+#--------------------------------------------------------------------
+# For level we'll use Jensen's third estimator (Kenshington, 2013).
+#--------------------------------------------------------------------
+mod2 <- FLModelSim(model=~k^0.66*t^0.57, params=FLPar(matrix(c(0.4,10)), dimnames=list(params=c("k","t"), iter=1)), vcov=array(c(0.002, 0.01,0.01, 1), dim=c(2,2)))
+#--------------------------------------------------------------------
+# and a trend from NAO
+#--------------------------------------------------------------------
+mod3 <- FLModelSim(model=~1+b*nao, params=FLPar(b=0.5), vcov=matrix(0.02))
+#--------------------------------------------------------------------
+# create object and simulate
+#--------------------------------------------------------------------
+m4 <- a4aM(shape=mod1, level=mod2, trend=mod3)
+m4 <- mvrnorm(100, m4)
+@ 
+
+In this particular case, the \emph{shape} model will not be randomized because it doesn't have a variance covariance matrix. Also note that because there is only one parameter in the \emph{trend} model, the randomization will use a univariate normal distribution. The same could be achieved with
+
+<<>>=
+m4 <- a4aM(shape=mod1, level=mvrnorm(100, mod2), trend=mvrnorm(100, mod3))
+@
+
+Note: How to include ageing error ???
+
+\subsection{Adding parameter uncertainty with copulas}
+
+As stated above these processes make use of the methods implemented for \emph{FLModelSim}. EXPAND... In the following example we'll use Gislason's second estimator (REF), $M_l=K(\frac{L_inf}{l})^1.5$.
+
+<<>>=
+linf <- 60
+k <- 0.4
+# vcov matrix
+mm <- matrix(NA, ncol=2, nrow=2)
+# 10% cv
+diag(mm) <- c((linf*0.1)^2, (k*0.1)^2)
+# 0.2 correlation
+mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.05)
+# a good way to check is using cov2cor
+cov2cor(mm)
+# create object
+mgis2 <- FLModelSim(model=~K*(linf/len)^1.5, params=FLPar(linf=linf, K=k), vcov=mm)
+
+pars <- list(list(55,65), list(a=0.3, b=0.6, c=0.35))
+mgis2 <- mvrtriangle(1000, mgis2, paramMargins=pars)
+@
+
+<<fig=TRUE>>=
+splom(t(params(mgis2)@.Data))
+@
+
+<<fig=TRUE>>=
+par(mfrow=c(2,1))
+hist(c(params(mgis2)["linf",]), main="Linf")
+hist(c(params(mgis2)["K",]), main="K")
+@
+
+Use the constructor or the set method to add the new model. Note that we have a quite complex method now for \emph{M}. A length based \emph{shape} model from Gislason's work, Pauly's based temperature \emph{level} and a time trend depending on NAO. 
+
+<<>>=
+m5 <- a4aM(shape=mgis2, level=mod2, trend=mod3)
+# or
+m5 <- m4
+level(m5) <- mgis2
+@
+
+\subsection{The "m" method}
+
+The \emph{m} method is the workhorse on computing natural mortality. The method returns a \emph{FLQuant} that can be inserted in an \emph{FLStock} for posterior usage by the assessment method. Note that if the models use \emph{age} and/or \emph{year} as terms, the method expects these to be included in the call (will be passed through the \ldots argument). If they're not, the method will use the range slot to work out the ages and/or years that should be predicted. If \emph{age} and/or \emph{year} are not model terms, the method will use the range slot to define the dimensions of the resulting \emph{M} \emph{FLQuant}.
+
+<<>>=
+# simple
+m(m1)
+# with ages
+rngage(m1) <- c(0,15)
+m(m1)
+# with ages and years
+rngyear(m1) <- c(2000, 2010)
+m(m1)
+@
+
+The next example as aage based shape. The information on the range of ages can be passed when calling \emph{m}, or else the method will pick it up from the \emph{range} slot. Note that in this case \emph{mbar} becames relevant. It's the range of ages that is used to compute the mean level, which will match the \emph{level} model.
+
+<<>>=
+# simple
+m(m2)
+# with ages
+rngage(m2) <- c(0,15)
+m(m2)
+# with ages and years
+rngyear(m2) <- c(2000, 2003)
+m(m2)
+# note that 
+predict(level(m2))
+# is similar to 
+m(m2)["0"]
+# that's because mbar is "0"
+rngmbar(m2)
+# changing ...
+rngmbar(m2)<- c(0,5)
+quantMeans(m(m2)[as.character(0:5)])
+@
+
+
+<<>>=
+# simple
+m(m3, nao=1)
+# with ages
+rngage(m3) <- c(0,15)
+m(m3, nao=0)
+# with ages and years
+rngyear(m3) <- c(2000, 2003)
+m(m3, nao=as.numeric(nao[,as.character(2000:2003)]))
+@
+
+<<>>=
+# simple
+m(m4, nao=1)
+# with ages
+rngage(m4) <- c(0,15)
+m(m4, nao=0)
+# with ages and years
+rngyear(m4) <- c(2000, 2003)
+m(m4, nao=as.numeric(nao[,as.character(2000:2003)]))
+@
+
+<<fig=TRUE>>=
+bwplot(data~factor(quant)|year, data=m(m4, nao=as.numeric(nao[,as.character(2000:2003)])))
+@
+
+or this!
+<<fig=TRUE>>=
+plotIters(m(m4, nao=as.numeric(nao[,as.character(2000:2003)])), by = "year")
+@
+
+
+\section{Running assessments}
+
+There are two basic types of assessments available from using \texttt{a4a}: the management procedure (MP) fit and the full assessment fit.  The MP fit does not compute estimates of covariances and is therefore quicker to execute, while the full assessment fit returns parameter estimates and their covariances and hence retains the ability to simulate from the model at the expense of longer fitting time.
+
+
+\subsection{a4aFit* - The fit classes}
+
+The basic model output is contained in the \texttt{a4aFit} class.  This object contains only the fitted values.
+
+<<>>=
+showClass("a4aFit")
+@
+
+Fitted values are stored in the \texttt{stock.n}, \texttt{harvest}, \texttt{catch.n} and \texttt{index} slots.  It also contains information carried over from the stock object used to fit the model: the name of the stock in \texttt{name}, any description provided in \texttt{desc} and the age and year range and mean F range in \texttt{range}.  There is also a wall clock that has a breakdown of the time taken o run the model.
+
+The full assessment fit returns an object of \texttt{a4aFitSA} class:
+
+<<>>=
+showClass("a4aFitSA")
+@
+
+The additional slots in the assessment output is the \texttt{fitSumm} and \texttt{pars} slots which are containers for model summaries and the model parameters.  The \texttt{pars} slot is a class of type \texttt{SCAPars} which is itself composed of sub-classes, designed to contain the information necessary to simulate from the model.
+
+<<>>=
+showClass("SCAPars")
+showClass("a4aStkParams")
+@
+
+for example, all the parameters required so simulate a time-series of mean F trends is contained in the \texttt{stkmodel} slot, which is a class of type \texttt{a4aStkParams}.  This class contains the relevant submodels (see later), their parameters \texttt{params} and the joint covariance matrix \texttt{vcov} for all stock related parameters.
+
+\subsection{The submodels}
+
+In the \texttt{a4a} assessment model, the model structure is defined by submodels.  These are models for the different parts of a statistical catch at age model that requires structural assumptions, such as the selectivity of the fishing fleet, or how F-at-age changes over time.  It is advantageous to write the model for F-at-age and survey catchability as linear models (by working with log F and log Q) becuase it allows us to use the linear modelling tools available in R:  see for example gam formulas, or factorial design formulas using lm.  In R's linear modelling lanquage, a constant model is coded as $\sim$ 1, while a slope over age would simply be $\sim$ age.  Extending this we can write a traditional year / age seperable F model like $\sim$ factor(age) $+$ factor(year).
+
+There are effectively 5 submodels in operation: the model for F-at-age, a model for initial age structure, a model for recruitment, a (list) of model(s) for survey catchability-at-age, and a list of models for the observation variance of catch.n and the survey indices.  In practice, we fix the variance models and the initial age structure models, but in theory these can be changed.  A basic set of submodels would be
+
+<<>>=
+fmodel <- ~ factor(age) + factor(year)
+qmodel <- list(~ factor(age)) 
+@
+
+\subsection{Run !!}
+
+running the model is done by
+
+<<>>=
+fit <- a4a(fmodel, qmodel, stock = ple4, indices = ple4.indices[1])
+@
+
+note that because the survey index for plaice has missing values we get a warning saying that we assume these values are missing at random, and not because the observations were zero.
+
+We can inspect the summaries from this fit my adding it to the origional stock object, for example to see the fitted fbar we can do
+
+<<figure=TRUE>>=
+fitstk <- ple4 + fit
+plotIters(fbar(fitstk))
+@
+
+
+\subsection{Some more examples}
+
+We will now take a look at some examples for F models and the forms that we can get.  Lets start with a separable model in which we model selectivity at age as an (unpenalised) thin plate spline.  We will use the North Sea Plaice data again, and since this has 10 ages we will use a simple rule of thumb that the spline should have fewer than $\frac{10}{2} = 5$ degrees of freedom, and so we opt for 4 degrees of freedom.  We will also do the same for year and model the change in F through time as a smoother with 20 degrees of freedom.
+
+<<figure=TRUE>>=
+fmodel <- ~ s(age, k=4) + s(year, k = 20)
+qmodel <- list( ~ factor(age))
+fit1 <- a4a(fmodel, qmodel, stock = ple4, indices = ple4.indices[1]) 
+wireframe(data ~ year + age, data = as.data.frame(harvest(fit1)), drape = TRUE)
+@
+
+Lets now investigate some variations in the selectivity shape with time, but only a little... we can do this by adding a smooth interaction term in the fmodel
+
+<<figure=TRUE>>=
+fmodel <- ~ s(age, k=4) + s(year, k = 20) + te(age, year, k = c(3,3))
+qmodel <- list( ~ factor(age))
+fit2 <- a4a(fmodel, qmodel, stock = ple4, indices = ple4.indices[1]) 
+wireframe(data ~ year + age, data = as.data.frame(harvest(fit2)), drape = TRUE)
+@
+
+A further move is to free up the Fs to vary more over time
+
+<<figure=TRUE>>=
+fmodel <- ~ te(age, year, k = c(4,20))
+qmodel <- list( ~ factor(age))
+fit2 <- a4a(fmodel, qmodel, stock = ple4, indices = ple4.indices[1]) 
+wireframe(data ~ year + age, data = as.data.frame(harvest(fit2)), drape = TRUE)
+@
+
+In the last examples the Fs are linked across age and time.  What if we want to free up a specific age class because in the residuals we see a consistent pattern.  This can happen, for example, if the spatial distribution of juvenilles is disconnected to the distribution of adults.  The fishery focuses on the adult fish, and therefore the the F on young fish is a function of the distribution of the juveniles and could deserve a seperate model.  This can be achieved by
+
+<<figure=TRUE>>=
+fmodel <- ~ te(age, year, k = c(4,20)) + s(year, k = 5, by = as.numeric(age==1))
+qmodel <- list( ~ factor(age))
+fit3 <- a4a(fmodel, qmodel, stock = ple4, indices = ple4.indices[1]) 
+wireframe(data ~ year + age, data = as.data.frame(harvest(fit3)), drape = TRUE)
+@
+
+Please note that each of these model \emph{structures} lets say, have not been tuned to the data.  The degrees of freedom of each model can be better tuned to the data by using model selection procedures such as AIC or BIC.
+
+
+
+\end{document}
+

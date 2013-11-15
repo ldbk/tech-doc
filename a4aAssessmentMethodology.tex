@@ -1,0 +1,1688 @@
+\documentclass[a4paper,english,10pt]{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{color} 
+\usepackage{float}
+\usepackage{longtable}
+\usepackage[bottom]{footmisc}
+\usepackage{url}
+\usepackage{natbib}
+\usepackage{authblk}
+\usepackage[T1]{fontenc}
+\usepackage[utf8x]{inputenc}
+\usepackage{babel}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{verbose,a4paper,tmargin=3cm,bmargin=2cm,lmargin=2cm,rmargin=3cm}
+\setlength{\parskip}{\medskipamount}
+\setlength{\parindent}{0pt}
+\hypersetup{
+    colorlinks=true,       % false: boxed links; true: colored links
+    linkcolor=blue,        % color of internal links
+    citecolor=red,         % color of links to bibliography
+    filecolor=blue,        % color of file links
+    urlcolor=blue          % color of external links
+}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\title{Stock assessment and management advice with a4a methods \\ DRAFT}
+
+\author[1]{Ernesto Jardim}
+\author[1]{Colin Millar}
+\author[1]{Finlay Scott}
+\affil[1]{European Commission, Joint Research Centre, IPSC / Maritime Affairs Unit, 21027 Ispra (VA), Italy}
+\affil[*]{Corresponding author \href{mailto:ernesto.jardim@jrc.ec.europa.eu}{ernesto.jardim@jrc.ec.europa.eu}}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Introduction}
+
+\begin{itemize}
+	\item Objectives
+	\item a4a concepts
+	\begin{itemize}
+		\item life history considers parameters to have distributions, it's a kind of Bayesian posteriors informed estimates, but if one runs a Bayesian analysis to estimate growth parameters the posteriors can be used  
+	\end{itemize}
+	\item Workflow diagram
+\end{itemize}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# ==============================================================================}
+\hlcom{# libraries and constants}
+\hlcom{# ==============================================================================}
+\hlkwd{library}\hlstd{(FLa4a)}
+\end{alltt}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Loading required package: FLCore\\\#\# Loading required package: grid\\\#\# Loading required package: lattice\\\#\# Loading required package: MASS\\\#\# FLCore 2.5.0 development version\\\#\# \\\#\# \\\#\# Attaching package: 'FLCore'\\\#\# \\\#\# The following objects are masked from 'package:base':\\\#\# \\\#\#\ \ \ \  cbind, rbind\\\#\# \\\#\# Loading required package: Matrix\\\#\# \\\#\# Attaching package: 'Matrix'\\\#\# \\\#\# The following object is masked from 'package:FLCore':\\\#\# \\\#\#\ \ \ \  expand\\\#\# \\\#\# Loading required package: mgcv\\\#\# Loading required package: nlme\\\#\# This is mgcv 1.7-26. For overview type 'help("{}mgcv-package"{})'.\\\#\# Loading required package: copula\\\#\# Loading required package: triangle}}
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: replacing previous import by 'lattice::barchart' when loading 'FLa4a'\\\#\# Warning: replacing previous import by 'lattice::bwplot' when loading 'FLa4a'\\\#\# Warning: replacing previous import by 'lattice::densityplot' when loading 'FLa4a'\\\#\# Warning: replacing previous import by 'lattice::dotplot' when loading 'FLa4a'\\\#\# Warning: replacing previous import by 'lattice::histogram' when loading 'FLa4a'\\\#\# Warning: replacing previous import by 'lattice::splom' when loading 'FLa4a'\\\#\# Warning: replacing previous import by 'lattice::stripplot' when loading 'FLa4a'\\\#\# Warning: replacing previous import by 'lattice::xyplot' when loading 'FLa4a'\\\#\# Warning: replacing previous import by 'Matrix::expand' when loading 'FLa4a'}}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# This is FLa4a 0.9.4. For overview type 'help("{}FLa4a-package"{})'}}\begin{alltt}
+\hlkwd{library}\hlstd{(XML)}
+\hlkwd{library}\hlstd{(reshape2)}
+\hlkwd{data}\hlstd{(rfLen)}
+\hlkwd{data}\hlstd{(ple4)}
+\hlkwd{data}\hlstd{(ple4.indices)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# ==============================================================================}
+\hlcom{# some functions for later}
+\hlcom{# ==============================================================================}
+\hlcom{# quant 2 quant}
+\hlstd{qt2qt} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{object}\hlstd{,} \hlkwc{id} \hlstd{=} \hlnum{5}\hlstd{,} \hlkwc{split} \hlstd{=} \hlstr{"-"}\hlstd{) \{}
+    \hlstd{qt} \hlkwb{<-} \hlstd{object[, id]}
+    \hlkwd{levels}\hlstd{(qt)} \hlkwb{<-} \hlkwd{unlist}\hlstd{(}\hlkwd{lapply}\hlstd{(}\hlkwd{strsplit}\hlstd{(}\hlkwd{levels}\hlstd{(qt),} \hlkwc{split} \hlstd{= split),} \hlstr{"[["}\hlstd{,} \hlnum{2}\hlstd{))}
+    \hlkwd{as.numeric}\hlstd{(}\hlkwd{as.character}\hlstd{(qt))}
+\hlstd{\}}
+\hlcom{# check import and massage}
+\hlstd{cim} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{object}\hlstd{,} \hlkwc{n}\hlstd{,} \hlkwc{wt}\hlstd{,} \hlkwc{hrv} \hlstd{=} \hlstr{"missing"}\hlstd{) \{}
+    \hlstd{v} \hlkwb{<-} \hlstd{object[}\hlkwd{sample}\hlstd{(}\hlnum{1}\hlopt{:}\hlkwd{nrow}\hlstd{(object),} \hlnum{1}\hlstd{), ]}
+    \hlstd{c1} \hlkwb{<-} \hlkwd{c}\hlstd{(n[}\hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V5),} \hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V1),} \hlnum{1}\hlstd{,} \hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V2)]} \hlopt{==}
+        \hlstd{v}\hlopt{$}\hlstd{V6)}
+    \hlstd{c2} \hlkwb{<-} \hlkwd{c}\hlstd{(wt[}\hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V5),} \hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V1),} \hlnum{1}\hlstd{,} \hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V2)]} \hlopt{==}
+        \hlstd{v}\hlopt{$}\hlstd{V7)}
+    \hlkwa{if} \hlstd{(}\hlkwd{missing}\hlstd{(hrv)) \{}
+        \hlstd{c1} \hlopt{+} \hlstd{c2} \hlopt{==} \hlnum{2}
+    \hlstd{\}} \hlkwa{else} \hlstd{\{}
+        \hlstd{c3} \hlkwb{<-} \hlkwd{c}\hlstd{(hrv[}\hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V5),} \hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V1),} \hlnum{1}\hlstd{,} \hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V2)]} \hlopt{==}
+            \hlstd{v}\hlopt{$}\hlstd{V8)}
+        \hlstd{c1} \hlopt{+} \hlstd{c2} \hlopt{+} \hlstd{c3} \hlopt{==} \hlnum{3}
+    \hlstd{\}}
+\hlstd{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+\section{Reading files and building FLR objects}
+
+For this document we'll use the plaice in ICES area IV dataset, provided by FLR, and a length-based simulated dataset based on red fish, using gadget (http://www.hafro.is/gadget), provided by Daniel Howell (Institute of Marine Research, Norway).
+
+\subsection{Red fish length based dataset}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# ==============================================================================}
+\hlcom{# Read files}
+\hlcom{# ==============================================================================}
+\hlcom{# catch}
+\hlstd{cth.orig} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"data/catch.len"}\hlstd{,} \hlkwc{skip} \hlstd{=} \hlnum{5}\hlstd{)}
+\hlcom{# stock}
+\hlstd{stk.orig} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"data/red.len"}\hlstd{,} \hlkwc{skip} \hlstd{=} \hlnum{4}\hlstd{)}
+\hlcom{# surveys}
+\hlstd{idx.orig} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"data/survey.len"}\hlstd{,} \hlkwc{skip} \hlstd{=} \hlnum{5}\hlstd{)}
+\hlstd{idxJmp.orig} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"data/jump.survey.len"}\hlstd{,} \hlkwc{skip} \hlstd{=} \hlnum{5}\hlstd{)}
+\hlstd{idxTrd.orig} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"data/tend.survey.len"}\hlstd{,} \hlkwc{skip} \hlstd{=} \hlnum{5}\hlstd{)}
+\hlcom{# ==============================================================================}
+\hlcom{# Recode}
+\hlcom{# ==============================================================================}
+\hlcom{# catch}
+\hlstd{cth.orig[,} \hlnum{5}\hlstd{]} \hlkwb{<-} \hlkwd{qt2qt}\hlstd{(cth.orig)}
+\hlcom{# stock}
+\hlstd{stk.orig[,} \hlnum{5}\hlstd{]} \hlkwb{<-} \hlkwd{qt2qt}\hlstd{(stk.orig)}
+\hlcom{# surveys}
+\hlstd{idx.orig[,} \hlnum{5}\hlstd{]} \hlkwb{<-} \hlkwd{qt2qt}\hlstd{(idx.orig)}
+\hlstd{idxJmp.orig[,} \hlnum{5}\hlstd{]} \hlkwb{<-} \hlkwd{qt2qt}\hlstd{(idxJmp.orig)}
+\hlstd{idxTrd.orig[,} \hlnum{5}\hlstd{]} \hlkwb{<-} \hlkwd{qt2qt}\hlstd{(idxTrd.orig)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# ==============================================================================}
+\hlcom{# cast}
+\hlcom{# ==============================================================================}
+\hlcom{# catch}
+\hlstd{cth.n} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V6"}\hlstd{,} \hlkwc{data} \hlstd{= cth.orig)}
+\hlstd{cth.wt} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V7"}\hlstd{,} \hlkwc{data} \hlstd{= cth.orig)}
+\hlstd{hrv} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V8"}\hlstd{,} \hlkwc{data} \hlstd{= cth.orig)}
+\hlcom{# stock}
+\hlstd{stk.n} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V6"}\hlstd{,} \hlkwc{data} \hlstd{= stk.orig)}
+\hlstd{stk.wt} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V7"}\hlstd{,} \hlkwc{data} \hlstd{= stk.orig)}
+\hlcom{# surveys}
+\hlstd{idx.n} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V6"}\hlstd{,} \hlkwc{data} \hlstd{= idx.orig)}
+\hlstd{idx.wt} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V7"}\hlstd{,} \hlkwc{data} \hlstd{= idx.orig)}
+\hlstd{idx.hrv} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V8"}\hlstd{,} \hlkwc{data} \hlstd{= idx.orig)}
+\hlstd{idxJmp.n} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V6"}\hlstd{,} \hlkwc{data} \hlstd{= idxJmp.orig)}
+\hlstd{idxJmp.wt} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V7"}\hlstd{,} \hlkwc{data} \hlstd{= idxJmp.orig)}
+\hlstd{idxJmp.hrv} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V8"}\hlstd{,} \hlkwc{data} \hlstd{= idxJmp.orig)}
+\hlstd{idxTrd.n} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V6"}\hlstd{,} \hlkwc{data} \hlstd{= idxTrd.orig)}
+\hlstd{idxTrd.wt} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V7"}\hlstd{,} \hlkwc{data} \hlstd{= idxTrd.orig)}
+\hlstd{idxTrd.hrv} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V8"}\hlstd{,} \hlkwc{data} \hlstd{= idxTrd.orig)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# ==============================================================================}
+\hlcom{# quants}
+\hlcom{# ==============================================================================}
+\hlcom{# catch}
+\hlstd{dnms} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(cth.n)}
+\hlkwd{names}\hlstd{(dnms)} \hlkwb{<-} \hlkwd{names}\hlstd{(}\hlkwd{dimnames}\hlstd{(}\hlkwd{FLQuant}\hlstd{()))}
+\hlkwd{names}\hlstd{(dnms)[}\hlnum{1}\hlstd{]} \hlkwb{<-} \hlstr{"len"}
+\hlstd{cth.n} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(cth.n,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{cth.wt} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(cth.wt,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{hrv} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(hrv,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlkwd{units}\hlstd{(hrv)} \hlkwb{<-} \hlstr{"f"}
+\hlcom{# stock}
+\hlstd{dnms} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(stk.n)}
+\hlkwd{names}\hlstd{(dnms)} \hlkwb{<-} \hlkwd{names}\hlstd{(}\hlkwd{dimnames}\hlstd{(}\hlkwd{FLQuant}\hlstd{()))}
+\hlkwd{names}\hlstd{(dnms)[}\hlnum{1}\hlstd{]} \hlkwb{<-} \hlstr{"len"}
+\hlstd{stk.n} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(stk.n,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{stk.wt} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(stk.wt,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlcom{# stock}
+\hlstd{dnms} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(idx.n)}
+\hlkwd{names}\hlstd{(dnms)} \hlkwb{<-} \hlkwd{names}\hlstd{(}\hlkwd{dimnames}\hlstd{(}\hlkwd{FLQuant}\hlstd{()))}
+\hlkwd{names}\hlstd{(dnms)[}\hlnum{1}\hlstd{]} \hlkwb{<-} \hlstr{"len"}
+\hlstd{idx.n} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idx.n,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{idx.wt} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idx.wt,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{idx.hrv} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idx.hrv,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{dnms} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(idxJmp.n)}
+\hlkwd{names}\hlstd{(dnms)} \hlkwb{<-} \hlkwd{names}\hlstd{(}\hlkwd{dimnames}\hlstd{(}\hlkwd{FLQuant}\hlstd{()))}
+\hlkwd{names}\hlstd{(dnms)[}\hlnum{1}\hlstd{]} \hlkwb{<-} \hlstr{"len"}
+\hlstd{idxJmp.n} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idxJmp.n,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{idxJmp.wt} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idxJmp.wt,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{idxJmp.hrv} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idxJmp.hrv,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{dnms} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(idxTrd.n)}
+\hlkwd{names}\hlstd{(dnms)} \hlkwb{<-} \hlkwd{names}\hlstd{(}\hlkwd{dimnames}\hlstd{(}\hlkwd{FLQuant}\hlstd{()))}
+\hlkwd{names}\hlstd{(dnms)[}\hlnum{1}\hlstd{]} \hlkwb{<-} \hlstr{"len"}
+\hlstd{idxTrd.n} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idxTrd.n,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{idxTrd.wt} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idxTrd.wt,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{idxTrd.hrv} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idxTrd.hrv,} \hlkwc{dimnames} \hlstd{= dnms)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# ==============================================================================}
+\hlcom{# check}
+\hlcom{# ==============================================================================}
+\hlcom{# ------------------------------------------------------------------------------}
+\hlcom{# match original data}
+\hlcom{# ------------------------------------------------------------------------------}
+\hlcom{# catch}
+\hlkwd{cim}\hlstd{(cth.orig, cth.n, cth.wt, hrv)}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\begin{alltt}
+\hlcom{# stock}
+\hlkwd{cim}\hlstd{(stk.orig, stk.n, stk.wt)}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\begin{alltt}
+\hlcom{# surveys}
+\hlkwd{cim}\hlstd{(idx.orig, idx.n, idx.wt, idx.hrv)}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\begin{alltt}
+\hlkwd{cim}\hlstd{(idxJmp.orig, idxJmp.n, idxJmp.wt, idxJmp.hrv)}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\begin{alltt}
+\hlkwd{cim}\hlstd{(idxTrd.orig, idxTrd.n, idxTrd.wt, idxTrd.hrv)}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+%#------------------------------------------------------------------------------
+%# contents
+%#------------------------------------------------------------------------------
+
+%# length-weight relationship is a bit odd ...
+%xyplot(data~len|year, groups=season, data=cth.wt/cth.n, type="l")
+
+%# length-weight relationship is a bit odd ...
+%xyplot(data~len|year, groups=season, data=stk.wt, type="l")
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# ==============================================================================}
+\hlcom{# FLR objects}
+\hlcom{# ==============================================================================}
+\hlstd{rfLen.stk} \hlkwb{<-} \hlkwd{FLStockLen}\hlstd{(}\hlkwc{stock.n} \hlstd{= stk.n,} \hlkwc{stock.wt} \hlstd{= stk.wt,} \hlkwc{stock} \hlstd{=} \hlkwd{quantSums}\hlstd{(stk.wt} \hlopt{*}
+    \hlstd{stk.n),} \hlkwc{catch.n} \hlstd{= cth.n,} \hlkwc{catch.wt} \hlstd{= cth.wt}\hlopt{/}\hlstd{cth.n,} \hlkwc{catch} \hlstd{=} \hlkwd{quantSums}\hlstd{(cth.wt),}
+    \hlkwc{harvest} \hlstd{= hrv)}
+\hlkwd{m}\hlstd{(rfLen.stk)[]} \hlkwb{<-} \hlnum{0.05}
+\hlkwd{mat}\hlstd{(rfLen.stk)[]} \hlkwb{<-} \hlkwd{m.spwn}\hlstd{(rfLen.stk)[]} \hlkwb{<-} \hlkwd{harvest.spwn}\hlstd{(rfLen.stk)[]} \hlkwb{<-} \hlnum{0}
+\hlkwd{mat}\hlstd{(rfLen.stk)[}\hlnum{38}\hlopt{:}\hlnum{59}\hlstd{, , ,} \hlnum{3}\hlopt{:}\hlnum{4}\hlstd{]} \hlkwb{<-} \hlnum{1}
+\hlstd{rfTrawl.idx} \hlkwb{<-} \hlkwd{FLIndex}\hlstd{(}\hlkwc{index} \hlstd{= idx.n,} \hlkwc{catch.n} \hlstd{= idx.n,} \hlkwc{catch.wt} \hlstd{= idx.wt,} \hlkwc{sel.pattern} \hlstd{= idx.hrv)}
+\hlkwd{effort}\hlstd{(rfTrawl.idx)[]} \hlkwb{<-} \hlnum{100}
+\hlstd{rfTrawlJmp.idx} \hlkwb{<-} \hlkwd{FLIndex}\hlstd{(}\hlkwc{index} \hlstd{= idxJmp.n,} \hlkwc{catch.n} \hlstd{= idxJmp.n,} \hlkwc{catch.wt} \hlstd{= idxJmp.wt,}
+    \hlkwc{sel.pattern} \hlstd{= idxJmp.hrv)}
+\hlkwd{effort}\hlstd{(rfTrawlJmp.idx)[]} \hlkwb{<-} \hlnum{100}
+\hlstd{rfTrawlTrd.idx} \hlkwb{<-} \hlkwd{FLIndex}\hlstd{(}\hlkwc{index} \hlstd{= idxTrd.n,} \hlkwc{catch.n} \hlstd{= idxTrd.n,} \hlkwc{catch.wt} \hlstd{= idxTrd.wt,}
+    \hlkwc{sel.pattern} \hlstd{= idxTrd.hrv)}
+\hlkwd{effort}\hlstd{(rfTrawlTrd.idx)[]} \hlkwb{<-} \hlnum{100}
+\hlcom{# ------------------------------------------------------------------------------}
+\hlcom{# save}
+\hlcom{# ------------------------------------------------------------------------------}
+\hlkwd{save}\hlstd{(rfLen.stk, rfTrawl.idx, rfTrawlJmp.idx, rfTrawlTrd.idx,} \hlkwc{file} \hlstd{=} \hlstr{"rfLen.rdata"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+\section{Converting length data to age}
+
+The stock assessment framework is based on age dynamics. To use length information it must be pre-processed before used for assessment. The rationale is that the pre-processing should give the analyst the flexibility to use whatever sources of information, \emph{e.g.} literature or online databases, to grab information about the species growth and the uncertainty about the model parameters.
+
+\subsection{a4aGr - The growth class}
+
+The convertion of length data to age is performed through the usage of a growth model. The implementation is done through the \emph{a4aGr} class. Check the help file for more information.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{showClass}\hlstd{(}\hlstr{"a4aGr"}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## Class "a4aGr" [package "FLa4a"]
+## 
+## Slots:
+##                                                                   
+## Name:      grMod  grInvMod    params      vcov     distr      name
+## Class:   formula   formula     FLPar     array character character
+##                           
+## Name:       desc     range
+## Class: character   numeric
+## 
+## Extends: "FLComp"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+A simple construction of \emph{a4aGr} objects requires the model and parameters to be provided.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# ------------------------------------------------------------------------------}
+\hlcom{# a von Bertalanffy model}
+\hlcom{# ------------------------------------------------------------------------------}
+\hlstd{vbObj} \hlkwb{<-} \hlkwd{a4aGr}\hlstd{(}\hlkwc{grMod} \hlstd{=} \hlopt{~}\hlstd{linf} \hlopt{*} \hlstd{(}\hlnum{1} \hlopt{-} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{k} \hlopt{*} \hlstd{(t} \hlopt{-} \hlstd{t0))),} \hlkwc{grInvMod} \hlstd{=} \hlopt{~}\hlstd{t0} \hlopt{-} \hlnum{1}\hlopt{/}\hlstd{k} \hlopt{*}
+    \hlkwd{log}\hlstd{(}\hlnum{1} \hlopt{-} \hlstd{len}\hlopt{/}\hlstd{linf),} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{linf} \hlstd{=} \hlnum{58.5}\hlstd{,} \hlkwc{k} \hlstd{=} \hlnum{0.086}\hlstd{,} \hlkwc{t0} \hlstd{=} \hlnum{0.001}\hlstd{,} \hlkwc{units} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"cm"}\hlstd{,}
+    \hlstr{"ano-1"}\hlstd{,} \hlstr{"ano"}\hlstd{)))}
+\hlcom{# a quick check about the model and it's inverse}
+\hlstd{lc} \hlkwb{=} \hlnum{20}
+\hlkwd{predict}\hlstd{(vbObj,} \hlkwc{t} \hlstd{=} \hlkwd{predict}\hlstd{(vbObj,} \hlkwc{len} \hlstd{= lc))} \hlopt{==} \hlstd{lc}
+\end{alltt}
+\begin{verbatim}
+##    iter
+##        1
+##   1 TRUE
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+The predict method will allow the transformation between age and lengths.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# ------------------------------------------------------------------------------}
+\hlcom{# predicting ages from lengths and vice-versa}
+\hlcom{# ------------------------------------------------------------------------------}
+\hlkwd{predict}\hlstd{(vbObj,} \hlkwc{len} \hlstd{=} \hlnum{5}\hlopt{:}\hlnum{10} \hlopt{+} \hlnum{0.5}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+##    iter
+##         1
+##   1 1.149
+##   2 1.371
+##   3 1.596
+##   4 1.827
+##   5 2.062
+##   6 2.301
+\end{verbatim}
+\begin{alltt}
+\hlkwd{predict}\hlstd{(vbObj,} \hlkwc{t} \hlstd{=} \hlnum{5}\hlopt{:}\hlnum{10} \hlopt{+} \hlnum{0.5}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+##    iter
+##         1
+##   1 22.04
+##   2 25.05
+##   3 27.80
+##   4 30.33
+##   5 32.66
+##   6 34.78
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+\subsection{Adding multivariate normal parameter uncertainty}
+
+Uncertainty is introduced through parameter's uncertainty. The most traditional multivariate normal approach can be used. The implementation for \emph{a5aGr} makes use of the \emph{vcov} slot to get the parameter's covariance matrix. If the parameters or the covariance matrix have iterations then the medians accross iterations are computed before simulating. Check help for \emph{mvrnorm} for more information.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# vcov matrix}
+\hlstd{mm} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlnum{NA}\hlstd{,} \hlkwc{ncol} \hlstd{=} \hlnum{3}\hlstd{,} \hlkwc{nrow} \hlstd{=} \hlnum{3}\hlstd{)}
+\hlkwd{diag}\hlstd{(mm)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{100}\hlstd{,} \hlnum{0.001}\hlstd{,} \hlnum{0.001}\hlstd{)}
+\hlstd{mm[}\hlkwd{upper.tri}\hlstd{(mm)]} \hlkwb{<-} \hlstd{mm[}\hlkwd{lower.tri}\hlstd{(mm)]} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{0.1}\hlstd{,} \hlnum{0.1}\hlstd{,} \hlnum{3e-04}\hlstd{)}
+\hlcom{# object}
+\hlstd{vbObj} \hlkwb{<-} \hlkwd{a4aGr}\hlstd{(}\hlkwc{grMod} \hlstd{=} \hlopt{~}\hlstd{linf} \hlopt{*} \hlstd{(}\hlnum{1} \hlopt{-} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{k} \hlopt{*} \hlstd{(t} \hlopt{-} \hlstd{t0))),} \hlkwc{grInvMod} \hlstd{=} \hlopt{~}\hlstd{t0} \hlopt{-} \hlnum{1}\hlopt{/}\hlstd{k} \hlopt{*}
+    \hlkwd{log}\hlstd{(}\hlnum{1} \hlopt{-} \hlstd{len}\hlopt{/}\hlstd{linf),} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{linf} \hlstd{=} \hlnum{58.5}\hlstd{,} \hlkwc{k} \hlstd{=} \hlnum{0.086}\hlstd{,} \hlkwc{t0} \hlstd{=} \hlnum{0.001}\hlstd{,} \hlkwc{units} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"cm"}\hlstd{,}
+    \hlstr{"ano-1"}\hlstd{,} \hlstr{"ano"}\hlstd{)),} \hlkwc{vcov} \hlstd{= mm,} \hlkwc{distr} \hlstd{=} \hlstr{"norm"}\hlstd{)}
+\hlcom{# simulate}
+\hlstd{vbObj} \hlkwb{<-} \hlkwd{mvrnorm}\hlstd{(}\hlnum{100}\hlstd{, vbObj)}
+\hlcom{# predict}
+\hlkwd{predict}\hlstd{(vbObj,} \hlkwc{len} \hlstd{=} \hlnum{5}\hlopt{:}\hlnum{10} \hlopt{+} \hlnum{0.5}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+##    iter
+##         1     2      3     4      5     6     7     8     9    10    11
+##   1 1.673 0.837 0.9062 1.147 0.5585 2.448 1.593 1.119 1.614 1.113 1.682
+##   2 2.008 1.007 1.0846 1.356 0.6591 2.926 1.912 1.338 1.934 1.325 2.002
+##   3 2.353 1.180 1.2661 1.570 0.7612 3.418 2.238 1.562 2.261 1.541 2.328
+##   4 2.706 1.357 1.4511 1.787 0.8648 3.924 2.571 1.792 2.596 1.763 2.660
+##   5 3.070 1.538 1.6395 2.009 0.9701 4.446 2.911 2.027 2.939 1.990 2.999
+##   6 3.444 1.723 1.8315 2.235 1.0769 4.983 3.258 2.268 3.290 2.222 3.344
+##    iter
+##         12    13     14     15     16     17    18    19     20    21
+##   1 0.6919 1.187 0.8210 0.9653 0.8559 0.8186 1.490 1.407  5.694 1.401
+##   2 0.8255 1.421 0.9736 1.1481 1.0216 0.9742 1.773 1.688  6.800 1.675
+##   3 0.9616 1.658 1.1288 1.3348 1.1903 1.1322 2.062 1.974  7.927 1.955
+##   4 1.1005 1.900 1.2868 1.5255 1.3623 1.2928 2.356 2.266  9.074 2.242
+##   5 1.2421 2.146 1.4475 1.7206 1.5375 1.4560 2.656 2.563 10.244 2.536
+##   6 1.3866 2.396 1.6111 1.9201 1.7162 1.6218 2.960 2.867 11.437 2.839
+##    iter
+##         22    23    24    25    26    27    28    29    30    31    32
+##   1  5.859 1.565 1.065 1.782 1.128 1.911 1.618 1.242 11.54 2.120 2.516
+##   2  7.023 1.874 1.272 2.131 1.342 2.286 1.944 1.483 13.77 2.539 3.036
+##   3  8.222 2.191 1.482 2.486 1.559 2.672 2.278 1.728 16.03 2.969 3.579
+##   4  9.456 2.517 1.695 2.848 1.782 3.069 2.620 1.979 18.34 3.410 4.146
+##   5 10.730 2.852 1.912 3.218 2.009 3.477 2.972 2.235 20.70 3.862 4.738
+##   6 12.045 3.198 2.132 3.595 2.241 3.898 3.332 2.497 23.10 4.326 5.360
+##    iter
+##        33     34     35    36     37     38    39     40    41    42
+##   1 1.522 0.9987 0.8521 2.739 0.8488 0.9503 1.169 0.9942 0.825 1.655
+##   2 1.811 1.1850 1.0153 3.278 1.0123 1.1376 1.398 1.1818 0.986 1.971
+##   3 2.106 1.3742 1.1815 3.830 1.1786 1.3292 1.631 1.3736 1.150 2.294
+##   4 2.406 1.5663 1.3507 4.394 1.3475 1.5254 1.869 1.5698 1.318 2.623
+##   5 2.713 1.7616 1.5231 4.971 1.5194 1.7264 2.111 1.7706 1.489 2.960
+##   6 3.026 1.9599 1.6988 5.562 1.6942 1.9324 2.358 1.9762 1.663 3.305
+##    iter
+##         43    44     45    46    47    48    49     50    51     52     53
+##   1  5.580 1.730 0.9371 1.007 1.418 1.152 1.201 0.9751 1.262 0.8163 0.9193
+##   2  6.684 2.067 1.1156 1.190 1.689 1.378 1.437 1.1586 1.509 0.9860 1.0978
+##   3  7.817 2.410 1.2970 1.375 1.966 1.611 1.677 1.3454 1.762 1.1585 1.2796
+##   4  8.981 2.760 1.4814 1.563 2.248 1.849 1.923 1.5354 2.021 1.3339 1.4646
+##   5 10.178 3.118 1.6688 1.755 2.537 2.094 2.175 1.7289 2.285 1.5124 1.6532
+##   6 11.409 3.483 1.8593 1.949 2.831 2.345 2.432 1.9260 2.556 1.6939 1.8453
+##    iter
+##         54     55    56     57    58     59     60    61    62     63
+##   1 0.6298 0.7409 1.272 0.8086 1.693 0.5879 0.7879 1.020 1.076 0.6320
+##   2 0.7512 0.8720 1.515 0.9610 2.007 0.6972 0.9414 1.211 1.282 0.7508
+##   3 0.8746 1.0051 1.762 1.1158 2.328 0.8081 1.0977 1.405 1.493 0.8716
+##   4 1.0000 1.1402 2.013 1.2732 2.655 0.9204 1.2569 1.605 1.709 0.9944
+##   5 1.1276 1.2774 2.270 1.4332 2.988 1.0344 1.4190 1.809 1.929 1.1195
+##   6 1.2573 1.4168 2.532 1.5958 3.328 1.1501 1.5842 2.018 2.155 1.2467
+##    iter
+##        64     65     66    67    68     69    70    71    72    73    74
+##   1 1.047 0.8555 0.7693 1.793 1.202 0.7202 1.132 1.648 4.093 1.138 1.779
+##   2 1.253 1.0281 0.9196 2.138 1.421 0.8477 1.358 1.967 4.896 1.357 2.132
+##   3 1.464 1.2038 1.0730 2.490 1.644 0.9773 1.588 2.293 5.718 1.581 2.494
+##   4 1.680 1.3826 1.2294 2.850 1.871 1.1090 1.824 2.625 6.562 1.809 2.865
+##   5 1.900 1.5648 1.3890 3.219 2.103 1.2428 2.065 2.963 7.428 2.041 3.247
+##   6 2.124 1.7504 1.5519 3.597 2.338 1.3788 2.312 3.309 8.318 2.278 3.640
+##    iter
+##        75     76    77    78     79    80    81    82    83    84     85
+##   1 3.565  6.811 1.289 3.254 0.9778 1.471 1.378 2.024 1.487 2.479 0.9182
+##   2 4.269  8.194 1.543 3.885 1.1619 1.749 1.637 2.406 1.774 2.966 1.0854
+##   3 4.995  9.627 1.801 4.528 1.3492 2.034 1.901 2.797 2.066 3.465 1.2559
+##   4 5.745 11.115 2.064 5.185 1.5398 2.327 2.172 3.195 2.363 3.977 1.4297
+##   5 6.519 12.662 2.331 5.857 1.7338 2.628 2.448 3.601 2.665 4.501 1.6069
+##   6 7.321 14.273 2.604 6.543 1.9314 2.939 2.730 4.016 2.973 5.039 1.7878
+##    iter
+##        86     87    88    89    90    91    92     93    94    95    96
+##   1 1.092 0.7912 1.094 2.619 1.677 1.740 1.273 0.9813 1.023 1.714 1.015
+##   2 1.304 0.9401 1.304 3.159 2.012 2.068 1.520 1.1686 1.215 2.057 1.211
+##   3 1.521 1.0914 1.519 3.724 2.355 2.402 1.774 1.3594 1.410 2.409 1.411
+##   4 1.744 1.2453 1.738 4.315 2.705 2.742 2.035 1.5537 1.609 2.771 1.616
+##   5 1.972 1.4019 1.963 4.935 3.064 3.088 2.304 1.7518 1.811 3.142 1.826
+##   6 2.206 1.5612 2.193 5.587 3.431 3.442 2.580 1.9538 2.017 3.524 2.041
+##    iter
+##         97     98    99   100
+##   1 0.8521 0.7631 1.409 1.499
+##   2 1.0154 0.9080 1.672 1.790
+##   3 1.1816 1.0555 1.938 2.088
+##   4 1.3507 1.2056 2.209 2.392
+##   5 1.5230 1.3584 2.485 2.702
+##   6 1.6985 1.5142 2.765 3.020
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{boxplot}\hlstd{(}\hlkwd{t}\hlstd{(}\hlkwd{predict}\hlstd{(vbObj,} \hlkwc{t} \hlstd{=} \hlnum{0}\hlopt{:}\hlnum{50} \hlopt{+} \hlnum{0.5}\hlstd{)))}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-12} 
+
+\end{knitrout}
+
+
+\subsection{Adding parameter uncertainty with triangles and elliptic copulas}
+
+One alternative that may be interesting if one does not believe in assymptotic theory, is to use triangle distributions (\url{http://en.wikipedia.org/wiki/Triangle_distribution}). These distributions are parametrized using min, max and the most frequent value, which make them very interesting if the analyst needs to scrap information from the web or literature and perform some kind of meta-analysis.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{addr} \hlkwb{<-} \hlstr{"http://www.fishbase.org/PopDyn/PopGrowthList.php?ID=501"}
+\hlstd{tab} \hlkwb{<-} \hlkwd{try}\hlstd{(}\hlkwd{readHTMLTable}\hlstd{(addr))}
+\hlstd{linf} \hlkwb{<-} \hlkwd{as.numeric}\hlstd{(}\hlkwd{as.character}\hlstd{(tab}\hlopt{$}\hlstd{dataTable[,} \hlnum{2}\hlstd{]))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: \$ operator is invalid for atomic vectors}}\begin{alltt}
+\hlstd{k} \hlkwb{<-} \hlkwd{as.numeric}\hlstd{(}\hlkwd{as.character}\hlstd{(tab}\hlopt{$}\hlstd{dataTable[,} \hlnum{4}\hlstd{]))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: \$ operator is invalid for atomic vectors}}\begin{alltt}
+\hlstd{t0} \hlkwb{<-} \hlkwd{as.numeric}\hlstd{(}\hlkwd{as.character}\hlstd{(tab}\hlopt{$}\hlstd{dataTable[,} \hlnum{5}\hlstd{]))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: \$ operator is invalid for atomic vectors}}\begin{alltt}
+\hlstd{vbObj} \hlkwb{<-} \hlkwd{a4aGr}\hlstd{(}\hlkwc{grMod} \hlstd{=} \hlopt{~}\hlstd{linf} \hlopt{*} \hlstd{(}\hlnum{1} \hlopt{-} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{k} \hlopt{*} \hlstd{(t} \hlopt{-} \hlstd{t0))),} \hlkwc{grInvMod} \hlstd{=} \hlopt{~}\hlstd{t0} \hlopt{-} \hlnum{1}\hlopt{/}\hlstd{k} \hlopt{*}
+    \hlkwd{log}\hlstd{(}\hlnum{1} \hlopt{-} \hlstd{len}\hlopt{/}\hlstd{linf),} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{linf} \hlstd{=} \hlnum{58.5}\hlstd{,} \hlkwc{k} \hlstd{=} \hlnum{0.086}\hlstd{,} \hlkwc{t0} \hlstd{=} \hlnum{0.001}\hlstd{,} \hlkwc{units} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"cm"}\hlstd{,}
+    \hlstr{"ano-1"}\hlstd{,} \hlstr{"ano"}\hlstd{)),} \hlkwc{vcov} \hlstd{= mm)}
+\hlstd{pars} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlkwd{list}\hlstd{(}\hlkwc{a} \hlstd{=} \hlkwd{min}\hlstd{(linf),} \hlkwc{b} \hlstd{=} \hlkwd{max}\hlstd{(linf),} \hlkwc{c} \hlstd{=} \hlkwd{median}\hlstd{(linf)),} \hlkwd{list}\hlstd{(}\hlkwc{a} \hlstd{=} \hlkwd{min}\hlstd{(k),}
+    \hlkwc{b} \hlstd{=} \hlkwd{max}\hlstd{(k),} \hlkwc{c} \hlstd{=} \hlkwd{median}\hlstd{(k)),} \hlkwd{list}\hlstd{(}\hlkwc{a} \hlstd{=} \hlkwd{median}\hlstd{(t0,} \hlkwc{na.rm} \hlstd{= T)} \hlopt{-} \hlkwd{IQR}\hlstd{(t0,} \hlkwc{na.rm} \hlstd{= T)}\hlopt{/}\hlnum{2}\hlstd{,}
+    \hlkwc{b} \hlstd{=} \hlkwd{median}\hlstd{(t0,} \hlkwc{na.rm} \hlstd{= T)} \hlopt{+} \hlkwd{IQR}\hlstd{(t0,} \hlkwc{na.rm} \hlstd{= T)}\hlopt{/}\hlnum{2}\hlstd{))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: object 'linf' not found}}\begin{alltt}
+\hlstd{vbSim} \hlkwb{<-} \hlkwd{mvrtriangle}\hlstd{(}\hlnum{10000}\hlstd{, vbObj,} \hlkwc{paramMargins} \hlstd{= pars)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: object of type 'closure' is not subsettable}}\end{kframe}
+\end{knitrout}
+
+
+The marginals will reflect the uncertainty on the parameter values that were scrapped from fishbase, but, as we don't really believe the parameters are multivariate normal we addoppted a more relaxed distribution based on a \emph{t} copula with triangle marginals.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{par}\hlstd{(}\hlkwc{mfrow} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,} \hlnum{1}\hlstd{))}
+\hlkwd{hist}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{params}\hlstd{(vbSim)[}\hlstr{"linf"}\hlstd{, ]),} \hlkwc{main} \hlstd{=} \hlstr{"linf"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: error in evaluating the argument 'object' in selecting a method for function 'params': Error: object 'vbSim' not found}}\begin{alltt}
+\hlkwd{hist}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{params}\hlstd{(vbSim)[}\hlstr{"k"}\hlstd{, ]),} \hlkwc{main} \hlstd{=} \hlstr{"k"}\hlstd{,} \hlkwc{prob} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: error in evaluating the argument 'object' in selecting a method for function 'params': Error: object 'vbSim' not found}}\begin{alltt}
+\hlkwd{lines}\hlstd{(x.} \hlkwb{<-} \hlkwd{seq}\hlstd{(}\hlkwd{min}\hlstd{(k),} \hlkwd{max}\hlstd{(k),} \hlkwc{len} \hlstd{=} \hlnum{100}\hlstd{),} \hlkwd{dnorm}\hlstd{(x.,} \hlkwd{mean}\hlstd{(k),} \hlkwd{sd}\hlstd{(k)))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: object 'k' not found}}\begin{alltt}
+\hlkwd{hist}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{params}\hlstd{(vbSim)[}\hlstr{"t0"}\hlstd{, ]),} \hlkwc{main} \hlstd{=} \hlstr{"t0"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: error in evaluating the argument 'object' in selecting a method for function 'params': Error: object 'vbSim' not found}}\end{kframe}
+\end{knitrout}
+
+
+The shape of the correlation.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{splom}\hlstd{(}\hlkwd{data.frame}\hlstd{(}\hlkwd{t}\hlstd{(}\hlkwd{params}\hlstd{(vbSim)}\hlopt{@}\hlkwc{.Data}\hlstd{)),} \hlkwc{pch} \hlstd{=} \hlstr{"."}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: error in evaluating the argument 'x' in selecting a method for function 'splom': Error in t(params(vbSim)@.Data) : \\\#\#\ \  error in evaluating the argument 'x' in selecting a method for function 't': Error in params(vbSim) : \\\#\#\ \  error in evaluating the argument 'object' in selecting a method for function 'params': Error: object 'vbSim' not found\\\#\# Calls: data.frame -> t}}\end{kframe}
+\end{knitrout}
+
+
+Off course one can still use predict to get the feeling about the growth model uncertainty.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{boxplot}\hlstd{(}\hlkwd{t}\hlstd{(}\hlkwd{predict}\hlstd{(vbSim,} \hlkwc{t} \hlstd{=} \hlnum{0}\hlopt{:}\hlnum{20} \hlopt{+} \hlnum{0.5}\hlstd{)))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: error in evaluating the argument 'x' in selecting a method for function 't': Error in predict(vbSim, t = 0:20 + 0.5) : \\\#\#\ \  error in evaluating the argument 'object' in selecting a method for function 'predict': Error: object 'vbSim' not found}}\end{kframe}
+\end{knitrout}
+
+
+If you want to be really geek, you may scrap the entire growth parameters dataset from fishbase and compute the shape of the variance covariance matrix yourself.
+
+\subsection{Adding parameter uncertainty with copulas}
+
+A more general approach is to make use of whatever copula and marginal distribution one wants. Which is possible with \emph{mvrcop}. The example keeps the same parameters and changes only the copula type and family but a lot more can be done. Check the package \emph{copula} for more. 
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{vbSim} \hlkwb{<-} \hlkwd{mvrcop}\hlstd{(}\hlnum{10000}\hlstd{, vbObj,} \hlkwc{copula} \hlstd{=} \hlstr{"archmCopula"}\hlstd{,} \hlkwc{family} \hlstd{=} \hlstr{"clayton"}\hlstd{,} \hlkwc{param} \hlstd{=} \hlnum{2}\hlstd{,}
+    \hlkwc{margins} \hlstd{=} \hlstr{"triangle"}\hlstd{,} \hlkwc{paramMargins} \hlstd{= pars)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: object of type 'closure' is not subsettable}}\end{kframe}
+\end{knitrout}
+
+
+The shape of the correlation changes.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{splom}\hlstd{(}\hlkwd{data.frame}\hlstd{(}\hlkwd{t}\hlstd{(}\hlkwd{params}\hlstd{(vbSim)}\hlopt{@}\hlkwc{.Data}\hlstd{)),} \hlkwc{pch} \hlstd{=} \hlstr{"."}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: error in evaluating the argument 'x' in selecting a method for function 'splom': Error in t(params(vbSim)@.Data) : \\\#\#\ \  error in evaluating the argument 'x' in selecting a method for function 't': Error in params(vbSim) : \\\#\#\ \  error in evaluating the argument 'object' in selecting a method for function 'params': Error: object 'vbSim' not found\\\#\# Calls: data.frame -> t}}\end{kframe}
+\end{knitrout}
+
+
+As well as the predictions.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{boxplot}\hlstd{(}\hlkwd{t}\hlstd{(}\hlkwd{predict}\hlstd{(vbSim,} \hlkwc{t} \hlstd{=} \hlnum{0}\hlopt{:}\hlnum{20} \hlopt{+} \hlnum{0.5}\hlstd{)))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: error in evaluating the argument 'x' in selecting a method for function 't': Error in predict(vbSim, t = 0:20 + 0.5) : \\\#\#\ \  error in evaluating the argument 'object' in selecting a method for function 'predict': Error: object 'vbSim' not found}}\end{kframe}
+\end{knitrout}
+
+
+\subsection{The "l2a" method}
+
+After introducing uncertainty on the growth model it's time to transform the length dataset into an age dataset. The method that deals with this process is \emph{l2a}. The implementation for the \emph{FLQuant} class is the workhorse. There's two other implementations, for \emph{FLStock} and \emph{FLIndex}, which are mainly wrappers that call the \emph{FLQuant} method several times. Note that, for the moment, this method is quite slow. There's a double loop in the code that makes it slow, but we're working on a better solution.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# --------------------------------------------------------------------}
+\hlcom{# growth object}
+\hlcom{# --------------------------------------------------------------------}
+\hlstd{vbObj} \hlkwb{<-} \hlkwd{a4aGr}\hlstd{(}\hlkwc{grMod} \hlstd{=} \hlopt{~}\hlstd{linf} \hlopt{*} \hlstd{(}\hlnum{1} \hlopt{-} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{k} \hlopt{*} \hlstd{(t} \hlopt{-} \hlstd{t0))),} \hlkwc{grInvMod} \hlstd{=} \hlopt{~}\hlstd{t0} \hlopt{-} \hlnum{1}\hlopt{/}\hlstd{k} \hlopt{*}
+    \hlkwd{log}\hlstd{(}\hlnum{1} \hlopt{-} \hlstd{len}\hlopt{/}\hlstd{linf),} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{linf} \hlstd{=} \hlnum{58.5}\hlstd{,} \hlkwc{k} \hlstd{=} \hlnum{0.086}\hlstd{,} \hlkwc{t0} \hlstd{=} \hlnum{0.001}\hlstd{,} \hlkwc{units} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"cm"}\hlstd{,}
+    \hlstr{"ano-1"}\hlstd{,} \hlstr{"ano"}\hlstd{)),} \hlkwc{vcov} \hlstd{= mm,} \hlkwc{distr} \hlstd{=} \hlstr{"norm"}\hlstd{)}
+\hlcom{# --------------------------------------------------------------------}
+\hlcom{# converte catch-at-length to catch-at-age}
+\hlcom{# --------------------------------------------------------------------}
+\hlstd{cth.n} \hlkwb{<-} \hlkwd{l2a}\hlstd{(}\hlkwd{catch.n}\hlstd{(rfLen.stk), vbObj)}
+\end{alltt}
+\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\end{kframe}
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# trick}
+\hlkwd{quant}\hlstd{(cth.n)} \hlkwb{<-} \hlstr{"len"}
+\hlkwd{xyplot}\hlstd{(data} \hlopt{~} \hlstd{len} \hlopt{|} \hlstd{qname,} \hlkwc{groups} \hlstd{= year,} \hlkwc{data} \hlstd{= (}\hlkwd{FLQuants}\hlstd{(}\hlkwc{len} \hlstd{=} \hlkwd{catch.n}\hlstd{(rfLen.stk),}
+    \hlkwc{age} \hlstd{= cth.n)),} \hlkwc{type} \hlstd{=} \hlstr{"l"}\hlstd{,} \hlkwc{xlab} \hlstd{=} \hlstr{""}\hlstd{,} \hlkwc{ylab} \hlstd{=} \hlstr{"numbers"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-21} 
+
+\end{knitrout}
+
+
+Or we can convert all the relevant pieces of information in the stock and index dataset.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# --------------------------------------------------------------------}
+\hlcom{# convertion}
+\hlcom{# --------------------------------------------------------------------}
+\hlstd{aStk} \hlkwb{<-} \hlkwd{l2a}\hlstd{(rfLen.stk, vbObj)}
+\end{alltt}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: Individual weights, M and maturity will be averaged accross lengths, everything else will be summed. If this is not what you want, you'll have to deal with these slots by hand.}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## [1] "maxfbar has been changed to accomodate new plusgroup"
+\end{verbatim}
+\begin{alltt}
+\hlstd{aIdx} \hlkwb{<-} \hlkwd{l2a}\hlstd{(rfTrawl.idx, vbObj)}
+\end{alltt}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: Catch in numbers will be summed accross lenghths, everything else will be averaged. If this is not what you want, you'll have to deal with these slots by hand.}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\begin{verbatim}
+## Converting lengths to ages ...
+\end{verbatim}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: NaNs produced}}\end{kframe}
+\end{knitrout}
+
+
+When converting there's a number of defaults that the user must be aware. 
+
+All length above Linf are converted to the maximum age. This is not true in most cases, but that's as far as one can go with a age length growth model. There is no information on the model to deal with individuals larger than the maximum length. The variability around Linf is dealt by the randamization of the parameter Linf, and the cappacity to withold all the data depends on how well the analysist matches the variance of the parameter with the variance on the data.
+
+\section{Dealing with natural mortality}
+
+Natural mortality is dealt as an external parameter to the stock assessment model. The rationale is similar to that of growth. One should be able to grab information from whichever sources are available and use that information in a way that it propagates into stock assessment.
+
+The mechanism used by a4a is to build an interface that makes it transparent, flexible and hopefully easy to explore different options. In relation to natural mortality it means that the analyst should be able to use distinct models like Gislasson's, Charnov's, Pauly's, etc in a coherent framework making it possible to compare the outcomes of the assessment. 
+
+The smoother way to insert natural mortality in stock assessment is to use an \emph{a4aM} object and run the method \emph{m} to compute the values. The output is a \emph{FLQuant} that should be directly inserted in the \emph{FLStock} object to be used for assessment.   
+
+\subsection{a4aM - The M class}
+
+Natural mortality is implemented in a class named \emph{a4aM} which has three models of the class \emph{FLModelSim}. Each model represents one effects. An age effect, an year effect and a time trend, named \emph{shape}, \emph{level} and \emph{trend}, respectively. Check the help files for more information.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{showClass}\hlstd{(}\hlstr{"a4aM"}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## Class "a4aM" [package "FLa4a"]
+## 
+## Slots:
+##                                                                         
+## Name:       shape      level      trend       name       desc      range
+## Class: FLModelSim FLModelSim FLModelSim  character  character    numeric
+## 
+## Extends: "FLComp"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+A simple construction of \emph{a4aM} objects requires the models and parameters to be provided. The default method will build each of these models as a constant value of 1. For example the usual "0.2" guessestimate could be set up by  
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{mod2} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{a,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{a} \hlstd{=} \hlnum{0.2}\hlstd{))}
+\hlstd{m1} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{level} \hlstd{= mod2)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+Off course that would be too much work for the outcome. The interest is in using more knowledge setting M. The following example uses Jensen's second estimator (Kenshington, 2013) $M=1.5K$ and an exponential decay to set up the level and shape of M.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# --------------------------------------------------------------------}
+\hlcom{# models or shape and level}
+\hlcom{# --------------------------------------------------------------------}
+\hlstd{mod1} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{age} \hlopt{-} \hlnum{0.5}\hlstd{))}
+\hlstd{mod2} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlnum{1.5} \hlopt{*} \hlstd{k,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{k} \hlstd{=} \hlnum{0.4}\hlstd{))}
+\hlcom{# --------------------------------------------------------------------}
+\hlcom{# constructor}
+\hlcom{# --------------------------------------------------------------------}
+\hlstd{m2} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= mod1,} \hlkwc{level} \hlstd{= mod2)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+In alternative, an external factor may have impact on natural mortality which can be added through the \emph{trend} model. Suppose M depends on NAO through some mechanism that results in having lower M when NAO is negative and higher when it's positive. The impact is represented by the NAO value on the quarter before spawning, which occurs in the second quarter. 
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# -------------------------------------------------------------------- get}
+\hlcom{# NAO --------------------------------------------------------------------}
+\hlstd{nao.orig} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"http://www.cdc.noaa.gov/data/correlation/nao.data"}\hlstd{,}
+    \hlkwc{skip} \hlstd{=} \hlnum{1}\hlstd{,} \hlkwc{nrow} \hlstd{=} \hlnum{62}\hlstd{,} \hlkwc{na.strings} \hlstd{=} \hlstr{"-99.90"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning: unable to connect to 'www.cdc.noaa.gov' on port 80.}}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: cannot open the connection}}\begin{alltt}
+\hlstd{dnms} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlkwc{quant} \hlstd{=} \hlstr{"nao"}\hlstd{,} \hlkwc{year} \hlstd{=} \hlnum{1948}\hlopt{:}\hlnum{2009}\hlstd{,} \hlkwc{unit} \hlstd{=} \hlstr{"unique"}\hlstd{,} \hlkwc{season} \hlstd{=} \hlnum{1}\hlopt{:}\hlnum{12}\hlstd{,}
+    \hlkwc{area} \hlstd{=} \hlstr{"unique"}\hlstd{)}
+\hlstd{nao.flq} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(}\hlkwd{unlist}\hlstd{(nao.orig[,} \hlopt{-}\hlnum{1}\hlstd{]),} \hlkwc{dimnames} \hlstd{= dnms,} \hlkwc{units} \hlstd{=} \hlstr{"nao"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: error in evaluating the argument 'object' in selecting a method for function 'FLQuant': Error in unlist(nao.orig[, -1]) : object 'nao.orig' not found}}\begin{alltt}
+\hlcom{# build covar}
+\hlstd{nao} \hlkwb{<-} \hlkwd{seasonMeans}\hlstd{(nao.flq[, , ,} \hlnum{1}\hlopt{:}\hlnum{3}\hlstd{])}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: error in evaluating the argument 'x' in selecting a method for function 'seasonMeans': Error: object 'nao.flq' not found}}\begin{alltt}
+\hlstd{nao} \hlkwb{<-} \hlstd{nao} \hlopt{>} \hlnum{0}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: object 'nao' not found}}\begin{alltt}
+\hlcom{# -------------------------------------------------------------------- the}
+\hlcom{# trend model M increases 50% if NAO is positive on the first quarter}
+\hlcom{# --------------------------------------------------------------------}
+\hlstd{mod3} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlnum{1} \hlopt{+} \hlstd{b} \hlopt{*} \hlstd{nao,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{b} \hlstd{=} \hlnum{0.5}\hlstd{))}
+\hlcom{# --------------------------------------------------------------------}
+\hlcom{# constructor}
+\hlcom{# --------------------------------------------------------------------}
+\hlstd{mod1} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{age} \hlopt{-} \hlnum{0.5}\hlstd{))}
+\hlstd{mod2} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlnum{1.5} \hlopt{*} \hlstd{k,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{k} \hlstd{=} \hlnum{0.4}\hlstd{))}
+\hlstd{m3} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= mod1,} \hlkwc{level} \hlstd{= mod2,} \hlkwc{trend} \hlstd{= mod3)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+\subsection{Adding multivariate normal parameter uncertainty}
+
+Uncertainty is added through error on parameters. In the case of this class it makes use of the \emph{FLModelSim} "mvr" methods. A wrapper for \emph{mvrnorm} was implemented, but all the other options must be carried out in each sub-model at the time.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# -------------------------------------------------------------------- the}
+\hlcom{# same exponential decay for shape}
+\hlcom{# --------------------------------------------------------------------}
+\hlstd{mod1} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{age} \hlopt{-} \hlnum{0.5}\hlstd{))}
+\hlcom{# -------------------------------------------------------------------- For}
+\hlcom{# level we'll use Jensen's third estimator (Kenshington, 2013).}
+\hlcom{# --------------------------------------------------------------------}
+\hlstd{mod2} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{k}\hlopt{^}\hlnum{0.66} \hlopt{*} \hlstd{t}\hlopt{^}\hlnum{0.57}\hlstd{,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwd{matrix}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{0.4}\hlstd{,} \hlnum{10}\hlstd{)),}
+    \hlkwc{dimnames} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{params} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"k"}\hlstd{,} \hlstr{"t"}\hlstd{),} \hlkwc{iter} \hlstd{=} \hlnum{1}\hlstd{)),} \hlkwc{vcov} \hlstd{=} \hlkwd{array}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{0.002}\hlstd{,}
+    \hlnum{0.01}\hlstd{,} \hlnum{0.01}\hlstd{,} \hlnum{1}\hlstd{),} \hlkwc{dim} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,} \hlnum{2}\hlstd{)))}
+\hlcom{# -------------------------------------------------------------------- and a}
+\hlcom{# trend from NAO}
+\hlcom{# --------------------------------------------------------------------}
+\hlstd{mod3} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlnum{1} \hlopt{+} \hlstd{b} \hlopt{*} \hlstd{nao,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{b} \hlstd{=} \hlnum{0.5}\hlstd{),} \hlkwc{vcov} \hlstd{=} \hlkwd{matrix}\hlstd{(}\hlnum{0.02}\hlstd{))}
+\hlcom{# --------------------------------------------------------------------}
+\hlcom{# create object and simulate}
+\hlcom{# --------------------------------------------------------------------}
+\hlstd{m4} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= mod1,} \hlkwc{level} \hlstd{= mod2,} \hlkwc{trend} \hlstd{= mod3)}
+\hlstd{m4} \hlkwb{<-} \hlkwd{mvrnorm}\hlstd{(}\hlnum{100}\hlstd{, m4)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+In this particular case, the \emph{shape} model will not be randomized because it doesn't have a variance covariance matrix. Also note that because there is only one parameter in the \emph{trend} model, the randomization will use a univariate normal distribution. The same could be achieved with
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{m4} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= mod1,} \hlkwc{level} \hlstd{=} \hlkwd{mvrnorm}\hlstd{(}\hlnum{100}\hlstd{, mod2),} \hlkwc{trend} \hlstd{=} \hlkwd{mvrnorm}\hlstd{(}\hlnum{100}\hlstd{, mod3))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+Note: How to include ageing error ???
+
+\subsection{Adding parameter uncertainty with copulas}
+
+As stated above these processes make use of the methods implemented for \emph{FLModelSim}. EXPAND... In the following example we'll use Gislason's second estimator (REF), $M_l=K(\frac{L_inf}{l})^1.5$.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{linf} \hlkwb{<-} \hlnum{60}
+\hlstd{k} \hlkwb{<-} \hlnum{0.4}
+\hlcom{# vcov matrix}
+\hlstd{mm} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlnum{NA}\hlstd{,} \hlkwc{ncol} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{nrow} \hlstd{=} \hlnum{2}\hlstd{)}
+\hlcom{# 10% cv}
+\hlkwd{diag}\hlstd{(mm)} \hlkwb{<-} \hlkwd{c}\hlstd{((linf} \hlopt{*} \hlnum{0.1}\hlstd{)}\hlopt{^}\hlnum{2}\hlstd{, (k} \hlopt{*} \hlnum{0.1}\hlstd{)}\hlopt{^}\hlnum{2}\hlstd{)}
+\hlcom{# 0.2 correlation}
+\hlstd{mm[}\hlkwd{upper.tri}\hlstd{(mm)]} \hlkwb{<-} \hlstd{mm[}\hlkwd{lower.tri}\hlstd{(mm)]} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{0.05}\hlstd{)}
+\hlcom{# a good way to check is using cov2cor}
+\hlkwd{cov2cor}\hlstd{(mm)}
+\end{alltt}
+\begin{verbatim}
+##        [,1]   [,2]
+## [1,] 1.0000 0.2083
+## [2,] 0.2083 1.0000
+\end{verbatim}
+\begin{alltt}
+\hlcom{# create object}
+\hlstd{mgis2} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{K} \hlopt{*} \hlstd{(linf}\hlopt{/}\hlstd{len)}\hlopt{^}\hlnum{1.5}\hlstd{,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{linf} \hlstd{= linf,}
+    \hlkwc{K} \hlstd{= k),} \hlkwc{vcov} \hlstd{= mm)}
+\hlstd{pars} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlkwd{list}\hlstd{(}\hlnum{55}\hlstd{,} \hlnum{65}\hlstd{),} \hlkwd{list}\hlstd{(}\hlkwc{a} \hlstd{=} \hlnum{0.3}\hlstd{,} \hlkwc{b} \hlstd{=} \hlnum{0.6}\hlstd{,} \hlkwc{c} \hlstd{=} \hlnum{0.35}\hlstd{))}
+\hlstd{mgis2} \hlkwb{<-} \hlkwd{mvrtriangle}\hlstd{(}\hlnum{1000}\hlstd{, mgis2,} \hlkwc{paramMargins} \hlstd{= pars)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{splom}\hlstd{(}\hlkwd{t}\hlstd{(}\hlkwd{params}\hlstd{(mgis2)}\hlopt{@}\hlkwc{.Data}\hlstd{))}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-30} 
+
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{par}\hlstd{(}\hlkwc{mfrow} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,} \hlnum{1}\hlstd{))}
+\hlkwd{hist}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{params}\hlstd{(mgis2)[}\hlstr{"linf"}\hlstd{, ]),} \hlkwc{main} \hlstd{=} \hlstr{"Linf"}\hlstd{)}
+\hlkwd{hist}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{params}\hlstd{(mgis2)[}\hlstr{"K"}\hlstd{, ]),} \hlkwc{main} \hlstd{=} \hlstr{"K"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-31} 
+
+\end{knitrout}
+
+
+Use the constructor or the set method to add the new model. Note that we have a quite complex method now for \emph{M}. A length based \emph{shape} model from Gislason's work, Pauly's based temperature \emph{level} and a time trend depending on NAO. 
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{m5} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= mgis2,} \hlkwc{level} \hlstd{= mod2,} \hlkwc{trend} \hlstd{= mod3)}
+\hlcom{# or}
+\hlstd{m5} \hlkwb{<-} \hlstd{m4}
+\hlkwd{level}\hlstd{(m5)} \hlkwb{<-} \hlstd{mgis2}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+\subsection{The "m" method}
+
+The \emph{m} method is the workhorse on computing natural mortality. The method returns a \emph{FLQuant} that can be inserted in an \emph{FLStock} for posterior usage by the assessment method. Note that if the models use \emph{age} and/or \emph{year} as terms, the method expects these to be included in the call (will be passed through the \ldots argument). If they're not, the method will use the range slot to work out the ages and/or years that should be predicted. If \emph{age} and/or \emph{year} are not model terms, the method will use the range slot to define the dimensions of the resulting \emph{M} \emph{FLQuant}.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# simple}
+\hlkwd{m}\hlstd{(m1)}
+\end{alltt}
+\begin{verbatim}
+## An object of class "FLQuant"
+## , , unit = unique, season = all, area = unique
+## 
+##      year
+## quant 0  
+##     0 0.2
+## 
+## units:  NA
+\end{verbatim}
+\begin{alltt}
+\hlcom{# with ages}
+\hlkwd{rngage}\hlstd{(m1)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{15}\hlstd{)}
+\hlkwd{m}\hlstd{(m1)}
+\end{alltt}
+\begin{verbatim}
+## An object of class "FLQuant"
+## , , unit = unique, season = all, area = unique
+## 
+##      year
+## quant 0  
+##    0  0.2
+##    1  0.2
+##    2  0.2
+##    3  0.2
+##    4  0.2
+##    5  0.2
+##    6  0.2
+##    7  0.2
+##    8  0.2
+##    9  0.2
+##    10 0.2
+##    11 0.2
+##    12 0.2
+##    13 0.2
+##    14 0.2
+##    15 0.2
+## 
+## units:  NA
+\end{verbatim}
+\begin{alltt}
+\hlcom{# with ages and years}
+\hlkwd{rngyear}\hlstd{(m1)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{2000}\hlstd{,} \hlnum{2010}\hlstd{)}
+\hlkwd{m}\hlstd{(m1)}
+\end{alltt}
+\begin{verbatim}
+## An object of class "FLQuant"
+## , , unit = unique, season = all, area = unique
+## 
+##      year
+## quant 2000 2001 2002 2003 2004 2005 2006 2007 2008 2009 2010
+##    0  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
+##    1  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
+##    2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
+##    3  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
+##    4  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
+##    5  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
+##    6  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
+##    7  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
+##    8  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
+##    9  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
+##    10 0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
+##    11 0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
+##    12 0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
+##    13 0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
+##    14 0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
+##    15 0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
+## 
+## units:  NA
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+The next example as aage based shape. The information on the range of ages can be passed when calling \emph{m}, or else the method will pick it up from the \emph{range} slot. Note that in this case \emph{mbar} becames relevant. It's the range of ages that is used to compute the mean level, which will match the \emph{level} model.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# simple}
+\hlkwd{m}\hlstd{(m2)}
+\end{alltt}
+\begin{verbatim}
+## An object of class "FLQuant"
+## , , unit = unique, season = all, area = unique
+## 
+##      year
+## quant 0  
+##     0 0.6
+## 
+## units:  NA
+\end{verbatim}
+\begin{alltt}
+\hlcom{# with ages}
+\hlkwd{rngage}\hlstd{(m2)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{15}\hlstd{)}
+\hlkwd{m}\hlstd{(m2)}
+\end{alltt}
+\begin{verbatim}
+## An object of class "FLQuant"
+## , , unit = unique, season = all, area = unique
+## 
+##      year
+## quant 0         
+##    0  6.0000e-01
+##    1  2.2073e-01
+##    2  8.1201e-02
+##    3  2.9872e-02
+##    4  1.0989e-02
+##    5  4.0428e-03
+##    6  1.4873e-03
+##    7  5.4713e-04
+##    8  2.0128e-04
+##    9  7.4046e-05
+##    10 2.7240e-05
+##    11 1.0021e-05
+##    12 3.6865e-06
+##    13 1.3562e-06
+##    14 4.9892e-07
+##    15 1.8354e-07
+## 
+## units:  NA
+\end{verbatim}
+\begin{alltt}
+\hlcom{# with ages and years}
+\hlkwd{rngyear}\hlstd{(m2)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{2000}\hlstd{,} \hlnum{2003}\hlstd{)}
+\hlkwd{m}\hlstd{(m2)}
+\end{alltt}
+\begin{verbatim}
+## An object of class "FLQuant"
+## , , unit = unique, season = all, area = unique
+## 
+##      year
+## quant 2000       2001       2002       2003      
+##    0  6.0000e-01 6.0000e-01 6.0000e-01 6.0000e-01
+##    1  2.2073e-01 2.2073e-01 2.2073e-01 2.2073e-01
+##    2  8.1201e-02 8.1201e-02 8.1201e-02 8.1201e-02
+##    3  2.9872e-02 2.9872e-02 2.9872e-02 2.9872e-02
+##    4  1.0989e-02 1.0989e-02 1.0989e-02 1.0989e-02
+##    5  4.0428e-03 4.0428e-03 4.0428e-03 4.0428e-03
+##    6  1.4873e-03 1.4873e-03 1.4873e-03 1.4873e-03
+##    7  5.4713e-04 5.4713e-04 5.4713e-04 5.4713e-04
+##    8  2.0128e-04 2.0128e-04 2.0128e-04 2.0128e-04
+##    9  7.4046e-05 7.4046e-05 7.4046e-05 7.4046e-05
+##    10 2.7240e-05 2.7240e-05 2.7240e-05 2.7240e-05
+##    11 1.0021e-05 1.0021e-05 1.0021e-05 1.0021e-05
+##    12 3.6865e-06 3.6865e-06 3.6865e-06 3.6865e-06
+##    13 1.3562e-06 1.3562e-06 1.3562e-06 1.3562e-06
+##    14 4.9892e-07 4.9892e-07 4.9892e-07 4.9892e-07
+##    15 1.8354e-07 1.8354e-07 1.8354e-07 1.8354e-07
+## 
+## units:  NA
+\end{verbatim}
+\begin{alltt}
+\hlcom{# note that}
+\hlkwd{predict}\hlstd{(}\hlkwd{level}\hlstd{(m2))}
+\end{alltt}
+\begin{verbatim}
+##    iter
+##       1
+##   1 0.6
+\end{verbatim}
+\begin{alltt}
+\hlcom{# is similar to}
+\hlkwd{m}\hlstd{(m2)[}\hlstr{"0"}\hlstd{]}
+\end{alltt}
+\begin{verbatim}
+## An object of class "FLQuant"
+## , , unit = unique, season = all, area = unique
+## 
+##      year
+## quant 2000 2001 2002 2003
+##     0 0.6  0.6  0.6  0.6 
+## 
+## units:  NA
+\end{verbatim}
+\begin{alltt}
+\hlcom{# that's because mbar is '0'}
+\hlkwd{rngmbar}\hlstd{(m2)}
+\end{alltt}
+\begin{verbatim}
+## minmbar maxmbar 
+##       0       0
+\end{verbatim}
+\begin{alltt}
+\hlcom{# changing ...}
+\hlkwd{rngmbar}\hlstd{(m2)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{5}\hlstd{)}
+\hlkwd{quantMeans}\hlstd{(}\hlkwd{m}\hlstd{(m2)[}\hlkwd{as.character}\hlstd{(}\hlnum{0}\hlopt{:}\hlnum{5}\hlstd{)])}
+\end{alltt}
+\begin{verbatim}
+## An object of class "FLQuant"
+## , , unit = unique, season = all, area = unique
+## 
+##      year
+## quant 2000 2001 2002 2003
+##   all 0.6  0.6  0.6  0.6 
+## 
+## units:  NA
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# simple}
+\hlkwd{m}\hlstd{(m3,} \hlkwc{nao} \hlstd{=} \hlnum{1}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## An object of class "FLQuant"
+## , , unit = unique, season = all, area = unique
+## 
+##      year
+## quant 0  
+##     0 0.9
+## 
+## units:  NA
+\end{verbatim}
+\begin{alltt}
+\hlcom{# with ages}
+\hlkwd{rngage}\hlstd{(m3)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{15}\hlstd{)}
+\hlkwd{m}\hlstd{(m3,} \hlkwc{nao} \hlstd{=} \hlnum{0}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## An object of class "FLQuant"
+## , , unit = unique, season = all, area = unique
+## 
+##      year
+## quant 0         
+##    0  6.0000e-01
+##    1  2.2073e-01
+##    2  8.1201e-02
+##    3  2.9872e-02
+##    4  1.0989e-02
+##    5  4.0428e-03
+##    6  1.4873e-03
+##    7  5.4713e-04
+##    8  2.0128e-04
+##    9  7.4046e-05
+##    10 2.7240e-05
+##    11 1.0021e-05
+##    12 3.6865e-06
+##    13 1.3562e-06
+##    14 4.9892e-07
+##    15 1.8354e-07
+## 
+## units:  NA
+\end{verbatim}
+\begin{alltt}
+\hlcom{# with ages and years}
+\hlkwd{rngyear}\hlstd{(m3)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{2000}\hlstd{,} \hlnum{2003}\hlstd{)}
+\hlkwd{m}\hlstd{(m3,} \hlkwc{nao} \hlstd{=} \hlkwd{as.numeric}\hlstd{(nao[,} \hlkwd{as.character}\hlstd{(}\hlnum{2000}\hlopt{:}\hlnum{2003}\hlstd{)]))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: object 'nao' not found}}\end{kframe}
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# simple}
+\hlkwd{m}\hlstd{(m4,} \hlkwc{nao} \hlstd{=} \hlnum{1}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## An object of class "FLQuant"
+## iters:  100 
+## 
+## , , unit = unique, season = all, area = unique
+## 
+##      year
+## quant 0            
+##     0 3.0569(0.413)
+## 
+## units:  NA
+\end{verbatim}
+\begin{alltt}
+\hlcom{# with ages}
+\hlkwd{rngage}\hlstd{(m4)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{15}\hlstd{)}
+\hlkwd{m}\hlstd{(m4,} \hlkwc{nao} \hlstd{=} \hlnum{0}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## An object of class "FLQuant"
+## iters:  100 
+## 
+## , , unit = unique, season = all, area = unique
+## 
+##      year
+## quant 0                   
+##    0  2.0349e+00(2.10e-01)
+##    1  7.4860e-01(7.71e-02)
+##    2  2.7540e-01(2.84e-02)
+##    3  1.0131e-01(1.04e-02)
+##    4  3.7271e-02(3.84e-03)
+##    5  1.3711e-02(1.41e-03)
+##    6  5.0440e-03(5.20e-04)
+##    7  1.8556e-03(1.91e-04)
+##    8  6.8264e-04(7.04e-05)
+##    9  2.5113e-04(2.59e-05)
+##    10 9.2385e-05(9.52e-06)
+##    11 3.3986e-05(3.50e-06)
+##    12 1.2503e-05(1.29e-06)
+##    13 4.5996e-06(4.74e-07)
+##    14 1.6921e-06(1.74e-07)
+##    15 6.2248e-07(6.42e-08)
+## 
+## units:  NA
+\end{verbatim}
+\begin{alltt}
+\hlcom{# with ages and years}
+\hlkwd{rngyear}\hlstd{(m4)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{2000}\hlstd{,} \hlnum{2003}\hlstd{)}
+\hlkwd{m}\hlstd{(m4,} \hlkwc{nao} \hlstd{=} \hlkwd{as.numeric}\hlstd{(nao[,} \hlkwd{as.character}\hlstd{(}\hlnum{2000}\hlopt{:}\hlnum{2003}\hlstd{)]))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: object 'nao' not found}}\end{kframe}
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{bwplot}\hlstd{(data} \hlopt{~} \hlkwd{factor}\hlstd{(quant)} \hlopt{|} \hlstd{year,} \hlkwc{data} \hlstd{=} \hlkwd{m}\hlstd{(m4,} \hlkwc{nao} \hlstd{=} \hlkwd{as.numeric}\hlstd{(nao[,} \hlkwd{as.character}\hlstd{(}\hlnum{2000}\hlopt{:}\hlnum{2003}\hlstd{)])))}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: error in evaluating the argument 'data' in selecting a method for function 'bwplot': Error in .local(object, ...) : object 'nao' not found\\\#\# Calls: m -> m -> .local}}\end{kframe}
+\end{knitrout}
+
+
+or this!
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{plotIters}\hlstd{(}\hlkwd{m}\hlstd{(m4,} \hlkwc{nao} \hlstd{=} \hlkwd{as.numeric}\hlstd{(nao[,} \hlkwd{as.character}\hlstd{(}\hlnum{2000}\hlopt{:}\hlnum{2003}\hlstd{)])),} \hlkwc{by} \hlstd{=} \hlstr{"year"}\hlstd{)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: object 'nao' not found}}\end{kframe}
+\end{knitrout}
+
+
+
+\section{Running assessments}
+
+There are two basic types of assessments available from using \texttt{a4a}: the management procedure (MP) fit and the full assessment fit.  The MP fit does not compute estimates of covariances and is therefore quicker to execute, while the full assessment fit returns parameter estimates and their covariances and hence retains the ability to simulate from the model at the expense of longer fitting time.
+
+
+\subsection{a4aFit* - The fit classes}
+
+The basic model output is contained in the \texttt{a4aFit} class.  This object contains only the fitted values.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{showClass}\hlstd{(}\hlstr{"a4aFit"}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## Class "a4aFit" [package "FLa4a"]
+## 
+## Slots:
+##                                                                   
+## Name:       call     clock   fitSumm   stock.n   harvest   catch.n
+## Class:      call   numeric     array   FLQuant   FLQuant   FLQuant
+##                                               
+## Name:      index      name      desc     range
+## Class:  FLQuants character character   numeric
+## 
+## Extends: "FLComp"
+## 
+## Known Subclasses: 
+## Class "a4aFitSA", directly
+## Class "a4aFitMCMC", directly
+## Class "a4aFitExt", by class "a4aFitSA", distance 2
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+Fitted values are stored in the \texttt{stock.n}, \texttt{harvest}, \texttt{catch.n} and \texttt{index} slots.  It also contains information carried over from the stock object used to fit the model: the name of the stock in \texttt{name}, any description provided in \texttt{desc} and the age and year range and mean F range in \texttt{range}.  There is also a wall clock that has a breakdown of the time taken o run the model.
+
+The full assessment fit returns an object of \texttt{a4aFitSA} class:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{showClass}\hlstd{(}\hlstr{"a4aFitSA"}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## Class "a4aFitSA" [package "FLa4a"]
+## 
+## Slots:
+##                                                                   
+## Name:       pars      call     clock   fitSumm   stock.n   harvest
+## Class:   SCAPars      call   numeric     array   FLQuant   FLQuant
+##                                                         
+## Name:    catch.n     index      name      desc     range
+## Class:   FLQuant  FLQuants character character   numeric
+## 
+## Extends: 
+## Class "a4aFit", directly
+## Class "FLComp", by class "a4aFit", distance 2
+## 
+## Known Subclasses: "a4aFitExt"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+The additional slots in the assessment output is the \texttt{fitSumm} and \texttt{pars} slots which are containers for model summaries and the model parameters.  The \texttt{pars} slot is a class of type \texttt{SCAPars} which is itself composed of sub-classes, designed to contain the information necessary to simulate from the model.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{showClass}\hlstd{(}\hlstr{"SCAPars"}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## Class "SCAPars" [package "FLa4a"]
+## 
+## Slots:
+##                                              
+## Name:      stkmodel       qmodel       vmodel
+## Class: a4aStkParams    submodels    submodels
+\end{verbatim}
+\begin{alltt}
+\hlkwd{showClass}\hlstd{(}\hlstr{"a4aStkParams"}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## Class "a4aStkParams" [package "FLa4a"]
+## 
+## Slots:
+##                                                                   
+## Name:       fMod     n1Mod     srMod    params      vcov centering
+## Class:   formula   formula   formula     FLPar     array   numeric
+##                                               
+## Name:      distr      name      desc     range
+## Class: character character character   numeric
+## 
+## Extends: "FLComp"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+for example, all the parameters required so simulate a time-series of mean F trends is contained in the \texttt{stkmodel} slot, which is a class of type \texttt{a4aStkParams}.  This class contains the relevant submodels (see later), their parameters \texttt{params} and the joint covariance matrix \texttt{vcov} for all stock related parameters.
+
+\subsection{The submodels}
+
+In the \texttt{a4a} assessment model, the model structure is defined by submodels.  These are models for the different parts of a statistical catch at age model that requires structural assumptions, such as the selectivity of the fishing fleet, or how F-at-age changes over time.  It is advantageous to write the model for F-at-age and survey catchability as linear models (by working with log F and log Q) becuase it allows us to use the linear modelling tools available in R:  see for example gam formulas, or factorial design formulas using lm.  In R's linear modelling lanquage, a constant model is coded as $\sim$ 1, while a slope over age would simply be $\sim$ age.  Extending this we can write a traditional year / age seperable F model like $\sim$ factor(age) $+$ factor(year).
+
+There are effectively 5 submodels in operation: the model for F-at-age, a model for initial age structure, a model for recruitment, a (list) of model(s) for survey catchability-at-age, and a list of models for the observation variance of catch.n and the survey indices.  In practice, we fix the variance models and the initial age structure models, but in theory these can be changed.  A basic set of submodels would be
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{factor}\hlstd{(age)} \hlopt{+} \hlkwd{factor}\hlstd{(year)}
+\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{factor}\hlstd{(age))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+\subsection{Run !!}
+
+running the model is done by
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fit} \hlkwb{<-} \hlkwd{a4a}\hlstd{(fmodel, qmodel,} \hlkwc{stock} \hlstd{= ple4,} \hlkwc{indices} \hlstd{= ple4.indices[}\hlnum{1}\hlstd{])}
+\end{alltt}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Note: The following observations are treated as being missing at random:\\\#\# 	\ \ \ \ fleet year age\\\#\# 	 BTS-Isis 1997\ \  1\\\#\# 	 BTS-Isis 1997\ \  2\\\#\#\ \ \ \ \ \  Predictions will be made for missing observations.}}\end{kframe}
+\end{knitrout}
+
+
+note that because the survey index for plaice has missing values we get a warning saying that we assume these values are missing at random, and not because the observations were zero.
+
+We can inspect the summaries from this fit my adding it to the origional stock object, for example to see the fitted fbar we can do
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fitstk} \hlkwb{<-} \hlstd{ple4} \hlopt{+} \hlstd{fit}
+\hlkwd{plotIters}\hlstd{(}\hlkwd{fbar}\hlstd{(fitstk))}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-44} 
+
+\end{knitrout}
+
+
+
+\subsection{Some more examples}
+
+We will now take a look at some examples for F models and the forms that we can get.  Lets start with a separable model in which we model selectivity at age as an (unpenalised) thin plate spline.  We will use the North Sea Plaice data again, and since this has 10 ages we will use a simple rule of thumb that the spline should have fewer than $\frac{10}{2} = 5$ degrees of freedom, and so we opt for 4 degrees of freedom.  We will also do the same for year and model the change in F through time as a smoother with 20 degrees of freedom.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{)}
+\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{factor}\hlstd{(age))}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{a4a}\hlstd{(fmodel, qmodel,} \hlkwc{stock} \hlstd{= ple4,} \hlkwc{indices} \hlstd{= ple4.indices[}\hlnum{1}\hlstd{])}
+\end{alltt}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Note: The following observations are treated as being missing at random:\\\#\# 	\ \ \ \ fleet year age\\\#\# 	 BTS-Isis 1997\ \  1\\\#\# 	 BTS-Isis 1997\ \  2\\\#\#\ \ \ \ \ \  Predictions will be made for missing observations.}}\begin{alltt}
+\hlkwd{wireframe}\hlstd{(data} \hlopt{~} \hlstd{year} \hlopt{+} \hlstd{age,} \hlkwc{data} \hlstd{=} \hlkwd{as.data.frame}\hlstd{(}\hlkwd{harvest}\hlstd{(fit1)),} \hlkwc{drape} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-45} 
+
+\end{knitrout}
+
+
+Lets now investigate some variations in the selectivity shape with time, but only a little... we can do this by adding a smooth interaction term in the fmodel
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{)} \hlopt{+} \hlkwd{te}\hlstd{(age, year,} \hlkwc{k} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,} \hlnum{3}\hlstd{))}
+\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{factor}\hlstd{(age))}
+\hlstd{fit2} \hlkwb{<-} \hlkwd{a4a}\hlstd{(fmodel, qmodel,} \hlkwc{stock} \hlstd{= ple4,} \hlkwc{indices} \hlstd{= ple4.indices[}\hlnum{1}\hlstd{])}
+\end{alltt}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Note: The following observations are treated as being missing at random:\\\#\# 	\ \ \ \ fleet year age\\\#\# 	 BTS-Isis 1997\ \  1\\\#\# 	 BTS-Isis 1997\ \  2\\\#\#\ \ \ \ \ \  Predictions will be made for missing observations.}}\begin{alltt}
+\hlkwd{wireframe}\hlstd{(data} \hlopt{~} \hlstd{year} \hlopt{+} \hlstd{age,} \hlkwc{data} \hlstd{=} \hlkwd{as.data.frame}\hlstd{(}\hlkwd{harvest}\hlstd{(fit2)),} \hlkwc{drape} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-46} 
+
+\end{knitrout}
+
+
+A further move is to free up the Fs to vary more over time
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{te}\hlstd{(age, year,} \hlkwc{k} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,} \hlnum{20}\hlstd{))}
+\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{factor}\hlstd{(age))}
+\hlstd{fit2} \hlkwb{<-} \hlkwd{a4a}\hlstd{(fmodel, qmodel,} \hlkwc{stock} \hlstd{= ple4,} \hlkwc{indices} \hlstd{= ple4.indices[}\hlnum{1}\hlstd{])}
+\end{alltt}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Note: The following observations are treated as being missing at random:\\\#\# 	\ \ \ \ fleet year age\\\#\# 	 BTS-Isis 1997\ \  1\\\#\# 	 BTS-Isis 1997\ \  2\\\#\#\ \ \ \ \ \  Predictions will be made for missing observations.}}\begin{alltt}
+\hlkwd{wireframe}\hlstd{(data} \hlopt{~} \hlstd{year} \hlopt{+} \hlstd{age,} \hlkwc{data} \hlstd{=} \hlkwd{as.data.frame}\hlstd{(}\hlkwd{harvest}\hlstd{(fit2)),} \hlkwc{drape} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-47} 
+
+\end{knitrout}
+
+
+In the last examples the Fs are linked across age and time.  What if we want to free up a specific age class because in the residuals we see a consistent pattern.  This can happen, for example, if the spatial distribution of juvenilles is disconnected to the distribution of adults.  The fishery focuses on the adult fish, and therefore the the F on young fish is a function of the distribution of the juveniles and could deserve a seperate model.  This can be achieved by
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{te}\hlstd{(age, year,} \hlkwc{k} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,} \hlnum{20}\hlstd{))} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{5}\hlstd{,} \hlkwc{by} \hlstd{=} \hlkwd{as.numeric}\hlstd{(age} \hlopt{==}
+    \hlnum{1}\hlstd{))}
+\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{factor}\hlstd{(age))}
+\hlstd{fit3} \hlkwb{<-} \hlkwd{a4a}\hlstd{(fmodel, qmodel,} \hlkwc{stock} \hlstd{= ple4,} \hlkwc{indices} \hlstd{= ple4.indices[}\hlnum{1}\hlstd{])}
+\end{alltt}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Note: The following observations are treated as being missing at random:\\\#\# 	\ \ \ \ fleet year age\\\#\# 	 BTS-Isis 1997\ \  1\\\#\# 	 BTS-Isis 1997\ \  2\\\#\#\ \ \ \ \ \  Predictions will be made for missing observations.}}\begin{alltt}
+\hlkwd{wireframe}\hlstd{(data} \hlopt{~} \hlstd{year} \hlopt{+} \hlstd{age,} \hlkwc{data} \hlstd{=} \hlkwd{as.data.frame}\hlstd{(}\hlkwd{harvest}\hlstd{(fit3)),} \hlkwc{drape} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-48} 
+
+\end{knitrout}
+
+
+Please note that each of these model \emph{structures} lets say, have not been tuned to the data.  The degrees of freedom of each model can be better tuned to the data by using model selection procedures such as AIC or BIC.
+
+
+
+\end{document}
+
