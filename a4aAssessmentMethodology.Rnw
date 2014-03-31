@@ -553,8 +553,8 @@ The \code{index}, \code{catch.wt}, \code{index.var}, \code{sel.pattern} and \cod
 # Convert length-based FLStock and FLIndec to age-based 
 #==============================================================================
 
-aStk <- l2a(rfLen.stk, vbTri)
-aIdx <- l2a(rfTrawl.idx, vbTri)
+aStk <- l2a(rfLen.stk, vbTriSmall)
+aIdx <- l2a(rfTrawl.idx, vbTriSmall)
 @
 
 When converting with \code{l2a()} there are a number of defaults that of which the user should be aware. 
