@@ -715,6 +715,59 @@ wireframe(data ~ year + age, data = as.data.frame(harvest(fit3)), drape = TRUE)
 
 Please note that each of these model \emph{structures} lets say, have not been tuned to the data.  The degrees of freedom of each model can be better tuned to the data by using model selection procedures such as AIC or BIC.
 
+\subsection{Inspecting ADMB files}
+
+To inspect the ADMB files the user must specify the working dir and all files will be left there.
+
+<<>>=
+fit. <- a4a(fmodel, qmodel, stock = ple4, indices = ple4.indices[1], wkdir="mydir") 
+@
+
+\subsection{Variances of input data and likelihood weighting}
+
+By default the likelihood components are weighted using inverse variance of the parameters estimates. However the user may change this weights by setting the variance of the input parameters, which is done by adding a variance matrix to the catch.n and index.n slots of the stock and index objects. 
+
+<<>>=
+# data
+stk <- ple4
+idx <- ple4.indices[1]
+# models
+fmodel <- ~ s(age, k=4) + s(year, k = 20)
+qmodel <- list( ~ s(age, k=4))
+# variance of observed catches
+varslt <- catch.n(stk)
+varslt[] <- 1
+catch.n(stk) <- FLQuantDistr(catch.n(stk), varslt)
+# variance of observed indices
+varslt <- index(idx[[1]])
+varslt[] <- 0.1
+index(idx[[1]]) <- FLQuantDistr(index(idx[[1]]), varslt)
+# run
+fit0 <- a4a(fmodel, qmodel, stock = ple4, indices = ple4.indices[1]) 
+fit. <- a4a(fmodel, qmodel, stock = stk, indices = idx) 
+@
+
+\subsection{The variance model}
+
+One important subject related with fisheries data used for input to stock assessment models is the shape of the variance of the data. It's quite common to have more precision on the most represented ages and less precision on the less frequent ages. Due to the fact that the last do not show so often on the auction markets, on the fishing operations or on survey samples.
+
+By default the model assumes constant variance over time and ages (~ 1 model) but it can use other models specified by the user. This feature requires a call to the a4aInternal method, which gives more options than the a4a method, which in fact is a wrapper.
+
+<<>>=
+# data
+stk <- ple4
+idx <- ple4.indices[1]
+# models
+fmodel <- ~ s(age, k=4) + s(year, k = 20)
+qmodel <- list( ~ s(age, k=4))
+vmodel <- list(~1, ~1)
+# run
+fit0 <- a4aInternal(fmodel, qmodel, stock = ple4, indices = ple4.indices[1]) 
+fit00 <- a4aInternal(fmodel, qmodel, vmodel=vmodel, stock = ple4, indices = ple4.indices[1]) 
+all.equal(fit0, fit00)
+vmodel <- list(~(age)^2-1, ~1)
+fit. <- a4a(fmodel, qmodel, stock = stk, indices = idx) 
+@
 
 
 \end{document}
