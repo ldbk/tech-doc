@@ -73,7 +73,7 @@ fmodel <- ~ factor(age) + factor(year)
 
 qmodel <- list(~ factor(age)) 
 fit <- sca(ple4, ple4.indices[1], fmodel, qmodel)
-Z <- m(ple4) + harvest(fit)*frac
+Z <- m(ple4) + harvest(fit)*sfrac
 lst <- dimnames(fit@index[[1]])
 lst$x <- stock.n(fit)*exp(-Z)
 stkn <- do.call("trim", lst)
@@ -81,7 +81,7 @@ wireframe(data ~ age + year, data = as.data.frame(index(fit)[[1]]/stkn), drape =
 
 qmodel <- list(~ s(age, k=4))
 fit1 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
-Z <- m(ple4) + harvest(fit1)*frac
+Z <- m(ple4) + harvest(fit1)*sfrac
 lst <- dimnames(fit1@index[[1]])
 lst$x <- stock.n(fit1)*exp(-Z)
 stkn <- do.call("trim", lst)
@@ -89,7 +89,7 @@ wireframe(data ~ age + year, data = as.data.frame(index(fit1)[[1]]/stkn), drape 
 
 qmodel <- list(~ te(age, year, k = c(3,40)))
 fit2 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
-Z <- m(ple4) + harvest(fit2)*frac
+Z <- m(ple4) + harvest(fit2)*sfrac
 lst <- dimnames(fit2@index[[1]])
 lst$x <- stock.n(fit2)*exp(-Z)
 stkn <- do.call("trim", lst)
@@ -97,7 +97,7 @@ wireframe(data ~ age + year, data = as.data.frame(index(fit2)[[1]]/stkn), drape 
 
 qmodel <- list( ~ s(age, k=4) + year)
 fit3 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
-Z <- m(ple4) + harvest(fit3)*frac
+Z <- m(ple4) + harvest(fit3)*sfrac
 lst <- dimnames(fit3@index[[1]])
 lst$x <- stock.n(fit3)*exp(-Z)
 stkn <- do.call("trim", lst)
@@ -133,7 +133,7 @@ xyplot(data~year, groups=qname, data=flqs, type="l", main="Recruitment models", 
 #####################################
 
 #====================================
-# models
+# main models
 #====================================
 fmodel <- ~ s(age, k=4) + s(year, k = 20)
 qmodel <- list( ~ s(age, k=4) + year)
@@ -196,7 +196,7 @@ fit.pred <- predict(fit)
 lapply(fit.pred, names)
 
 # simulate
-fits <- simulate(fit, 25)
+fits <- simulate(fit, 1000)
 flqs <- FLQuants(sim=iterMedians(stock.n(fits)), det=stock.n(fit))
 xyplot(data~year|age, groups=qname, data=flqs, type="l", main="Median simulations VS fit", scales=list(y=list(relation="free")))
 stks <- ple4 + fits
@@ -210,13 +210,12 @@ qmodel <- list( ~ s(age, k=4) + year)
 srmodel <- ~s(year, k=20)
 fit <- a4aSCA(ple4, ple4.indices[1], fmodel, qmodel, srmodel) 
 
-# WCSAM exercise - replicating itself
-idxs <- ple4.indices[1]
-index(idxs[[1]]) <- index(fits)[[1]]
 
+# WCSAM exercise - replicating itself
+fits <- simulate(fit, 25)
+stks <- ple4 + fits
 fit1 <- a4aSCA(stks, idxs, fmodel, qmodel, srmodel, fit="MP") 
-flqs <- FLQuants(sim=iterMedians(stock.n(fits)), det=stock.n(fit), rep=iterMedians(stock.n(fit1)))
-xyplot(data~year|age, groups=qname, data=flqs, type="l", main="Median simulations VS fit", scales=list(y=list(relation="free")))
+plot(FLStocks(sim=ple4 + fit1, orig=ple4+fit))
 
 # working with covariates
 nao <- read.table("http://www.cdc.noaa.gov/data/correlation/nao.data", skip=1, nrow=62, na.strings="-99.90")
@@ -227,27 +226,52 @@ nao <- as.numeric(nao)
 srmodel <- ~ nao
 fit2 <- a4aSCA(ple4, ple4.indices[1], fmodel, qmodel, srmodel) 
 flqs <- FLQuants(fac=stock.n(fit)[1], cvar=stock.n(fit2)[1])
-xyplot(data~year, groups=qname, data=flqs, type="l", main="Recruitment models")
+xyplot(data~year, groups=qname, data=flqs, type="l", main="Recruitment model with covariates")
 
 srmodel <- ~ ricker(a=~nao, CV=0.1)
 fit3 <- a4aSCA(ple4, ple4.indices[1], fmodel, qmodel, srmodel) 
 flqs <- FLQuants(fac=stock.n(fit)[1], cvar=stock.n(fit3)[1])
-xyplot(data~year, groups=qname, data=flqs, type="l", main="Recruitment models")
+xyplot(data~year, groups=qname, data=flqs, type="l", main="Recruitment model with covariates")
 
 srmodel <- ~s(year, k=20)
-qmodel <- ~ factor(age) + nao
-fit4 <- a4aSCA(ple4, ple4.indices[1], fmodel, qmodel, srmodel) 
+qmodel <- list(~ factor(age) + nao)
+fit4 <- a4aSCA(ple4, ple4.indices[1], fmodel, qmodel, srmodel, covar=list(nao=nao)) 
+
 flqs <- FLQuants(smo=stock.n(fit), cvar=stock.n(fit4))
-xyplot(data~year|age, groups=qname, data=flqs, type="l", main="Recruitment models")
+xyplot(data~year|age, groups=qname, data=flqs, type="l", main="Catchability model with covariates", scales=list(y=list(relation="free")))
 
-# paralell computing
+Z <- m(ple4) + harvest(fit4)*sfrac
+lst <- dimnames(fit@index[[1]])
+lst$x <- stock.n(fit4)*exp(-Z)
+stkn <- do.call("trim", lst)
+wireframe(data ~ age + year, data = as.data.frame(index(fit4)[[1]]/stkn), drape = TRUE, screen = list(x = -90, y=-45))
+
+#====================================
+# likelihood profiling
+#====================================
+
+ks <- seq(10,50,5)
+qmodel <- list( ~ s(age, k=4) + year)
+srmodel <- ~s(year, k=20)
+liks <- liks <- data.frame(k=ks, nlogl=NA)
+for(i in ks){
+	fmodel <- as.formula(substitute(~s(age, k=4) + s(year, k=x), list(x=i)))
+	liks[liks$k==i,2] <- as.numeric(BIC(a4aSCA(ple4, ple4.indices[1], fmodel, qmodel, srmodel)))
+}
+
+# paralell computing (not working yet ...)
+fmodel <- ~ s(age, k=4) + s(year, k = 20)
+qmodel <- list( ~ s(age, k=4) + year)
+srmodel <- ~s(year, k=20)
+fit <- a4aSCA(ple4, ple4.indices[1], fmodel, qmodel, srmodel) 
+fits <- simulate(fit, 25)
+stks <- ple4 + fits 
+idxs <- ple4.indices[1]
+index(idxs[[1]]) <- index(fits)[[1]]
+
 library(parallel)
-options(mc.cores=3)
-lst <- mclapply(split(1:100, 1:100), function(x){
-	stk <- ple4 + fits[,,,,,as.numeric(x)]
-	a4aSCA(stk, ple4.indices[1], fmodel, qmodel, srmodel, fit="MP") 
+options(mc.cores=1)
+lst <- mclapply(split(1:25, 1:25), function(x){
+	fit <- a4aSCA(stks[,,,,,x], FLIndices(idxs[[1]][,,,,,x]), fmodel, qmodel, srmodel, fit="MP") 
 })
-
-
-
 
