@@ -274,7 +274,7 @@ effort(rfTrawlTrd.idx)[] <- 100
 # Save the objects for future use
 #==============================================================================
 
-save(rfLen.stk, rfTrawl.idx, rfTrawlJmp.idx, rfTrawlTrd.idx, file="rfLen.rdata")
+save(rfLen.stk, rfTrawl.idx, rfTrawlJmp.idx, rfTrawlTrd.idx, file="data/rfLen.rdata")
 @
 
 \section{Converting length data to age}
@@ -512,7 +512,7 @@ When converting from length-based data to age-based data you need to be aware of
 For example, individuals in length classes, 1-2, 2-3, and 3-4 cm may all be considered as being of age 1 (obviously depending on the growth model). How should the values in those length classes be combined?
 
 If the values are abundances then the values should be summed.
-Summing other types of values such as weights and rates (like fishing mortality) does not make sense. Instead these values shoud be averaged over the length classes.
+Summing other types of values such as weights and rates (like fishing mortality) does not make sense. Instead these values shoud be averaged over the length classes (weighted by the abundance for weights).
 This is controlled using the \code{stat} argument which can be either \code{mean} or \code{sum} (the default).
 
 %Note that, for the moment, this method is quite slow. There's a double loop in the code that makes it slow, but we're working on a better solution.
