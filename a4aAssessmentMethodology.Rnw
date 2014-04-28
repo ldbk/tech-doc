@@ -69,14 +69,14 @@
 library(FLa4a)
 library(XML)
 library(reshape2)
+library(diagram)
 data(rfLen)
 data(ple4)
 data(ple4.indices)
 @
 
 <<knitr_opts, echo=FALSE>>=
-opts_chunk$set(dev='png', cache=TRUE, fig.align='center', background='white')
-
+opts_chunk$set(dev='png', cache=TRUE, fig.align='center', background='white',  warning=FALSE, message=FALSE, dev="png", dev.args=list(type="cairo"), dpi=96)
 @
 
 <<trans_funcs, message=FALSE, warning=FALSE>>=
@@ -103,6 +103,27 @@ cim <- function(object, n, wt, hrv="missing"){
 		c1 + c2 + c3 == 3	
 	}
 }
+
+#==============================================================================
+# and a plot for later
+#==============================================================================
+plotS4 <- function(object, linktext="typeof", main="S4 class", ...){
+	args <- list(...)
+	obj <- getClass(as.character(object))
+	df0 <- data.frame(names(obj@slots), unlist(lapply(obj@slots, "[[", 1)))
+	nms <- c(t(df0))
+	nslts <- length(nms)/2
+	M <- matrix(nrow = length(nms), ncol = length(nms), byrow = TRUE, data = 0)
+	for(i in 1:nslts){
+		M[i*2,i*2-1] <- linktext 
+	}	
+	args$A=M
+	args$pos=rep(2, length(nms)/2)
+	args$name = nms
+	args$main=main
+	do.call("plotmat", args)
+}
+
 @
 
 \section{Reading files and building FLR objects}
@@ -277,6 +298,7 @@ effort(rfTrawlTrd.idx)[] <- 100
 save(rfLen.stk, rfTrawl.idx, rfTrawlJmp.idx, rfTrawlTrd.idx, file="data/rfLen.rdata")
 @
 
+\pagebreak
 \section{Converting length data to age}
 
 The stock assessment framework is based on age dynamics. To use length information it must be pre-processed before used for assessment. The rationale is that the pre-processing should give the analyst the flexibility to use a range of sources of information, \emph{e.g.} literature or online databases, to grab information about the species growth and the uncertainty about the model parameters.
@@ -327,14 +349,11 @@ predict(vbObj, t=5:10+0.5)
 
 \subsection{Adding parameter uncertainty with a multivariate normal distribution}
 
-Uncertainty is introduced through the inclusion of parameter uncertainty.
-There are several ways of doing this. The simplest method is to assume that the parameters are represented using a multivariate normal distribution.
-The implementation for \class{a4aGr} makes use of the \code{vcov} slot to set the parameter's covariance matrix.
-%This covariance matrix can have iterations (i.e. each iteration can have a different covariance matrix). CHECK
-% If the parameters or the covariance matrix have iterations then the medians accross iterations are computed before simulating. Check help for \code{mvrnorm} for more information.
+Uncertainty in the growth model is introduced through the inclusion of parameter uncertainty.
+This is done by making use of the parameter variance-covariance matrix (the \code{vcov} slot of the \class{a4aGr} class) and assuming a distribution.
+The numbers in the variance-covariance matrix could come from the parameter uncertainty from fitting the growth model parameters.
 
 Here we set the variance-covariance matrix with some made up numbers.
-% Can we get some estimates from the data?
 
 <<set_vcov_example>>=
 #==============================================================================
@@ -350,23 +369,32 @@ mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.1,0.0003)
 vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","ano-1","ano")), vcov=mm)
 @
 
+First we show a simple example where we assume that the parameters are represented using a multivariate normal distribution.
+% This covariance matrix can have iterations (i.e. each iteration can have a different covariance matrix). CHECK
+% If the parameters or the covariance matrix have iterations then the medians accross iterations are computed before simulating. Check help for \code{mvrnorm} for more information.
+
 <<simulate_vcov_example>>=
 #==============================================================================
-# Simulating parameters using the variance-covariance matrix
+# Simulating parameters using a multivariate normal distribution
 #==============================================================================
 
 # Note that the object we have just created has a single iteration of each parameter
 vbObj@params
 dim(vbObj@params)
-# We simulate from the a4aGr object by calling mvrnorm(). Here we create 100 iterations. 
+# We simulate from the a4aGr object by calling mvrnorm().
+# Here we create 10000 iterations.
+# This uses the variance-covariance matrix we created earlier
 vbNorm <- mvrnorm(10000,vbObj)
-# Now we have 100 iterations of each parameter, randomly sampled from the multivariate normal distribution
+# Now we have 10000 iterations of each parameter, randomly sampled from the multivariate normal distribution
 vbNorm@params
 dim(vbNorm@params)
+@
 
-# We can now convert from length to ages data based on the 100 parameter iterations.
-# This gives us 100 sets of ages data.
-# For example, here we convert a single length vector: 
+We can now convert from length to ages data based on the 10000 parameter iterations.
+This gives us 10000 sets of ages data.
+For example, here we convert a single length vector: 
+
+<<>>=
 ages <- predict(vbNorm, len=5:10+0.5)
 dim(ages)
 # We show the first ten only as an illustration
@@ -374,34 +402,45 @@ ages[,1:10]
 @
 
 The marginal distributions can be seen in Figure~\ref{fig:plot_norm_params}.
-
-\begin{figure}
-<<example_norm_parameter_distributions>>=
+<<plot_multinorm_marginal, eval=FALSE>>=
 par(mfrow=c(3,1))
 hist(c(params(vbNorm)["linf",]), main="linf", xlab="")
 hist(c(params(vbNorm)["k",]), main="k", prob=TRUE, xlab="")
-#lines(x. <- seq(min(k), max(k), len=100), dnorm(x., mean(k), sd(k)))
 hist(c(params(vbNorm)["t0",]), main="t0", xlab="")
+@
+
+\begin{figure}
+<<example_norm_parameter_distributions, echo=FALSE>>=
+<<plot_multinorm_marginal>>
 @
 \caption{The marginal distributions of each of the parameters from using a multivariate normal distribution.}
 \label{fig:plot_norm_params}
 \end{figure}
 
 The shape of the correlation can be seen in Figure~\ref{fig:plot_norm_scatter}.
+<<code_fig_plot_norm_scatter, eval=FALSE>>=
+# Plotting scatter plot of growth parameters
+splom(data.frame(t(params(vbNorm)@.Data)), pch=".")
+@
+
+<<code_plot_mv_growth, eval=FALSE>>=
+# Generating and plotting growth curves
+boxplot(t(predict(vbNorm, t=0:50+0.5)))
+@
 
 \begin{figure}
-<<example_norm_parameter_scatter>>=
-splom(data.frame(t(params(vbNorm)@.Data)), pch=".")
+<<example_norm_parameter_scatter, echo=FALSE>>=
+<<code_fig_plot_norm_scatter>>
 @
 \caption{Scatter plot of the 10000 samples parameter from the multivariate normal distribution.}
 \label{fig:plot_norm_scatter}
 \end{figure}
-Growth curves for the 100 iterations can be seen in Figure~\ref{fig:plot_mv_growth}.
+
+Growth curves for the 1000 iterations can be seen in Figure~\ref{fig:plot_mv_growth}.
 
 \begin{figure}
-<<example_mv_growth_curve_plot>>=
-# Generating and plotting growth curves
-boxplot(t(predict(vbNorm, t=0:50+0.5)))
+<<example_mv_growth_curve_plot, echo=FALSE>>=
+<<code_plot_mv_growth>>
 @
 \caption{Growth curves using parameters simulated from a multivariate normal distribution.}
 \label{fig:plot_mv_growth}
@@ -426,8 +465,8 @@ tab <- try(readHTMLTable(addr))
 linf <- as.numeric(as.character(tab$dataTable[,2]))
 k <- as.numeric(as.character(tab$dataTable[,4]))
 t0 <- as.numeric(as.character(tab$dataTable[,5]))
-# Set the min, max and median values for each parameters as a list of lists
-# Note that t0 has no 'c' (max) value. This makes the distribution symmetrical
+# Set the min (a), max (b) and median (c) values for the parameter as a list of lists
+# Note that t0 has no 'c' (median) value. This makes the distribution symmetrical
 triPars <- list(list(a=min(linf), b=max(linf), c=median(linf)),
              list(a=min(k), b=max(k), c=median(k)),
              list(a=median(t0, na.rm=T)-IQR(t0, na.rm=T)/2, b=median(t0, na.rm=T)+IQR(t0, na.rm=T)/2))
@@ -436,47 +475,60 @@ vbTri <- mvrtriangle(10000, vbObj, paramMargins=triPars)
 @
 
 The marginals will reflect the uncertainty on the parameter values that were scraped from FishBase but, as we don't really believe the parameters are multivariate normal we adopted a more relaxed distribution based on a \emph{t} copula with triangle marginals.
-The marginal distributions can be seen in Figure~\ref{fig:plot_tri_params}.
+The marginal distributions can be seen in Figure~\ref{fig:plot_tri_params} and the shape of the correlation can be seen in Figure~\ref{fig:plot_tri_scatter}.
 
-\begin{figure}
-<<example_tri_parameter_distributions>>=
+<<code_plot_tri_params, eval=FALSE>>=
+# Plot histogram of the marginals
 par(mfrow=c(3,1))
 hist(c(params(vbTri)["linf",]), main="linf", xlab="")
 hist(c(params(vbTri)["k",]), main="k", prob=TRUE, xlab="")
-#lines(x. <- seq(min(k), max(k), len=100), dnorm(x., mean(k), sd(k)))
 hist(c(params(vbTri)["t0",]), main="t0", xlab="")
+@
+
+<<code_plot_tri_scatter, eval=FALSE>>=
+# Scatter plot of the parameter values
+splom(data.frame(t(params(vbTri)@.Data)), pch=".")
+@
+
+\begin{figure}
+<<example_tri_parameter_distributions, echo=FALSE>>=
+<<code_plot_tri_params>>
 @
 \caption{The marginal distributions of each of the parameters from using a multivariate triangle distribution.}
 \label{fig:plot_tri_params}
 \end{figure}
 
-The shape of the correlation can be seen in Figure~\ref{fig:plot_tri_scatter}.
 
 \begin{figure}
-<<example_tri_parameter_scatter>>=
-splom(data.frame(t(params(vbTri)@.Data)), pch=".")
+<<example_tri_parameter_scatter, echo=FALSE>>=
+<<code_plot_tri_scatter>>
 @
 \caption{Scatter plot of the 10000 samples parameter from the multivariate triangle distribution.}
 \label{fig:plot_tri_scatter}
 \end{figure}
 
-Off course we can still use \code{predict()} to get see the growth model uncertainty (Figure~\ref{fig:plot_tri_growth}).
+We can still use \code{predict()} to get see the growth model uncertainty (Figure~\ref{fig:plot_tri_growth}).
+
+<<code_plot_tri_growth, eval=FALSE>>=
+# PLot growth curve
+boxplot(t(predict(vbTri, t=0:20+0.5)))
+@
 
 \begin{figure}
-<<example_tri_parameter_growth>>=
-boxplot(t(predict(vbTri, t=0:20+0.5)))
+<<example_tri_parameter_growth, echo=FALSE>>=
+<<code_plot_tri_growth>>
 @
 \caption{Growth curves using parameters simulated from a multivariate triangle distribution.}
 \label{fig:plot_tri_growth}
 \end{figure}
 
 Remember that the above examples use a variance-covariance matrix that we made up.
-If you want to be really geeky, you can scrape the entire growth parameters dataset from FishBase and compute the shape of the variance covariance matrix yourself.
+If you want to be really geeky, you can scrape the entire growth parameters dataset from FishBase and compute the shape of the variance-covariance matrix yourself.
 
 \subsection{Adding parameter uncertainty with other copulas}
 
 A more general approach to adding parameter uncertainty is to make use of whatever copula and marginal distribution you want.
-This is possible with \code{mvrcop()} function. The example below keeps the same parameters and changes only the copula type and family but a lot more can be done. Check the package \emph{copula} for more. 
+This is possible with the \code{mvrcop()} function. The example below keeps the same parameters and changes only the copula type and family but a lot more can be done. Check the package \emph{copula} for more. 
 
 % Needs more explanation
 
@@ -484,35 +536,42 @@ This is possible with \code{mvrcop()} function. The example below keeps the same
 vbCop <- mvrcop(10000, vbObj, copula="archmCopula", family="clayton", param=2, margins="triangle", paramMargins=triPars)
 @
 
-The shape of the correlation changes (Figure~\ref{fig:plot_cop_tri_scatter}).
+The shape of the correlation changes (Figure~\ref{fig:plot_cop_tri_scatter}) as well as the resulting growth curves (Figure~\ref{fig:plot_cop_tri_growth}). 
 
-\begin{figure}
-<<example_cop_tri_scatter>>=
+<<code_plot_cop_tri_scatter, eval=FALSE>>=
+# Scatter plot of parameter values
 splom(data.frame(t(params(vbCop)@.Data)), pch=".")
 @
-\caption{Scatter plot of the 10000 samples parameter from the using a triangle copula.}
+
+<<code_plot_cop_tri_growth, eval=FALSE>>=
+boxplot(t(predict(vbCop, t=0:20+0.5)))
+@
+
+\begin{figure}
+<<example_cop_tri_scatter, echo=FALSE>>=
+<<code_plot_cop_tri_scatter>>
+@
+\caption{Scatter plot of the 10000 samples parameter from the using an archmCopula copula with triangle margins.}
 \label{fig:plot_cop_tri_scatter}
 \end{figure}
 
-As well as the resulting growth curves (Figure~\ref{fig:plot_cop_tri_growth}). 
-
 \begin{figure}
-<<example_cop_tri_growth>>=
-boxplot(t(predict(vbCop, t=0:20+0.5)))
+<<example_cop_tri_growth, echo=FALSE>>=
+<<code_plot_cop_tri_growth>>
 @
-\caption{Growth curves from the using a triangle copula.}
+\caption{Growth curves from the using an archmCopula copula with triangle margins.}
 \label{fig:plot_cop_tri_growth}
 \end{figure}
 
-\subsection{The "l2a" method}
+\subsection{The \code{l2a()} method}
 
-After introducing uncertainty on the growth model through the parameters it's time to transform the length-based dataset into an age-based dataset. The method that deals with this process is \code{l2a()}. The implementation of this method for the \class{FLQuant} class is the main workhorse. There's two other implementations, for the \class{FLStock} and \class{FLIndex} classes, which are mainly wrappers that call the \class{FLQuant} method several times.
+After introducing uncertainty in the growth model through the parameters it's time to transform the length-based dataset into an age-based dataset. The method that deals with this process is \code{l2a()}. The implementation of this method for the \class{FLQuant} class is the main workhorse. There's two other implementations, for the \class{FLStock} and \class{FLIndex} classes, which are mainly wrappers that call the \class{FLQuant} method several times.
 
 When converting from length-based data to age-based data you need to be aware of how the aggregation of length classes is performed.
-For example, individuals in length classes, 1-2, 2-3, and 3-4 cm may all be considered as being of age 1 (obviously depending on the growth model). How should the values in those length classes be combined?
+For example, individuals in length classes 1-2, 2-3, and 3-4 cm may all be considered as being of age 1 (obviously depending on the growth model). How should the values in those length classes be combined?
 
 If the values are abundances then the values should be summed.
-Summing other types of values such as weights and rates (like fishing mortality) does not make sense. Instead these values shoud be averaged over the length classes (weighted by the abundance for weights).
+Summing other types of values such as weights and rates (like fishing mortality) does not make sense. Instead these values are averaged over the length classes (weighted by the abundance for weights).
 This is controlled using the \code{stat} argument which can be either \code{mean} or \code{sum} (the default).
 
 %Note that, for the moment, this method is quite slow. There's a double loop in the code that makes it slow, but we're working on a better solution.
@@ -530,23 +589,22 @@ vbTriSmall <- mvrtriangle(10, vbObj, paramMargins=triPars)
 cth.n <- l2a(catch.n(rfLen.stk), vbTriSmall)
 @
 
-%The results can be seen in Figure~\ref{fig:plot_flq_l2a}.
-%
-%\begin{figure}
-%<<example_plot_flq_l2a>>=
-%quant(cth.n) <- "len"
-%xyplot(data~len|qname+season, groups=year, data=(FLQuants(len=catch.n(rfLen.stk), age=cth.n)), type="l", xlab="", ylab="numbers")
-%@
-%\caption{Length and age-based FLQuant.}
-%\label{fig:plot_flq_l2a}
-%\end{figure}
+%The \code{cth.n} object is an \class{FLQuant} of catches at age with the same number of iterations as the growth model:
 
-Instead of converting one \class{FLQuant} at a time, we can convert entire \class{FLStock} and \class{FLIndex} objects.
+<<example_flq_slice>>=
+dim(cth.n)
+@
+
+In the previous example, the \class{FLQuant} object was sliced (\code{catch.n(rfLen.stk)}) had only one iteration. This iteration was sliced by each of the iterations in the growth model. It is possible for the \class{FLQuant} object to have the same number of iterations as the growth model, in which case each iteration of the \class{FLQuant} and the growth model are used together.
+It is also possible for the growth model to have only one iteration while the \class{FLQuant} object has many iterations. The same growth model is then used for each of the \class{FLQuant} iterations. As with all FLR objects, the general rule is \emph{one or n} iterations.
+
+
+As well as converting one \class{FLQuant} at a time, we can convert entire \class{FLStock} and \class{FLIndex} objects.
 In these cases the individual \class{FLQuant} slots of those classes are converted from length-based to age-based.
 As mentioned above, the aggregation method depends on the type of values the slots contain.
 The abundance slots (\code{*.n}, such as \code{stock.n}) are summed.
 The \code{*.wt}, \code{m}, \code{mat}, \code{harvest.spwn}, \code{m.spwn} and \code{harvest} slots of an \class{FLStock} object are averaged. 
-The weights are then corrected to ensure that the total catch weight (and landings, discards and stock weights) in the age-based object is the same as that in the length-based object.
+%The weights are then corrected to ensure that the total catch weight (and landings, discards and stock weights) in the age-based object is the same as that in the length-based object.
 The \code{index}, \code{catch.wt}, \code{index.var}, \code{sel.pattern} and \code{index.q} slots of an \class{FLIndex} object are averaged.
 
 The method for \class{FLStock} classes takes an additional argument for the plusgroup.
@@ -563,23 +621,37 @@ aIdx <- l2a(rfTrawl.idx, vbTriSmall)
 When converting with \code{l2a()} there are a number of defaults of which the user should be aware. 
 As there is no information in the growth model on how to deal with individuals larger than Linf, all lengths above Linf are converted to the maximum age. The variability around Linf is dealt with by the randomization of the parameter Linf and this should be consistent with the variance in the data.
 
+\pagebreak
 \section{Natural mortality}
 
 Natural mortality is dealt with as an external parameter to the stock assessment model. The rationale is similar to that of growth: one should be able to grab information from a range of sources and feed it into the assessment.
 
 The mechanism used by a4a is to build an interface that makes it transparent, flexible and hopefully easy to explore different options. In relation to natural mortality it means that the analyst should be able to use distinct models like Gislasson's, Charnov's, Pauly's, etc in a coherent framework making it possible to compare the outcomes of the assessment. 
 
-Within the a4a framework, the easiest way to insert natural mortality in the stock assessment is to use an \class{a4aM} object and run the method \code{m} to compute the values. The output is a \class{FLQuant} that can be directly inserted in the \class {FLStock} object to be used for the assessment.   
+Within the a4a framework, the general method for inserting natural mortality in the stock assessment is to:
+
+\begin{itemize}
+    \item Create an object of class \class{a4aM} which holds the model and parameters to be used to generate the natural mortality.
+    \item Add uncertainty to the parameters in the \class{a4aM} object.
+    \item Use the \code{m()} method on \class{a4aM} object to create an age or length based \class{FLQuant} object of the required dimensions.
+\end{itemize}
+
+The resulting \class{FLQuant} object can then be directly inserted into an \class {FLStock} object to be used for the assessment.   
+
+In this section we go through each of the steps in detail using a variety of different models.
 
 \subsection{\code{a4aM} - The M class}
 
-Natural mortality is implemented in a class named \class{a4aM}. This class is made up of three models of the class \class{FLModelSim}. Each model represents one effect: an age effect, a year effect and a time trend, named \code{shape}, \code{level} and \code{trend}, respectively. Check the help files for more information.
+Natural mortality is implemented in a class named \class{a4aM}. This class is made up of three models of the class \class{FLModelSim}.
+Each model represents one effect: an age or length effect, a scaling (level) effect and a time trend, named \code{shape}, \code{level} and \code{trend}, respectively.
+The impact of the models is multiplicative, i.e. the overal natural mortality is given by \class{shape} x  \class{level} x \class{trend}.
+Check the help files for more information.
 
 <<showClass_a4aM>>=
 showClass("a4aM")
 @
 
-The \class{a4aM} constructor requires that the models and parameters are provided. The default method will build each of these models as a constant value of 1. For example the usual "0.2" guessestimate could be set up by  
+The \class{a4aM} constructor requires that the models and parameters are provided. The default method will build each of these models as a constant value of 1. For example the usual "0.2" guessestimate could be set up by setting the \code{level} model to have a single parameter with a fixed value, while the other two models, \class{shape} and \class{trend}, have a default value of 1 (effectively, they have no effect).
 
 <<m_02>>=
 mod02 <- FLModelSim(model=~a, params=FLPar(a=0.2))
@@ -587,11 +659,13 @@ m1 <- a4aM(level=mod02)
 m1
 @
 
-More interesting natural mortality shapes can be set up using biological knowledge. The following example uses Jensen's second estimator (Kenshington, 2013) $M=1.5K$ and an exponential decay to set up the level and shape of M.
+More interesting natural mortality shapes can be set up using biological knowledge.
+The following example uses an exponential decay over ages (implying that resulting \class{FLQuant} generated by the \code{m()} method will be age beased).
+We also use Jensen's second estimator (Kenshington, 2013) as a scaling \code{level} model. This is based on the von Bertalanffy $K$ parameter, $M=1.5K$. 
 
 <<jensen_second_m>>=
 #==============================================================================
-# Models or shape and level
+# Models for age-based shape and level
 #==============================================================================
 
 shape2 <- FLModelSim(model=~exp(-age-0.5))
@@ -605,7 +679,28 @@ m2 <- a4aM(shape=shape2, level=level2)
 m2
 @ 
 
+
+Note that the \code{shape} model has \code{age} as a parameter of the model but is not set using the \code{params} argument.
+
+The \code{shape} model does not have to be age-based. For example, here we set up a \code{shape} model using Gislaon's second estimator (Kenshington, 2013):
+%$M_l=K(\frac{L_\inf}{l})^{1.5}$.
+$M_l=K(\frac{L_inf}{l})^1.5$
+We use the default \code{level} and \class{trend} models.
+% Current m() method is not ideal for length based methods as you cannot specify length range and half-widths to make compatible with FLStockLen
+
+<<gis_shape>>=
+#==============================================================================
+# A length-base shape model
+#==============================================================================
+
+shape_len <- FLModelSim(model=~K*(linf/len)^1.5, params=FLPar(linf=60, K=0.4))
+m_len <- a4aM(shape=shape_len)
+@
+
+
 As an alternative, an external factor may impact the natural mortality. This can be added through the \code{trend} model. Suppose M depends on the NAO through some mechanism that results in having lower M when NAO is negative and higher when it's positive. The impact is represented by the NAO value on the quarter before spawning, which occurs in the second quarter. 
+
+We use this to make a complicated natural mortality model with an age based shape model, a level model based on $K$ and a trend model driven by NAO.
 
 <<nao_m>>=
 #==============================================================================
@@ -622,7 +717,7 @@ nao <- seasonMeans(nao.flq[,,,1:3])
 nao <- (nao>0)
 
 #==============================================================================
-# The trend model M increases 50% if NAO is positive on the first quarter
+# The trend model: M increases 50% if NAO is positive on the first quarter
 #==============================================================================
 
 trend3 <- FLModelSim(model=~1+b*nao, params=FLPar(b=0.5))
@@ -638,8 +733,8 @@ m3
 @
 
 \subsection{Adding multivariate normal parameter uncertainty}
-%
-Uncertainty on natural mortality is added through uncertainty on the parameters. In the case of \class{a4aM} class it makes use of the \class{FLModelSim} 'mvr' methods. A wrapper for \code{mvrnorm} was implemented, but all the other options must be carried out in each sub-model at the time.
+
+Uncertainty on natural mortality is added through uncertainty on the parameters. In the case of the \class{a4aM} class it makes use of the \class{FLModelSim} \code{mvr()} methods. A wrapper for \code{mvrnorm} was implemented, but all the other options must be carried out in each sub-model at the time.
 
 <<mvrnorm_m>>=
 #==============================================================================
@@ -654,7 +749,7 @@ shape4 <- FLModelSim(model=~exp(-age-0.5))
 
 # Has two parameters, k and t
 # We include a variance-covariance matrix for the parameter interaction
-level4 <- FLModelSim(model=~k^0.66*t^0.57, params=FLPar(matrix(c(0.4,10)), dimnames=list(params=c("k","t"), iter=1)), vcov=array(c(0.002, 0.01,0.01, 1), dim=c(2,2)))
+level4 <- FLModelSim(model=~k^0.66*t^0.57, params=FLPar(k=0.4, t=10), vcov=array(c(0.002, 0.01,0.01, 1), dim=c(2,2)))
 
 #==============================================================================
 # A trend from NAO
@@ -672,11 +767,15 @@ m4
 # Look at the level model (for example)
 m4@level
 # Note the variance in the parameters
+# The trend model also has uncertainty
+params(trend(m4))
+# However, the shape model has no parameters and no uncertainty
+params(shape(m4))
 @ 
 
 In this particular case, the \code{shape} model will not be randomized because it doesn't have a variance covariance matrix. Also note that because there is only one parameter in the \code{trend} model, the randomization will use a univariate normal distribution.
 
-The same model could be achieved with:
+The same model could be achieved using \code{mnrnorm()} on each model component:
 
 <<univariate_m>>=
 m4 <- a4aM(shape=shape4, level=mvrnorm(100, level4), trend=mvrnorm(100, trend4))
@@ -709,28 +808,37 @@ mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.05)
 # a good way to check is using cov2cor
 cov2cor(mm)
 # create object
-mgis2 <- FLModelSim(model=~K*(linf/len)^1.5, params=FLPar(linf=linf, K=k), vcov=mm)
+mgis2 <- FLModelSim(model=~k*(linf/len)^1.5, params=FLPar(linf=linf, k=k), vcov=mm)
 # set the lower, upper and (optionally) centre of the parameters
-pars <- list(list(55,65), list(a=0.3, b=0.6, c=0.35))
+# Without the centre, the triangle is symmetrical
+pars <- list(list(a=55,b=65), list(a=0.3, b=0.6, c=0.35))
 mgis2 <- mvrtriangle(1000, mgis2, paramMargins=pars)
 mgis2
 @
 
-The resulting parameter estimates can be seen in Figure~\ref{fig:plot_tri_gis_m}.
+The resulting parameter estimates and marginal distributions can be seen in Figure~\ref{fig:plot_tri_gis_m} and \ref{fig:plot_tri_gis_m_hist}
+
+<<code_plot_tri_gis_m, eval=FALSE>>=
+splom(t(params(mgis2)@.Data))
+@
+
+<<code_plot_tri_gis_m_hist, eval=FALSE>>=
+par(mfrow=c(2,1))
+hist(c(params(mgis2)["linf",]), main="Linf", xlab="")
+hist(c(params(mgis2)["k",]), main="K", xlab="")
+@
 
 \begin{figure}
-<<example_tri_gis_m_scatter>>=
-splom(t(params(mgis2)@.Data))
+<<example_tri_gis_m_scatter, echo=FALSE>>=
+<<code_plot_tri_gis_m>>
 @
 \caption{Parameter estimates for Gislason's second natural mortality model from using a triangle distribution.}
 \label{fig:plot_tri_gis_m}
 \end{figure}
 
 \begin{figure}
-<<example_tri_gis_m_hist>>=
-par(mfrow=c(2,1))
-hist(c(params(mgis2)["linf",]), main="Linf", xlab="")
-hist(c(params(mgis2)["K",]), main="K", xlab="")
+<<example_tri_gis_m_hist, echo=FALSE>>=
+<<code_plot_tri_gis_m_hist>>
 @
 \caption{Marginal distributions of the parameters for Gislason's second natural mortality model from using a triangle distribution.}
 \label{fig:plot_tri_gis_m_hist}
@@ -738,103 +846,140 @@ hist(c(params(mgis2)["K",]), main="K", xlab="")
 
 
 We now have a new model that can be used for the \code{shape} model.
-Use the constructor or the set method to add the new model. Note that we have a quite complex method now for \emph{M}. A length based \code{shape} model from Gislason's work, Jensen's third based temperature \code{level} and a time \code{trend} depending on NAO. 
+Use the constructor or the set method to add the new model. Note that we have a quite complex method now for \emph{M}. A length based \code{shape} model from Gislason's work, Jensen's third based temperature \code{level} and a time \code{trend} depending on NAO. All of the component models have uncertainty in their parameters.
 
 
 <<making_complicated_m>>=
 m5 <- a4aM(shape=mgis2, level=level4, trend=trend4)
 # or
 m5 <- m4
-level(m5) <- mgis2
+shape(m5) <- mgis2
 @
 
 \subsection{The "m" method}
 
+Now that we have set up the natural mortality model and added parameter uncertainty, we are ready to generate the \class{FLQuant} of natural mortality. For that we need the \code{m()} method.
+
 The \code{m} method is the workhorse method for computing natural mortality. The method returns an \class{FLQuant} that can be inserted in an \class{FLStock} for usage by the assessment method. Note that if the models use \emph{age} and/or \emph{year} as terms, the method expects these to be included in the call. If they're not, the method will use the range slot to work out the ages and/or years that should be predicted.
+
+% Future developments will also allow for easy insertion into FLStockLen objects.
+
+The size of the \class{FLQuant} object is determined by the \code{min}, \code{max}, \code{minyear} and \code{maxyear} elements of the \code{range} slot of the \class{a4aM} object.
+By default the values of these elements are set to 0. Giving an \class{FLQuant} with length 1 in the quant and year dimension.
+The \code{range} slot can be set by hand, or by using the \code{rngquant()} and \code{rngyear()} methods.
+
+The name of the first dimension of the output \class{FLQuant} (e.g. 'age' or 'len') is determined by the parameters of the \code{shape} model. If it is not clear what the name should be then the name is set to 'quant'.
 
 <<simple_m>>=
 #==============================================================================
 # Using the m method to make an FLQuant of constant natural mortality
 #==============================================================================
+# Start with the simplest model
+m1
+# Check the range
+range(m1)
 # Simple - no ages or years
 m(m1)
-# With ages
-rngage(m1) <- c(0,15) # set the age range
+# Set the quant range
+rngquant(m1) <- c(0,7) # set the quant range
+range(m1)
 m(m1)
-# with ages and years
+# Set the year range too
 rngyear(m1) <- c(2000, 2010) # set the year range
+range(m1)
 m(m1)
+# Note the name of the first dimension is 'quant'
 @
 
-The next example has an age based shape. The information on the range of ages can be passed when calling \code{m}, or else the method will pick it up from the \code{range} slot. Note that in this case \emph{mbar} becames relevant. It's the range of ages that is used to compute the mean level, which will match the \code{level} model.
-% Eh? What is that stuff with matching level?
-% And what is mbar?
+The next example has an age based shape. As the shape model has 'age' as a variable which is not included in the \class{FLPar} slot it is used as the name of the first dimension.
+Note that in this case \emph{mbar} becames relevant. It's the range of quants (in this case, ages) that is used to compute the mean level. This mean level will match the value given by the \code{level} model.
 
-% This needs much more explanation....
+The \emph{mbar} range can be changed with the \code{rngmbar()} method.
+
 <<m2>>=
 #==============================================================================
 # Using the m method to make an FLQuant with age varying natural mortality
 #==============================================================================
-
-# Simple
+# Remind ourselves of the model
+m2
+# Simple with no ages or years - note that the first dimension is 'age'
 m(m2)
 # With ages
-rngage(m2) <- c(0,15)
+rngquant(m2) <- c(0,7)
 m(m2)
 # With ages and years
 rngyear(m2) <- c(2000, 2003)
 m(m2)
-# Note that 
+# Note that the level value is:
 predict(level(m2))
-# is similar to 
+# Is the same as
 m(m2)["0"]
-# that's because mbar is "0"
-rngmbar(m2)
-# changing ...
+# This is because the mbar range is currently set to "0" and "0"
+range(m2)
+# The mean natural mortality value over this range is given by the level model
+# We can change the mbar range
 rngmbar(m2)<- c(0,5)
+range(m2)
+# This rescales the natural mortality at age:
+m(m2)
+# Check that the mortality over the mean range is the same as the level model
 quantMeans(m(m2)[as.character(0:5)])
 @
 
+The next example uses a time trend for the \code{trend} model.
+We use the \code{m3} model we made earlier.
+The \code{trend} model for this model has a covariate, 'nao'. This needs to be passed in to the \code{m()} method.
+The year range of the 'nao' covariate should match that of the \code{range} slot.
 
-<<m3>>=
+<<m3_trend>>=
 #==============================================================================
 # Using the m method to make an FLQuant with a time trend
 #==============================================================================
-# Simple
+# Simple, pass in a single nao value (only one year)
 m(m3, nao=1)
-# With ages
-rngage(m3) <- c(0,15)
+# Set some ages
+rngquant(m3) <- c(0,7)
 m(m3, nao=0)
 # With ages and years - passing in the NAO data as numeric (1,0,1,0)
 rngyear(m3) <- c(2000, 2003)
 m(m3, nao=as.numeric(nao[,as.character(2000:2003)]))
 @
 
-<<>>=
+The final example show how \code{m()} can be used to make an \class{FLQuant} with uncertainty (see Figure~\ref{fig:uncertain_m}).
+We use the \code{m4} from earlier with uncertainty on the level and trend parameters.
+
+<<m4_uncertainty_m>>=
 #==============================================================================
 # Using the m method to make an FLQuant with uncertainty
 #==============================================================================
 
-# Simple - no time trend
+# Simple - no time trend but with iterations
 m(m4, nao=1)
+dim(m(m4, nao=1))
 # With ages
-rngage(m4) <- c(0,15)
+rngquant(m4) <- c(0,7)
 m(m4, nao=0)
+dim(m(m4, nao=0))
 # With ages and years
 rngyear(m4) <- c(2000, 2003)
 m(m4, nao=as.numeric(nao[,as.character(2000:2003)]))
+dim(m(m4, nao=as.numeric(nao[,as.character(2000:2003)])))
 @
 
-See Figure~\ref{fig:uncertain_m}.
+<<code_uncertain_m, eval=FALSE>>=
+bwplot(data~factor(age)|year, data=m(m4, nao=as.numeric(nao[,as.character(2000:2003)])))
+@
 
-\begin{figure}
-<<plot_uncertain_m>>=
-bwplot(data~factor(quant)|year, data=m(m4, nao=as.numeric(nao[,as.character(2000:2003)])))
+
+\begin{figure}[h!]
+<<plot_uncertain_m, echo=FALSE>>=
+<<code_uncertain_m>>
 @
 \caption{Natural mortality with age and year trend.}
 \label{fig:uncertain_m}
 \end{figure}
 
+\pagebreak
 \section{Running assessments}
 
 There are two basic types of assessments available from using \texttt{a4a}: the management procedure (MP) fit and the full assessment fit.  The MP fit does not compute estimates of covariances and is therefore quicker to execute, while the full assessment fit returns parameter estimates and their covariances and hence retains the ability to simulate from the model at the expense of longer fitting time.
@@ -919,20 +1064,11 @@ fmodel <- ~ factor(age) + factor(year)
 qmodel <- list(~ factor(age)) 
 @
 
-
-<<>>=
-library(FLa4a)
-library(diagram)
-data(ple4)
-data(ple4.indices)
-source("funs.R")
-@
-
 \subsection{Quick and dirty}
 
 The default settings of the stock assessment model work reasoably well. It's an area of research that will improve with time.
 
-<<>>=
+<<message=TRUE>>=
 data(ple4)
 data(ple4.indices)
 fit <- sca(ple4, ple4.indices)
@@ -944,34 +1080,34 @@ Note that because the survey index for plaice has missing values we get a warnin
 res <- residuals(fit, ple4, ple4.indices)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 plot(res, main="Residuals")
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 bubbles(res)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 qqmath(res)
 @
 
 We can inspect the summaries from this fit my adding it to the origional stock object, for example to see the fitted fbar we can do
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 stk <- ple4 + fit
 plot(stk, main="Stock summary")
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 wireframe(data ~ age + year, data = as.data.frame(harvest(stk)), drape = TRUE, main="Fishing mortality", screen = list(x = -90, y=-45))
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 wireframe(data ~ age + year, data = as.data.frame(stock.n(stk)), drape = TRUE, main="Population", screen = list(x = -90, y=-45))
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 wireframe(data ~ age + year, data = as.data.frame(catch.n(stk)), drape = TRUE, main="Catches")
 @
 
@@ -983,7 +1119,7 @@ The basic model output is contained in the \texttt{a4aFit} class. This object co
 showClass("a4aFit")
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 plotS4("a4aFit", main="a4aFit class", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type = "square", box.prop = 0.3)
 @
 
@@ -995,7 +1131,7 @@ The full assessment fit returns an object of \texttt{a4aFitSA} class:
 showClass("a4aFitSA")
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 plotS4("a4aFitSA", main="a4aFitSA class", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type = "square", box.prop = 0.3)
 @
 
@@ -1007,15 +1143,15 @@ showClass("a4aStkParams")
 showClass("submodel")
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 plotS4("SCAPars", main="SCAPars class", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type = "square", box.prop = 0.3)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 plotS4("a4aStkParams", main="a4aStkParams class", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type = "square", box.prop = 0.3)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 plotS4("submodel", main="submodel class", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type = "square", box.prop = 0.3)
 @
 
@@ -1041,7 +1177,7 @@ fmodel <- ~ factor(age) + factor(year)
 fit <- sca(stock = ple4, indices = ple4.indices[1], fmodel=fmodel, qmodel=qmodel)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
@@ -1050,7 +1186,7 @@ fmodel <- ~ s(age, k=4) + s(year, k = 20)
 fit1 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 wireframe(data ~ age + year, data = as.data.frame(harvest(fit1)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
@@ -1059,7 +1195,7 @@ fmodel <- ~ s(age, k=4) + s(year, k = 20) + te(age, year, k = c(3,3))
 fit2 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 wireframe(data ~ age + year, data = as.data.frame(harvest(fit2)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
@@ -1068,7 +1204,7 @@ fmodel <- ~ te(age, year, k = c(4,20))
 fit3 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 wireframe(data ~ age + year, data = as.data.frame(harvest(fit3)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
@@ -1077,7 +1213,7 @@ fmodel <- ~ te(age, year, k = c(4,20)) + s(year, k = 5, by = as.numeric(age==1))
 fit4 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 wireframe(data ~ age + year, data = as.data.frame(harvest(fit4)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
@@ -1097,7 +1233,7 @@ lst$x <- stock.n(fit)*exp(-Z)
 stkn <- do.call("trim", lst)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 wireframe(data ~ age + year, data = as.data.frame(index(fit)[[1]]/stkn), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
@@ -1110,7 +1246,7 @@ lst$x <- stock.n(fit1)*exp(-Z)
 stkn <- do.call("trim", lst)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 wireframe(data ~ age + year, data = as.data.frame(index(fit1)[[1]]/stkn), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
@@ -1123,7 +1259,7 @@ lst$x <- stock.n(fit2)*exp(-Z)
 stkn <- do.call("trim", lst)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 wireframe(data ~ age + year, data = as.data.frame(index(fit2)[[1]]/stkn), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
@@ -1136,8 +1272,33 @@ lst$x <- stock.n(fit3)*exp(-Z)
 stkn <- do.call("trim", lst)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 wireframe(data ~ age + year, data = as.data.frame(index(fit3)[[1]]/stkn), drape = TRUE, screen = list(x = -90, y=-45))
+@
+
+\subsubsection{Catchability submodel for age aggregated indices}
+
+Age aggregated indices (biomass, DEPM, etc) have to be passed in the FLIndices object with the name "bio". At the moment only one "bio" index is allowed. Note that in this case the qmodel should be set without age factors. It could have a "year" component though. 
+
+<<>>=
+# creating an index
+bioidx <- FLIndex(FLQuant(NA, dimnames=list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])))
+index(bioidx) <- stock(ple4)*0.001
+index(bioidx) <- index(bioidx)*exp(rnorm(index(bioidx), sd=0.1))
+range(bioidx)[c("startf","endf")] <- c(0,0)
+# fitting the model
+fit <- sca(ple4, FLIndices(bio=bioidx), qmodel=list(~1))
+# how is it fiting catchability ? not too well ...
+index(fit)[[1]]/(quantSums(stock.n(fit)*stock.wt(ple4)))
+@
+
+Residuals are not so good ... one shouldn't expect much from a model with only one biomass index anyway. 
+
+
+The results are not so bad because most information is coming from the catch at age information.
+
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
+plot(FLStocks(ple4=ple4, fit=ple4+fit))
 @
 
 \subsubsection{Stock-recruitment submodel}
@@ -1163,7 +1324,7 @@ fit5 <- sca(ple4, ple4.indices[1], fmodel, qmodel, srmodel)
 flqs <- FLQuants(fac=stock.n(fit)[1], smo=stock.n(fit1)[1], ric=stock.n(fit2)[1], bh=stock.n(fit3)[1], hs=stock.n(fit4)[1], gm=stock.n(fit5)[1])
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 xyplot(data~year, groups=qname, data=flqs, type="l", main="Recruitment models", auto.key=list(points=FALSE, lines=TRUE, columns=3))
 @
 
@@ -1187,7 +1348,7 @@ fit1 <- a4aSCA(ple4, ple4.indices[1], n1model=n1model)
 flqs <- FLQuants(smo=stock.n(fit1)[,1], fac=stock.n(fit)[,1])
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 xyplot(data~age, groups=qname, data=flqs, type="l", main="N1 models", auto.key=list(points=FALSE, lines=TRUE, columns=2))
 @
 
@@ -1205,7 +1366,7 @@ fit2 <- a4aSCA(ple4, ple4.indices[1], vmodel=vmodel)
 flqs <- FLQuants(cts=catch.n(fit1), smo=catch.n(fit2))
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 xyplot(data~year|age, groups=qname, data=flqs, type="l", main="Variance models", scales=list(y=list(relation="free")), auto.key=list(points=FALSE, lines=TRUE, columns=2))
 @
 
@@ -1225,17 +1386,17 @@ fit2 <- a4aSCA(ple4, ple4.indices[1], qmodel=list(~s(age, k=4)), srmodel=srmodel
 flqs <- FLQuants(fac=stock.n(fit)[1], cvar=stock.n(fit2)[1])
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 xyplot(data~year, groups=qname, data=flqs, type="l", main="Recruitment model with covariates")
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 srmodel <- ~ ricker(a=~nao, CV=0.1)
 fit3 <- a4aSCA(ple4, ple4.indices[1], qmodel=list(~s(age, k=4)), srmodel=srmodel) 
 flqs <- FLQuants(fac=stock.n(fit)[1], cvar=stock.n(fit3)[1])
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 xyplot(data~year, groups=qname, data=flqs, type="l", main="Recruitment model with covariates")
 @
 
@@ -1270,11 +1431,11 @@ fits <- simulate(fit, 100)
 flqs <- FLQuants(sim=iterMedians(stock.n(fits)), det=stock.n(fit))
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 xyplot(data~year|age, groups=qname, data=flqs, type="l", main="Median simulations VS fit", scales=list(y=list(relation="free")))
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 stks <- ple4 + fits
 plot(stks)
 @
@@ -1310,20 +1471,8 @@ fit1 <- a4aSCA(stk, idx, vmodel=vmodel)
 flqs <- FLQuants(nowgt=stock.n(fit), extwgt=stock.n(fit1))
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 xyplot(data~year|age, groups=qname, data=flqs, type="l", main="Likelihood weighting", scales=list(y=list(relation="free")), auto.key=list(points=FALSE, lines=TRUE, columns=2))
-@
-
-\subsubsection{WCSAM exercise - replicating itself}
-
-<<>>=
-fits <- simulate(fit, 25)
-stks <- ple4 + fits
-fit1 <- a4aSCA(stks, ple4.indices[1], fit="MP") 
-@
-
-<<figure=TRUE>>=
-plot(FLStocks(sim=ple4 + fit1, orig=ple4+fit))
 @
 
 \subsubsection{More models}
@@ -1334,7 +1483,7 @@ fmodel = ~ s(replace(age, age>5, 5), k=4) + s(year, k=20)
 fit <- sca(ple4, ple4.indices, fmodel=fmodel)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
@@ -1344,7 +1493,7 @@ fmodel=~s(age, k = 3, by = breakpts(year, 1990))
 fit <- sca(ple4, ple4.indices, fmodel=fmodel)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
@@ -1354,7 +1503,7 @@ fmodel <- ~ factor(age) + s(year, k=10, by = breakpts(age, c(2:8)))
 fit <- sca(ple4, ple4.indices, fmodel=fmodel)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
@@ -1384,39 +1533,91 @@ m(stk) <- flq
 fit1 <- sca(stk, ple4.indices)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 plot(FLStocks(munc=ple4+fit1, m02=ple4+fit))
 @
 
-\subsubsection{Likelihood profiling - ToDo}
+%\subsubsection{Likelihood profiling - ToDo}
+
+%<<>>=
+%qk <- 3:8
+%fk <- seq(10,50,5)
+%liks <- expand.grid(qk=qk, fk=fk)
+%liks$loglik <- NA
+%for(i in 1:nrow(liks)){
+%	ks <- liks[i,]
+%	qmodel <- as.formula(substitute(~s(age, k=x) + year, list(x=ks$qk)))
+%	fmodel <- as.formula(substitute(~s(age, k=4) + s(year, k=x), list(x=ks$fk)))
+%	liks[i,3] <- as.numeric(AIC(sca(ple4, ple4.indices[1], qmodel=list(qmodel), fmodel=fmodel)))
+%}
+%@
+
+\subsubsection{WCSAM exercise - replicating itself}
 
 <<>>=
-#ks <- seq(10,50,5)
-#qmodel <- list( ~ s(age, k=4) + year)
-#srmodel <- ~s(year, k=20)
-#liks <- liks <- data.frame(k=ks, nlogl=NA)
-#for(i in ks){
-#	fmodel <- as.formula(substitute(~s(age, k=4) + s(year, k=x), list(x=i)))
-#	liks[liks$k==i,2] <- as.numeric(BIC(a4aSCA(ple4, ple4.indices[1], fmodel, qmodel, srmodel)))
-#}
+fit <- sca(ple4, ple4.indices, fit="assessment")
+nits <- 25
+stk <- ple4 + fit
+fits <- simulate(fit, nits)
+stks <- ple4 + fits 
+idxs <- ple4.indices[1]
+index(idxs[[1]]) <- index(fits)[[1]]
+library(parallel)
+options(mc.cores=4)
+lst <- lapply(split(1:nits, 1:nits), function(x){
+	out <- try(sca(iter(stks, x), FLIndices(iter(idxs[[1]], x)))) 
+	if(is(out, "try-error")) NULL else out
+})
+
+stks2 <- stks
+for(i in 1:nits){
+	iter(catch.n(stks2), i) <- catch.n(lst[[i]])
+	iter(stock.n(stks2), i) <- stock.n(lst[[i]])
+	iter(harvest(stks2), i) <- harvest(lst[[i]])
+} 
+catch(stks2) <- computeCatch(stks2) 
+stock(stks2) <- computeStock(stks2) 
 @
 
-\subsubsection{Paralell computing (not working yet ...)}
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
+plot(FLStocks(orig=stk, sim=stks, fitsim=stks2))
+@
+
+\subsubsection{Paralell computing}
+
+This is an example of how to use the parallel package to run assessments. In this example each iteration is a dataset, including surveys, and we'll run one assessment for each iteration. Afterwards the data is pulled back together in a FLStock object and plotted. Only 20 iterations are ran to avoid taking too long. Also note that we're using 4 cores. This parameter depends on the computer being used. These days almost all computers have 2 cores.
+
+Finnally, compare this code with the one for replicating WCSAM and note that it's exacly the same, except that we're using mclapply, which is in parallel, instead of lapply. 
 
 <<>>=
-#fmodel <- ~ s(age, k=4) + s(year, k = 20)
-#qmodel <- list( ~ s(age, k=4) + year)
-#srmodel <- ~s(year, k=20)
-#fit <- a4aSCA(ple4, ple4.indices[1], fmodel, qmodel, srmodel) 
-#fits <- simulate(fit, 25)
-#stks <- ple4 + fits 
-#idxs <- ple4.indices[1]
-#index(idxs[[1]]) <- index(fits)[[1]]
-#library(parallel)
-#options(mc.cores=1)
-#lst <- mclapply(split(1:25, 1:25), function(x){
-#	fit <- a4aSCA(stks[,,,,,x], FLIndices(idxs[[1]][,,,,,x]), fmodel, qmodel, srmodel, fit="MP") 
-#})
+nits <- 20
+fit <- a4aSCA(ple4, ple4.indices[1]) 
+stk <- ple4 + fit
+fits <- simulate(fit, nits)
+stks <- ple4 + fits 
+idxs <- ple4.indices[1]
+index(idxs[[1]]) <- index(fits)[[1]]
+library(parallel)
+options(mc.cores=4)
+lst <- mclapply(split(1:nits, 1:nits), function(x){
+	out <- try(sca(iter(stks, x), FLIndices(iter(idxs[[1]], x)))) 
+	if(is(out, "try-error")) NULL else out
+})
+
+stks2 <- stks
+for(i in 1:nits){
+	iter(catch.n(stks2), i) <- catch.n(lst[[i]])
+	iter(stock.n(stks2), i) <- stock.n(lst[[i]])
+	iter(harvest(stks2), i) <- harvest(lst[[i]])
+} 
+catch(stks2) <- computeCatch(stks2) 
+stock(stks2) <- computeStock(stks2) 
+stks3 <- FLStocks(orig=stk, sim=stks, fitsim=stks2)
+
+@
+
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
+plot(stks3)
 @
 
 \subsection{Model averaging}
@@ -1434,11 +1635,11 @@ flqs <- lapply(stks, ssb)
 flqs <- lapply(flqs, iterMedians)
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 xyplot(data~year, groups=qname, data=flqs, type="l")
 @
 
-<<figure=TRUE>>=
+<<figure=TRUE,fig.pos="h!",echo=FALSE>>=
 plot(stks)
 @
 
