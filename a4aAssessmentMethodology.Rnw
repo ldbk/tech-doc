@@ -52,20 +52,84 @@
 
 \section{Introduction}
 
+\subsection{Background}
+
+(quoting from Jardim, et.al, 2014\footnote{Jardim,E., Millar,C.P., Mosqueira,I., Scott,F., Osio,G.C., Ferretti,M., Alzorriz,N., Orio,A. 2014. What if stock assessment is as simple as a linear model? The a4a initiative. ICES JMS. \url{http://icesjms.oxfordjournals.org/content/early/2014/04/03/icesjms.fsu050.abstract}
+})
+
+The volume and availability of data useful for fisheries stock assessment is continually increasing. Time series of ‘traditional’ sources of information, such as surveys and landings data are not only getting longer, but also cover an increasing number of species.
+
+For example, in Europe the 2009 revision of the Data Collection Regulation (EU, 2008a) has changed the focus of fisheries sampling programmes away from providing data for individual assessment of ‘key’ stocks (i.e. those that are economically important) to documenting fishing trips, thereby shifting the perspective to a large coastal monitoring programme. The result has been that data on growth and reproduction of fish stocks are being collected for more than 300 stocks in waters where the European fleets operate.
+
+Recognizing that the context above required new methodological developments, the European Commission Joint Research Centre (JRC) started its ‘Assessment for All’ Initiative (a4a), with the aim to develop, test, and distribute methods to assess a large numbers of stocks in an operational time frame, and to build the necessary capacity/expertise on stock assessment and advice provision. 
+
+The long-term strategy of a4a is to increase the number of stock assessments by reducing the workload required to run each analysis and by bringing more scientists/analysts into fisheries management advice. The first is achieved by developing a working framework with the methods required to run all the analysis a stock assessment needs. Such an approach should make the model exploration and selection processes easier, as well as decreasing the burden of moving between software platforms. The second can be achieved by making the analysis more intuitive, thereby attracting more experts to join stock assessment teams.
+
+(end quoting)
+
+The a4a Initiative objectives are:
 \begin{itemize}
-	\item Objectives
-	\item a4a concepts
-	\begin{itemize}
-		\item life history considers parameters to have distributions, it's a kind of Bayesian posteriors informed estimates, but if one runs a Bayesian analysis to estimate growth parameters the posteriors can be used  
-	\end{itemize}
-	\item Workflow diagram
+	\item develop an assessment method targeting stocks that have a reduced knowledge base on biology and moderate time series on exploitation and abundance;
+	\item trigger the discussion about the problem of massive stock assessment;
+	\item capacity building
 \end{itemize}
 
+To achieve these objectives, the Initiative proposed to carry out the following tasks
+\begin{itemize}
+	\item define a moderate data stock;
+	\item develop a stock assessment framework;
+	\item develop a forecasting algorithm based on MSE;
+	\item carry out training courses for marine scientists.
+\end{itemize}
+
+The moderate data stock definition was an important step in the Initiative's development. It clearly focused the initiative on stocks with some information, moving away from the data-poor stocks, but without moving into data eager methodologies. It was recognized that there's a lot of research on both extremes of the data availability spectrum, but the middle 'region' is most of the times left behind.
+
+The 'moderate data stock', which constitutes the entry level of our analysis, has, at least:
+\begin{itemize}
+	\item in relation to exploitation:
+	\begin{itemize}
+		\item nominal effort
+		\item volume of catches, which may be split in landings and discards, or not
+		\item length frequencies of the catches, landings or discards
+	\end{itemize}
+	\item in relation to biology:
+	\begin{itemize}
+		\item knife edge maturity ogive
+		\item indication of growth model and parameters
+		\item length-weight relationship
+	\end{itemize}
+	\item in relation to abundance:
+	\begin{itemize}
+		\item index of abundance
+	\end{itemize}	
+\end{itemize}
+
+Note that these datasets can be assembled in different ways, using distinct methods. 
+
+The stock assessment model framework is a non-Linear catch-at-age model implemented in R/FLR/ADMB that can be applied rapidly to a wide range of situations with low parametrization requirements. Later we'll come back to these characteristics and it's application.
+
+Regarding the MSE, it's seen as a sophisticated forecasting algorithm that takes into account structural uncertainty about stock dynamics (growth, recruitment, maturity) and on exploitation by commercial fleets (selectivity), embedding the framework of decision making. 
+
+\subsection{The a4a approach to stock assessment and management advice}
+
+The approach presented here is split in 4 steps: (i) converting length data to age data using a growth model, (ii) modelling natural mortality, (iii) assessing the stock, and (iv) MSE\footnote{Under development, to be released with version 2.0, scheduled for the fourth quarter of 2014}.
+
+These steps may be followed in sequence or independently, depending on the user's preferences. All that is needed is to use the objects provided by the previous step and provide the objects required by the next, so that data flows between steps smoothly. One can make the analogy with a lego build, where for each layer the builder may use the pieces provided by a particular boxset, or make use of pieces from other boxsets. Figure \ref{fig:inout} shows the process including the class of the objects that carry the data (in black).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{./inout}
+\caption{In/out process of the a4a approach. The boxes in black represent the classes of the objects that carry the information for each step and out of each step.}
+\label{fig:inout}
+\end{figure}
+
+Analysis related with projections and biological reference points are dealt by the FLR packages FLash and FLBRP. As such the Initiative does not provide specific methods for these analysis.
+
+Steps 1 and 2 are simulation based, there's no fitting of growth models or natural mortality models. The rationale is to provide tools that allow the uncertainty associated with these processes to be carried on into the stock assessment. This approach allows the users to pick up the required information from other sources of information, like papers, PhDs, Fishbase, other stocks, etc. Baring in mind that the entry level stock may not have hard information on the processes of growth or natural mortality, but generic information about life history invariants can be used. For example, Nokome Bentley is developing an R package that uses bayesian networks to estimate empirical distributions for these parameters from Fishbase.
+
+\subsection{Loading libraries, data and defining some useful functions}
 
 <<load_libraries, message=FALSE, warning=FALSE>>=
-#==============================================================================
-# Libraries and constants 
-#==============================================================================
 library(FLa4a)
 library(XML)
 library(reshape2)
@@ -80,9 +144,7 @@ opts_chunk$set(dev='png', cache=TRUE, fig.align='center', background='white',  w
 @
 
 <<trans_funcs, message=FALSE, warning=FALSE>>=
-#==============================================================================
-# Some functions for transforming the data
-#==============================================================================
+# functions for transforming the data
 
 # quant 2 quant
 qt2qt <- function(object, id=5, split="-"){
@@ -104,9 +166,7 @@ cim <- function(object, n, wt, hrv="missing"){
 	}
 }
 
-#==============================================================================
 # and a plot for later
-#==============================================================================
 plotS4 <- function(object, linktext="typeof", main="S4 class", ...){
 	args <- list(...)
 	obj <- getClass(as.character(object))
@@ -132,12 +192,9 @@ For this document we'll use the plaice in ICES area IV dataset, provided by FLR,
 
 In this section we read in the Gadget data files, and transform them into FLR objects.
 
-First we read in the files as data frames.
-<<read_gadget_files>>=
-#==============================================================================
-# Read files
-#==============================================================================
+First we read in the files as data frames and recode some variables.
 
+<<read_gadget_files>>=
 # catch
 cth.orig <- read.table("data/catch.len", skip=5)
 
@@ -149,9 +206,7 @@ idx.orig <- read.table("data/survey.len", skip=5)
 idxJmp.orig <- read.table("data/jump.survey.len", skip=5)
 idxTrd.orig <- read.table("data/tend.survey.len", skip=5)
 
-#==============================================================================
 # Recode the length categories into something usable
-#==============================================================================
 
 # catch
 cth.orig[,5] <- qt2qt(cth.orig)
@@ -165,13 +220,9 @@ idxJmp.orig[,5] <- qt2qt(idxJmp.orig)
 idxTrd.orig[,5] <- qt2qt(idxTrd.orig)
 @
 
-Then we reshape the data frames into six dimensional arrays.
+Then we reshape the data frames into six dimensional arrays using cast from package 'reshape2'.
 
 <<cast_data>>=
-#==============================================================================
-# Cast the data into arrays
-#==============================================================================
-
 # catch
 cth.n <- acast(V5~V1~1~V2~1~1, value.var="V6", data=cth.orig)
 cth.wt <- acast(V5~V1~1~V2~1~1, value.var="V7", data=cth.orig)
@@ -185,11 +236,9 @@ stk.wt <- acast(V5~V1~1~V2~1~1, value.var="V7", data=stk.orig)
 idx.n <- acast(V5~V1~1~V2~1~1, value.var="V6", data=idx.orig)
 idx.wt <- acast(V5~V1~1~V2~1~1, value.var="V7", data=idx.orig)
 idx.hrv <- acast(V5~V1~1~V2~1~1, value.var="V8", data=idx.orig)
-
 idxJmp.n <- acast(V5~V1~1~V2~1~1, value.var="V6", data=idxJmp.orig)
 idxJmp.wt <- acast(V5~V1~1~V2~1~1, value.var="V7", data=idxJmp.orig)
 idxJmp.hrv <- acast(V5~V1~1~V2~1~1, value.var="V8", data=idxJmp.orig)
-
 idxTrd.n <- acast(V5~V1~1~V2~1~1, value.var="V6", data=idxTrd.orig)
 idxTrd.wt <- acast(V5~V1~1~V2~1~1, value.var="V7", data=idxTrd.orig)
 idxTrd.hrv <- acast(V5~V1~1~V2~1~1, value.var="V8", data=idxTrd.orig)
@@ -198,10 +247,6 @@ idxTrd.hrv <- acast(V5~V1~1~V2~1~1, value.var="V8", data=idxTrd.orig)
 We take the arrays and make \class{FLQuant} objects from them.
 
 <<make_FLQs>>=
-#==============================================================================
-# Make FLQuant objects
-#==============================================================================
-
 # catch
 dnms <- dimnames(cth.n)
 names(dnms) <- names(dimnames(FLQuant()))
@@ -218,7 +263,7 @@ names(dnms)[1] <- "len"
 stk.n <- FLQuant(stk.n, dimnames=dnms)
 stk.wt <- FLQuant(stk.wt, dimnames=dnms)
 
-# stock
+# surveys
 dnms <- dimnames(idx.n)
 names(dnms) <- names(dimnames(FLQuant()))
 names(dnms)[1] <- "len"
@@ -244,10 +289,6 @@ idxTrd.hrv <- FLQuant(idxTrd.hrv, dimnames=dnms)
 Some sanity checks to check that the resulting objects have matching dimensions.
 
 <<dim_check>>=
-#==============================================================================
-# Check dims match
-#==============================================================================
-
 # catch
 cim(cth.orig, cth.n, cth.wt, hrv)
 
@@ -273,15 +314,13 @@ cim(idxTrd.orig, idxTrd.n, idxTrd.wt, idxTrd.hrv)
 Finally, we make FLR objects from the data.
 
 <<make_FLR_objects>>=
-#==============================================================================
-# FLR objects
-#==============================================================================
-
+# stock
 rfLen.stk <- FLStockLen(stock.n=stk.n, stock.wt=stk.wt, stock=quantSums(stk.wt*stk.n), catch.n=cth.n, catch.wt=cth.wt/cth.n, catch=quantSums(cth.wt), harvest=hrv)
 m(rfLen.stk)[] <- 0.05
 mat(rfLen.stk)[] <- m.spwn(rfLen.stk)[] <- harvest.spwn(rfLen.stk)[] <- 0
 mat(rfLen.stk)[38:59,,,3:4] <- 1
-  
+
+# surveys
 rfTrawl.idx <- FLIndex(index=idx.n, catch.n=idx.n, catch.wt=idx.wt, sel.pattern=idx.hrv) 
 effort(rfTrawl.idx)[] <- 100
 
@@ -290,12 +329,6 @@ effort(rfTrawlJmp.idx)[] <- 100
 
 rfTrawlTrd.idx <- FLIndex(index=idxTrd.n, catch.n=idxTrd.n, catch.wt=idxTrd.wt, sel.pattern=idxTrd.hrv) 
 effort(rfTrawlTrd.idx)[] <- 100
-
-#==============================================================================
-# Save the objects for future use
-#==============================================================================
-
-save(rfLen.stk, rfTrawl.idx, rfTrawlJmp.idx, rfTrawlTrd.idx, file="data/rfLen.rdata")
 @
 
 \pagebreak
@@ -316,33 +349,20 @@ showClass("a4aGr")
 A simple construction of \class{a4aGr} objects requires the model and parameters to be provided.
 Check the help file for more information.
 
-Here we show an example using the von Bertalanffy growth model. It is possible to use other growth models.
+Here we show an example using the von Bertalanffy growth model. To create the a4aGr object it's necessary to pass the model equation (length ~ time), the inverse model equation (time ~ length) and the parameters. Any growth model can be used as long as it's possible to write the equation in the form explained.
 
 <<a4aGr_vB_example>>=
-#==============================================================================
-# An example using the von Bertalanffy growth model
-#==============================================================================
-
-# Create the a4aGr object by passing in:
-# the model (length ~ time)
-# the inverse of the model (time ~ length)
-# the parameters
 vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","ano-1","ano")))
+
+# Check the model and its inverse
+lc=20
+predict(vbObj, len=lc)
+predict(vbObj, t=predict(vbObj, len=lc))==lc
 @
 
 The predict method allows the transformation between age and lengths.
 
 <<predict_araGr_example>>=
-#==============================================================================
-# Predicting ages from lengths and vice-versa
-#==============================================================================
-
-# First we check the model and its inverse
-lc=20
-predict(vbObj, len=lc)
-predict(vbObj, t=predict(vbObj, len=lc))==lc
-
-# Example of converting a vector of lengths or ages
 predict(vbObj, len=5:10+0.5)
 predict(vbObj, t=5:10+0.5)
 @
@@ -353,20 +373,30 @@ Uncertainty in the growth model is introduced through the inclusion of parameter
 This is done by making use of the parameter variance-covariance matrix (the \code{vcov} slot of the \class{a4aGr} class) and assuming a distribution.
 The numbers in the variance-covariance matrix could come from the parameter uncertainty from fitting the growth model parameters.
 
-Here we set the variance-covariance matrix with some made up numbers.
+Here we set the variance-covariance matrix by scaling a correlation matrix, using a cv of 0.2.
 
 <<set_vcov_example>>=
-#==============================================================================
-# Setting the variance-covariance matrix
-#==============================================================================
-
-# Make an empty vcov matrix
-mm <- matrix(NA, ncol=3, nrow=3)
-# Fill it up with made up values
-diag(mm) <- c(100, 0.001,0.001)
-mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.1,0.1,0.0003)
+# Make an empty cor matrix
+cm <- diag(c(1,1,1))
+# k and linf are negatively correlated while t0 is independent
+cm[1,2] <- cm[2,1] <- -0.5
+# scale cor to var using CV=0.2 and some made up values
+cv <- 0.2
+p <- c(linf=60, k=0.09, t0=-0.01)
+vc <- matrix(1, ncol=3, nrow=3)
+l <- vc
+l[1,] <- l[,1] <- p[1]*cv
+k <- vc
+k[,2] <- k[2,] <- p[2]*cv
+t <- vc
+t[3,] <- t[,3] <- p[3]*cv
+mm <- t*k*l
+diag(mm) <- diag(mm)^2
+mm <- mm*cm
+# check that we have the correlation foreseen
+all.equal(cm, cov2cor(mm))
 # Create the a4aGr object as before but now we also include arguments for multivariate normal uncertainty
-vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=58.5, k=0.086, t0=0.001, units=c("cm","ano-1","ano")), vcov=mm)
+vbObj <- a4aGr(grMod=~linf*(1-exp(-k*(t-t0))), grInvMod=~t0-1/k*log(1-len/linf), params=FLPar(linf=p["linf"], k=p["k"], t0=p["t0"], units=c("cm","ano-1","ano")), vcov=mm)
 @
 
 First we show a simple example where we assume that the parameters are represented using a multivariate normal distribution.
@@ -374,10 +404,6 @@ First we show a simple example where we assume that the parameters are represent
 % If the parameters or the covariance matrix have iterations then the medians accross iterations are computed before simulating. Check help for \code{mvrnorm} for more information.
 
 <<simulate_vcov_example>>=
-#==============================================================================
-# Simulating parameters using a multivariate normal distribution
-#==============================================================================
-
 # Note that the object we have just created has a single iteration of each parameter
 vbObj@params
 dim(vbObj@params)
@@ -390,9 +416,7 @@ vbNorm@params
 dim(vbNorm@params)
 @
 
-We can now convert from length to ages data based on the 10000 parameter iterations.
-This gives us 10000 sets of ages data.
-For example, here we convert a single length vector: 
+We can now convert from length to ages data based on the 10000 parameter iterations. This gives us 10000 sets of ages data. For example, here we convert a single length vector: 
 
 <<>>=
 ages <- predict(vbNorm, len=5:10+0.5)
@@ -409,7 +433,7 @@ hist(c(params(vbNorm)["k",]), main="k", prob=TRUE, xlab="")
 hist(c(params(vbNorm)["t0",]), main="t0", xlab="")
 @
 
-\begin{figure}
+\begin{figure}[h]
 <<example_norm_parameter_distributions, echo=FALSE>>=
 <<plot_multinorm_marginal>>
 @
@@ -428,7 +452,7 @@ splom(data.frame(t(params(vbNorm)@.Data)), pch=".")
 boxplot(t(predict(vbNorm, t=0:50+0.5)))
 @
 
-\begin{figure}
+\begin{figure}[h]
 <<example_norm_parameter_scatter, echo=FALSE>>=
 <<code_fig_plot_norm_scatter>>
 @
@@ -438,7 +462,7 @@ boxplot(t(predict(vbNorm, t=0:50+0.5)))
 
 Growth curves for the 1000 iterations can be seen in Figure~\ref{fig:plot_mv_growth}.
 
-\begin{figure}
+\begin{figure}[h]
 <<example_mv_growth_curve_plot, echo=FALSE>>=
 <<code_plot_mv_growth>>
 @
@@ -449,14 +473,11 @@ Growth curves for the 1000 iterations can be seen in Figure~\ref{fig:plot_mv_gro
 \subsection{Adding parameter uncertainty with a multivariate triangle distribution}
 \label{sec:growth_triangle_cop}
 
-One alternative to using normal distributions, particularly if you don't believe in asymptotic theory, is to use triangle distributions (\url{http://en.wikipedia.org/wiki/Triangle_distribution}). These distributions are parametrized using the minimum, maximum and median values.
-This can be very attractive if the analyst needs to scrape information from the web or literature and perform some kind of meta-analysis.
+One alternative to using normal distributions, particularly if you don't believe in asymptotic theory, is to use triangle distributions (\url{http://en.wikipedia.org/wiki/Triangle_distribution}). These distributions are parametrized using the minimum, maximum and median values. This can be very attractive if the analyst needs to scrape information from the web or literature and perform some kind of meta-analysis.
+
+Example of setting a triangle distribution with values taken from FishBase.
 
 <<tri_example>>=
-#==============================================================================
-# Example of setting a triangle distribution with values taken from FishBase
-#==============================================================================
-
 # The web address for the growth parameters for redfish (Sebastes norvegicus)
 addr <- "http://www.fishbase.org/PopDyn/PopGrowthList.php?ID=501"
 # Scrape the data
@@ -490,7 +511,7 @@ hist(c(params(vbTri)["t0",]), main="t0", xlab="")
 splom(data.frame(t(params(vbTri)@.Data)), pch=".")
 @
 
-\begin{figure}
+\begin{figure}[h]
 <<example_tri_parameter_distributions, echo=FALSE>>=
 <<code_plot_tri_params>>
 @
@@ -499,7 +520,7 @@ splom(data.frame(t(params(vbTri)@.Data)), pch=".")
 \end{figure}
 
 
-\begin{figure}
+\begin{figure}[h]
 <<example_tri_parameter_scatter, echo=FALSE>>=
 <<code_plot_tri_scatter>>
 @
@@ -514,7 +535,7 @@ We can still use \code{predict()} to get see the growth model uncertainty (Figur
 boxplot(t(predict(vbTri, t=0:20+0.5)))
 @
 
-\begin{figure}
+\begin{figure}[h]
 <<example_tri_parameter_growth, echo=FALSE>>=
 <<code_plot_tri_growth>>
 @
@@ -547,7 +568,7 @@ splom(data.frame(t(params(vbCop)@.Data)), pch=".")
 boxplot(t(predict(vbCop, t=0:20+0.5)))
 @
 
-\begin{figure}
+\begin{figure}[h]
 <<example_cop_tri_scatter, echo=FALSE>>=
 <<code_plot_cop_tri_scatter>>
 @
@@ -555,7 +576,7 @@ boxplot(t(predict(vbCop, t=0:20+0.5)))
 \label{fig:plot_cop_tri_scatter}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
 <<example_cop_tri_growth, echo=FALSE>>=
 <<code_plot_cop_tri_growth>>
 @
@@ -567,59 +588,34 @@ boxplot(t(predict(vbCop, t=0:20+0.5)))
 
 After introducing uncertainty in the growth model through the parameters it's time to transform the length-based dataset into an age-based dataset. The method that deals with this process is \code{l2a()}. The implementation of this method for the \class{FLQuant} class is the main workhorse. There's two other implementations, for the \class{FLStock} and \class{FLIndex} classes, which are mainly wrappers that call the \class{FLQuant} method several times.
 
-When converting from length-based data to age-based data you need to be aware of how the aggregation of length classes is performed.
-For example, individuals in length classes 1-2, 2-3, and 3-4 cm may all be considered as being of age 1 (obviously depending on the growth model). How should the values in those length classes be combined?
+When converting from length-based data to age-based data you need to be aware of how the aggregation of length classes is performed. For example, individuals in length classes 1-2, 2-3, and 3-4 cm may all be considered as being of age 1 (obviously depending on the growth model). How should the values in those length classes be combined?
 
-If the values are abundances then the values should be summed.
-Summing other types of values such as weights and rates (like fishing mortality) does not make sense. Instead these values are averaged over the length classes (weighted by the abundance for weights).
-This is controlled using the \code{stat} argument which can be either \code{mean} or \code{sum} (the default).
+If the values are abundances then the values should be summed. Summing other types of values such as weights and rates (like fishing mortality) does not make sense. Instead these values are averaged over the length classes (weighted by the abundance for weights). This is controlled using the \code{stat} argument which can be either \code{mean} or \code{sum} (the default).
 
-%Note that, for the moment, this method is quite slow. There's a double loop in the code that makes it slow, but we're working on a better solution.
+We demontrate the method by converting a catch-at-length FLQuant to a catch-at-age FLQuant. First we make the an a4aGr object with a multivariate triangle distribution. We use 10 iterations as an example. More would be better. And call l2a by passing in the length-based FLQuant and the a4aGr object.
 
 <<FLQ_l2a, message=FALSE, warning=FALSE>>=
-#==============================================================================
-# Convert length-based FLQuant to age-based FLQuant
-#==============================================================================
-
-# We demontrate the method by converting a catch-at-length FLQuant to a catch-at-age FLQuant.
-# First we make the an a4aGr object with a multivariate triangle distribution.
-# We use 10 iterations as an example. More would be better.
 vbTriSmall <- mvrtriangle(10, vbObj, paramMargins=triPars)
-# We use l2a by passing in the length-based FLQuant and the a4aGr object
 cth.n <- l2a(catch.n(rfLen.stk), vbTriSmall)
 @
-
-%The \code{cth.n} object is an \class{FLQuant} of catches at age with the same number of iterations as the growth model:
 
 <<example_flq_slice>>=
 dim(cth.n)
 @
 
-In the previous example, the \class{FLQuant} object was sliced (\code{catch.n(rfLen.stk)}) had only one iteration. This iteration was sliced by each of the iterations in the growth model. It is possible for the \class{FLQuant} object to have the same number of iterations as the growth model, in which case each iteration of the \class{FLQuant} and the growth model are used together.
-It is also possible for the growth model to have only one iteration while the \class{FLQuant} object has many iterations. The same growth model is then used for each of the \class{FLQuant} iterations. As with all FLR objects, the general rule is \emph{one or n} iterations.
+In the previous example, the \class{FLQuant} object was sliced (\code{catch.n(rfLen.stk)}) had only one iteration. This iteration was sliced by each of the iterations in the growth model. It is possible for the \class{FLQuant} object to have the same number of iterations as the growth model, in which case each iteration of the \class{FLQuant} and the growth model are used together. It is also possible for the growth model to have only one iteration while the \class{FLQuant} object has many iterations. The same growth model is then used for each of the \class{FLQuant} iterations. As with all FLR objects, the general rule is \emph{one or n} iterations.
 
 
-As well as converting one \class{FLQuant} at a time, we can convert entire \class{FLStock} and \class{FLIndex} objects.
-In these cases the individual \class{FLQuant} slots of those classes are converted from length-based to age-based.
-As mentioned above, the aggregation method depends on the type of values the slots contain.
-The abundance slots (\code{*.n}, such as \code{stock.n}) are summed.
-The \code{*.wt}, \code{m}, \code{mat}, \code{harvest.spwn}, \code{m.spwn} and \code{harvest} slots of an \class{FLStock} object are averaged. 
-%The weights are then corrected to ensure that the total catch weight (and landings, discards and stock weights) in the age-based object is the same as that in the length-based object.
-The \code{index}, \code{catch.wt}, \code{index.var}, \code{sel.pattern} and \code{index.q} slots of an \class{FLIndex} object are averaged.
+As well as converting one \class{FLQuant} at a time, we can convert entire \class{FLStock} and \class{FLIndex} objects. In these cases the individual \class{FLQuant} slots of those classes are converted from length-based to age-based. As mentioned above, the aggregation method depends on the type of values the slots contain. The abundance slots (\code{*.n}, such as \code{stock.n}) are summed. The \code{*.wt}, \code{m}, \code{mat}, \code{harvest.spwn}, \code{m.spwn} and \code{harvest} slots of an \class{FLStock} object are averaged. The \code{index}, \code{catch.wt}, \code{index.var}, \code{sel.pattern} and \code{index.q} slots of an \class{FLIndex} object are averaged.
 
 The method for \class{FLStock} classes takes an additional argument for the plusgroup.
 
 <<FLS_FLI_l2a, message=FALSE, warning=FALSE>>=
-#==============================================================================
-# Convert length-based FLStock and FLIndec to age-based 
-#==============================================================================
-
 aStk <- l2a(rfLen.stk, vbTriSmall, plusgroup=14)
 aIdx <- l2a(rfTrawl.idx, vbTriSmall)
 @
 
-When converting with \code{l2a()} there are a number of defaults of which the user should be aware. 
-As there is no information in the growth model on how to deal with individuals larger than Linf, all lengths above Linf are converted to the maximum age. The variability around Linf is dealt with by the randomization of the parameter Linf and this should be consistent with the variance in the data.
+When converting with \code{l2a()} there are a number of defaults of which the user should be aware. As there is no information in the growth model on how to deal with individuals larger than Linf, all lengths above Linf are converted to the maximum age. The variability around Linf is dealt with by the randomization of the parameter Linf and this should be consistent with the variance in the data.
 
 \pagebreak
 \section{Natural mortality}
@@ -642,10 +638,7 @@ In this section we go through each of the steps in detail using a variety of dif
 
 \subsection{\code{a4aM} - The M class}
 
-Natural mortality is implemented in a class named \class{a4aM}. This class is made up of three models of the class \class{FLModelSim}.
-Each model represents one effect: an age or length effect, a scaling (level) effect and a time trend, named \code{shape}, \code{level} and \code{trend}, respectively.
-The impact of the models is multiplicative, i.e. the overal natural mortality is given by \class{shape} x  \class{level} x \class{trend}.
-Check the help files for more information.
+Natural mortality is implemented in a class named \class{a4aM}. This class is made up of three models of the class \class{FLModelSim}. Each model represents one effect: an age or length effect, a scaling (level) effect and a time trend, named \code{shape}, \code{level} and \code{trend}, respectively. The impact of the models is multiplicative, i.e. the overal natural mortality is given by \class{shape} x  \class{level} x \class{trend}. Check the help files for more information.
 
 <<showClass_a4aM>>=
 showClass("a4aM")
@@ -659,26 +652,14 @@ m1 <- a4aM(level=mod02)
 m1
 @
 
-More interesting natural mortality shapes can be set up using biological knowledge.
-The following example uses an exponential decay over ages (implying that resulting \class{FLQuant} generated by the \code{m()} method will be age beased).
-We also use Jensen's second estimator (Kenshington, 2013) as a scaling \code{level} model. This is based on the von Bertalanffy $K$ parameter, $M=1.5K$. 
+More interesting natural mortality shapes can be set up using biological knowledge. The following example uses an exponential decay over ages (implying that resulting \class{FLQuant} generated by the \code{m()} method will be age beased). We also use Jensen's second estimator (Kenshington, 2013) as a scaling \code{level} model. This is based on the von Bertalanffy $K$ parameter, $M=1.5K$. 
 
 <<jensen_second_m>>=
-#==============================================================================
-# Models for age-based shape and level
-#==============================================================================
-
 shape2 <- FLModelSim(model=~exp(-age-0.5))
 level2 <- FLModelSim(model=~1.5*k, params=FLPar(k=0.4))
-
-#==============================================================================
-# a4aM constructor
-#==============================================================================
-
 m2 <- a4aM(shape=shape2, level=level2)
 m2
 @ 
-
 
 Note that the \code{shape} model has \code{age} as a parameter of the model but is not set using the \code{params} argument.
 
@@ -688,25 +669,19 @@ $M_l=K(\frac{L_inf}{l})^1.5$
 We use the default \code{level} and \class{trend} models.
 % Current m() method is not ideal for length based methods as you cannot specify length range and half-widths to make compatible with FLStockLen
 
-<<gis_shape>>=
-#==============================================================================
-# A length-base shape model
-#==============================================================================
+Check a length-base shape model.
 
+<<gis_shape>>=
 shape_len <- FLModelSim(model=~K*(linf/len)^1.5, params=FLPar(linf=60, K=0.4))
 m_len <- a4aM(shape=shape_len)
 @
 
-
 As an alternative, an external factor may impact the natural mortality. This can be added through the \code{trend} model. Suppose M depends on the NAO through some mechanism that results in having lower M when NAO is negative and higher when it's positive. The impact is represented by the NAO value on the quarter before spawning, which occurs in the second quarter. 
 
-We use this to make a complicated natural mortality model with an age based shape model, a level model based on $K$ and a trend model driven by NAO.
+We use this to make a complicated natural mortality model with an age based shape model, a level model based on $K$ and a trend model driven by NAO, where M increases 50\% if NAO is positive on the first quarter.
 
 <<nao_m>>=
-#==============================================================================
 # Get NAO
-#==============================================================================
-
 nao.orig <- read.table("http://www.cdc.noaa.gov/data/correlation/nao.data", skip=1, nrow=62, na.strings="-99.90")
 dnms <- list(quant="nao", year=1948:2009, unit="unique", season=1:12, area="unique")
 # Build an FLQuant from the NAO data
@@ -715,17 +690,8 @@ nao.flq <- FLQuant(unlist(nao.orig[,-1]), dimnames=dnms, units="nao")
 nao <- seasonMeans(nao.flq[,,,1:3]) 
 # Turn into Boolean
 nao <- (nao>0)
-
-#==============================================================================
-# The trend model: M increases 50% if NAO is positive on the first quarter
-#==============================================================================
-
 trend3 <- FLModelSim(model=~1+b*nao, params=FLPar(b=0.5))
-
-#==============================================================================
 # Constructor
-#==============================================================================
-
 shape3 <- FLModelSim(model=~exp(-age-0.5))
 level3 <- FLModelSim(model=~1.5*k, params=FLPar(k=0.4))
 m3 <- a4aM(shape=shape3, level=level3, trend=trend3)
@@ -737,30 +703,9 @@ m3
 Uncertainty on natural mortality is added through uncertainty on the parameters. In the case of the \class{a4aM} class it makes use of the \class{FLModelSim} \code{mvr()} methods. A wrapper for \code{mvrnorm} was implemented, but all the other options must be carried out in each sub-model at the time.
 
 <<mvrnorm_m>>=
-#==============================================================================
-# The same exponential decay for shape
-#==============================================================================
-
 shape4 <- FLModelSim(model=~exp(-age-0.5))
-
-#==============================================================================
-# For level we'll use Jensen's third estimator (Kenshington, 2013).
-#==============================================================================
-
-# Has two parameters, k and t
-# We include a variance-covariance matrix for the parameter interaction
 level4 <- FLModelSim(model=~k^0.66*t^0.57, params=FLPar(k=0.4, t=10), vcov=array(c(0.002, 0.01,0.01, 1), dim=c(2,2)))
-
-#==============================================================================
-# A trend from NAO
-#==============================================================================
-
-# We also include variance
 trend4 <- FLModelSim(model=~1+b*nao, params=FLPar(b=0.5), vcov=matrix(0.02))
-
-#==============================================================================
-# Create object and simulate 100 times
-#==============================================================================
 m4 <- a4aM(shape=shape4, level=level4, trend=trend4)
 m4 <- mvrnorm(100, m4)
 m4
@@ -785,18 +730,13 @@ m4 <- a4aM(shape=shape4, level=mvrnorm(100, level4), trend=mvrnorm(100, trend4))
 
 \subsection{Adding parameter uncertainty with copulas}
 
-We can also use copulas add parameter uncertainty to the natural mortality model, similar to the way we use them for the growth model \ref{sec:growth_triangle_cop}.
-As stated above these processes make use of the methods implemented for the \class{FLModelSim} class.
+We can also use copulas add parameter uncertainty to the natural mortality model, similar to the way we use them for the growth model \ref{sec:growth_triangle_cop}. As stated above these processes make use of the methods implemented for the \class{FLModelSim} class.
 
 % EXPAND...
 
-In the following example we'll use Gislason's second estimator (REF), $M_l=K(\frac{L_inf}{l})^1.5$.
+In the following example we'll use Gislason's second estimator (REF), $M_l=K(\frac{L_inf}{l})^1.5$ and a triangle copula to model parameter uncertainty in natural mortality.
 
 <<gis_copula>>=
-#==============================================================================
-# Using a triangle copula to model parameter uncertainty in natural mortality
-#==============================================================================
-
 linf <- 60
 k <- 0.4
 # vcov matrix (make up some values)
@@ -828,7 +768,7 @@ hist(c(params(mgis2)["linf",]), main="Linf", xlab="")
 hist(c(params(mgis2)["k",]), main="K", xlab="")
 @
 
-\begin{figure}
+\begin{figure}[h]
 <<example_tri_gis_m_scatter, echo=FALSE>>=
 <<code_plot_tri_gis_m>>
 @
@@ -836,7 +776,7 @@ hist(c(params(mgis2)["k",]), main="K", xlab="")
 \label{fig:plot_tri_gis_m}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
 <<example_tri_gis_m_hist, echo=FALSE>>=
 <<code_plot_tri_gis_m_hist>>
 @
@@ -844,10 +784,7 @@ hist(c(params(mgis2)["k",]), main="K", xlab="")
 \label{fig:plot_tri_gis_m_hist}
 \end{figure}
 
-
-We now have a new model that can be used for the \code{shape} model.
-Use the constructor or the set method to add the new model. Note that we have a quite complex method now for \emph{M}. A length based \code{shape} model from Gislason's work, Jensen's third based temperature \code{level} and a time \code{trend} depending on NAO. All of the component models have uncertainty in their parameters.
-
+We now have a new model that can be used for the \code{shape} model. Use the constructor or the set method to add the new model. Note that we have a quite complex method now for \emph{M}. A length based \code{shape} model from Gislason's work, Jensen's third based temperature \code{level} and a time \code{trend} depending on NAO. All of the component models have uncertainty in their parameters.
 
 <<making_complicated_m>>=
 m5 <- a4aM(shape=mgis2, level=level4, trend=trend4)
@@ -864,16 +801,13 @@ The \code{m} method is the workhorse method for computing natural mortality. The
 
 % Future developments will also allow for easy insertion into FLStockLen objects.
 
-The size of the \class{FLQuant} object is determined by the \code{min}, \code{max}, \code{minyear} and \code{maxyear} elements of the \code{range} slot of the \class{a4aM} object.
-By default the values of these elements are set to 0. Giving an \class{FLQuant} with length 1 in the quant and year dimension.
-The \code{range} slot can be set by hand, or by using the \code{rngquant()} and \code{rngyear()} methods.
+The size of the \class{FLQuant} object is determined by the \code{min}, \code{max}, \code{minyear} and \code{maxyear} elements of the \code{range} slot of the \class{a4aM} object. By default the values of these elements are set to 0. Giving an \class{FLQuant} with length 1 in the quant and year dimension. The \code{range} slot can be set by hand, or by using the \code{rngquant()} and \code{rngyear()} methods.
 
 The name of the first dimension of the output \class{FLQuant} (e.g. 'age' or 'len') is determined by the parameters of the \code{shape} model. If it is not clear what the name should be then the name is set to 'quant'.
 
+Using the m method to make an FLQuant of constant natural mortality:
+
 <<simple_m>>=
-#==============================================================================
-# Using the m method to make an FLQuant of constant natural mortality
-#==============================================================================
 # Start with the simplest model
 m1
 # Check the range
@@ -891,15 +825,13 @@ m(m1)
 # Note the name of the first dimension is 'quant'
 @
 
-The next example has an age based shape. As the shape model has 'age' as a variable which is not included in the \class{FLPar} slot it is used as the name of the first dimension.
-Note that in this case \emph{mbar} becames relevant. It's the range of quants (in this case, ages) that is used to compute the mean level. This mean level will match the value given by the \code{level} model.
+The next example has an age based shape. As the shape model has 'age' as a variable which is not included in the \class{FLPar} slot it is used as the name of the first dimension. Note that in this case \emph{mbar} becames relevant. It's the range of quants (in this case, ages) that is used to compute the mean level. This mean level will match the value given by the \code{level} model.
 
 The \emph{mbar} range can be changed with the \code{rngmbar()} method.
 
+Using the m method to make an FLQuant with age varying natural mortality:
+
 <<m2>>=
-#==============================================================================
-# Using the m method to make an FLQuant with age varying natural mortality
-#==============================================================================
 # Remind ourselves of the model
 m2
 # Simple with no ages or years - note that the first dimension is 'age'
@@ -926,15 +858,11 @@ m(m2)
 quantMeans(m(m2)[as.character(0:5)])
 @
 
-The next example uses a time trend for the \code{trend} model.
-We use the \code{m3} model we made earlier.
-The \code{trend} model for this model has a covariate, 'nao'. This needs to be passed in to the \code{m()} method.
-The year range of the 'nao' covariate should match that of the \code{range} slot.
+The next example uses a time trend for the \code{trend} model. We use the \code{m3} model we made earlier. The \code{trend} model for this model has a covariate, 'nao'. This needs to be passed in to the \code{m()} method. The year range of the 'nao' covariate should match that of the \code{range} slot.
+
+Using the m method to make an FLQuant with a time trend:
 
 <<m3_trend>>=
-#==============================================================================
-# Using the m method to make an FLQuant with a time trend
-#==============================================================================
 # Simple, pass in a single nao value (only one year)
 m(m3, nao=1)
 # Set some ages
@@ -945,14 +873,11 @@ rngyear(m3) <- c(2000, 2003)
 m(m3, nao=as.numeric(nao[,as.character(2000:2003)]))
 @
 
-The final example show how \code{m()} can be used to make an \class{FLQuant} with uncertainty (see Figure~\ref{fig:uncertain_m}).
-We use the \code{m4} from earlier with uncertainty on the level and trend parameters.
+The final example show how \code{m()} can be used to make an \class{FLQuant} with uncertainty (see Figure~\ref{fig:uncertain_m}). We use the \code{m4} from earlier with uncertainty on the level and trend parameters.
+
+Using the m method to make an FLQuant with uncertainty:
 
 <<m4_uncertainty_m>>=
-#==============================================================================
-# Using the m method to make an FLQuant with uncertainty
-#==============================================================================
-
 # Simple - no time trend but with iterations
 m(m4, nao=1)
 dim(m(m4, nao=1))
@@ -970,8 +895,7 @@ dim(m(m4, nao=as.numeric(nao[,as.character(2000:2003)])))
 bwplot(data~factor(age)|year, data=m(m4, nao=as.numeric(nao[,as.character(2000:2003)])))
 @
 
-
-\begin{figure}[h!]
+\begin{figure}[h]
 <<plot_uncertain_m, echo=FALSE>>=
 <<code_uncertain_m>>
 @
