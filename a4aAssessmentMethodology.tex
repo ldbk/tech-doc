@@ -11,16 +11,16 @@
 }
 \makeatother
 
-\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
-\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
-\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
-\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
-\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
-\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
-\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
-\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
-\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
-\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\definecolor{fgcolor}{rgb}{0, 0, 0}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.2,0.2,0.2}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.2,0.2,0.2}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.2,0.267,0.4}{#1}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0.2,0.2,0.2}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.361,0.506,0.596}{#1}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.361,0.506,0.596}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.361,0.506,0.596}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.361,0.506,0.596}{#1}}%
 
 \usepackage{framed}
 \makeatletter
@@ -128,21 +128,21 @@ To achieve these objectives, the Initiative identified a series of tasks, which 
 
 \subsubsection{The moderate data stock}
 
-The moderate data stock definition was an important step in the Initiative's development. It clearly focused the initiative on stocks with some information, moving away from the data-poor stocks, but without moving into data eager methodologies. It was recognized that there's a lot of research on both extremes of the data availability spectrum, but the middle 'region' is most of the times left behind.
+The moderate data stock definition was an important step in the Initiative's development. It clearly focused the initiative on stocks with some information, moving away from the data-poor stocks, but without moving into data rich methodologies. It was recognized that there's a lot of research on both extremes of the data availability spectrum, but comparatively little in the middle 'region'. From this came the idea of the 'moderate data stock'. 
 
-The 'moderate data stock', which constitutes the entry level of our analysis, has at least the following datasets, which can be assembled in different ways, using distinct methods.
+The 'moderate data stock' constitutes the entry level of our analysis. It has at least the following datasets, which can be assembled in different ways, using distinct methods.
  
 \begin{itemize}
 	\item in relation to exploitation:
 	\begin{itemize}
-		\item nominal effort (optional, needed in case CPUE indices are to be derived);
 		\item volume of catches, which may be split in landings and discards, or not;
 		\item length frequencies of the catches, landings or discards;
+		\item nominal effort (optional, needed in case CPUE indices are to be derived);
 	\end{itemize}
 	\item in relation to biology:
 	\begin{itemize}
-		\item knife edge maturity ogive;
-		\item indication of growth model and parameters;
+		\item estimate of maturity ogive (e.g. $L_{50}$);
+		\item estimates of growth model and parameters;
 		\item length-weight relationship;
 	\end{itemize}
 	\item in relation to abundance:
@@ -153,17 +153,17 @@ The 'moderate data stock', which constitutes the entry level of our analysis, ha
 
 \subsubsection{The stock assessment framework}
 
-The stock assessment model framework is a non-Linear catch-at-age model implemented in R/FLR/ADMB that can be applied rapidly to a wide range of situations with low parametrization requirements. Later we'll come back to these characteristics and it's application.
+The stock assessment model framework is a non-linear catch-at-age model implemented in R/FLR/ADMB that can be applied rapidly to a wide range of situations with low parametrization requirements. Later we'll come back to these characteristics and it's application (Section~\ref{sec:running_assessments}).
 
 \subsubsection{MSE}
 
-Regarding the MSE, it's seen as a sophisticated forecasting algorithm that takes into account structural uncertainty about stock dynamics (growth, recruitment, maturity) and on exploitation by commercial fleets (selectivity), embedding the framework of decision making. 
+The MSE is a sophisticated forecasting algorithm that takes into account structural uncertainty about stock dynamics (growth, recruitment, maturity) and on exploitation by commercial fleets (selectivity), embedding the framework of decision making. 
 
 \subsubsection{Training}
 
-During the last 2 years JRC organized 4 courses of introduction to R and FLR: Varese, January 2012; Varese, ??? ...
+During the last 2 years JRC organized 4 courses of introduction to R and FLR: Varese, January 2012; Varese, ???; Barza, March 2013; FAO / GFCM, Rome, November 2013.
 
-In 2013 a short course about a4a methods was organized in Lisbon, the first full course on FLR and a4a methods was organized in CEFAS, March 2014 and another one is planned for August 2014.
+In 2013 a short course about a4a methods was organized in Lisbon. The first full course on FLR and a4a methods was organized in CEFAS, March 2014 and another one is planned for August 2014.
 
 These courses are open to all participants and don't have an attendance fee.
 
@@ -171,7 +171,7 @@ These courses are open to all participants and don't have an attendance fee.
 
 The approach presented here is split in 4 steps: (i) converting length data to age data using a growth model, (ii) modelling natural mortality, (iii) assessing the stock, and (iv) MSE\footnote{Under development, to be released with version 2.0, scheduled for the fourth quarter of 2014}.
 
-These steps may be followed in sequence or independently, depending on the user's preferences. All that is needed is to use the objects provided by the previous step and provide the objects required by the next, so that data flows between steps smoothly. One can make the analogy with a lego build, where for each layer the builder may use the pieces provided by a particular boxset, or make use of pieces from other boxsets. Figure \ref{fig:inout} shows the process including the class of the objects that carry the data (in black).
+These steps may be followed in sequence or independently, depending on the user's preferences. All that is needed is to use the objects provided by the previous step and provide the objects required by the next, so that data flows between steps smoothly. One can make the analogy with building with Lego, where for each layer the builder may use the pieces provided by a particular boxset, or make use of pieces from other boxsets. Figure \ref{fig:inout} shows the process, including the class of the objects that carry the data (in black).
 
 \begin{figure}[h]
 \centering
@@ -180,11 +180,14 @@ These steps may be followed in sequence or independently, depending on the user'
 \label{fig:inout}
 \end{figure}
 
-Analysis related with projections and biological reference points are dealt by the FLR packages FLash and FLBRP. As such the Initiative does not provide specific methods for these analysis.
+Analysis related to projections and biological reference points are dealt with by the FLR packages \pkg{FLash} and \pkg{FLBRP}. As such the Initiative does not provide specific methods for these analysis.
 
-Steps 1 and 2 are simulation based, there's no fitting of growth models or natural mortality models. The rationale is to provide tools that allow the uncertainty associated with these processes to be carried on into the stock assessment. This approach allows the users to pick up the required information from other sources of information, like papers, PhDs, Fishbase, other stocks, etc. Baring in mind that the entry level stock may not have hard information on the processes of growth or natural mortality, but generic information about life history invariants can be used. For example, Nokome Bentley is developing an R package that uses bayesian networks to estimate empirical distributions for these parameters from Fishbase.
+In Steps 1 and 2 there is no fitting of growth models or natural mortality models. The rationale is to provide tools that allow the uncertainty associated with these processes to be carried on into the stock assessment, e.g. through parameter uncertainty. This approach allows the users to pick up the required information from other sources of information such as papers, PhDs, Fishbase, other stocks, etc. Bearing in mind that the stock under analysis may not have specific information on the growth or natural mortality processes, but generic information about life history invariants can be used. For example, Nokome Bentley is developing an R package that uses Bayesian networks to estimate empirical distributions for these parameters from Fishbase.
 
-\subsection{Loading libraries, data and defining some useful functions}
+\section{Loading libraries, data and defining some useful functions}
+
+
+
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -200,55 +203,52 @@ Steps 1 and 2 are simulation based, there's no fitting of growth models or natur
 \end{knitrout}
 
 
-
-
-
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# functions for transforming the data
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# functions for transforming the data}
 
-# quant 2 quant
-qt2qt <- function(object, id = 5, split = "-") {
-    qt <- object[, id]
-    levels(qt) <- unlist(lapply(strsplit(levels(qt), split = split), "[[", 2))
-    as.numeric(as.character(qt))
-}
+\hlcom{# quant 2 quant}
+\hlstd{qt2qt} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{object}\hlstd{,} \hlkwc{id} \hlstd{=} \hlnum{5}\hlstd{,} \hlkwc{split} \hlstd{=} \hlstr{"-"}\hlstd{) \{}
+    \hlstd{qt} \hlkwb{<-} \hlstd{object[, id]}
+    \hlkwd{levels}\hlstd{(qt)} \hlkwb{<-} \hlkwd{unlist}\hlstd{(}\hlkwd{lapply}\hlstd{(}\hlkwd{strsplit}\hlstd{(}\hlkwd{levels}\hlstd{(qt),} \hlkwc{split} \hlstd{= split),} \hlstr{"[["}\hlstd{,} \hlnum{2}\hlstd{))}
+    \hlkwd{as.numeric}\hlstd{(}\hlkwd{as.character}\hlstd{(qt))}
+\hlstd{\}}
 
-# check import and massage
-cim <- function(object, n, wt, hrv = "missing") {
-    v <- object[sample(1:nrow(object), 1), ]
-    c1 <- c(n[as.character(v$V5), as.character(v$V1), 1, as.character(v$V2)] == 
-        v$V6)
-    c2 <- c(wt[as.character(v$V5), as.character(v$V1), 1, as.character(v$V2)] == 
-        v$V7)
-    if (missing(hrv)) {
-        c1 + c2 == 2
-    } else {
-        c3 <- c(hrv[as.character(v$V5), as.character(v$V1), 1, as.character(v$V2)] == 
-            v$V8)
-        c1 + c2 + c3 == 3
-    }
-}
+\hlcom{# check import and massage}
+\hlstd{cim} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{object}\hlstd{,} \hlkwc{n}\hlstd{,} \hlkwc{wt}\hlstd{,} \hlkwc{hrv} \hlstd{=} \hlstr{"missing"}\hlstd{) \{}
+    \hlstd{v} \hlkwb{<-} \hlstd{object[}\hlkwd{sample}\hlstd{(}\hlnum{1}\hlopt{:}\hlkwd{nrow}\hlstd{(object),} \hlnum{1}\hlstd{), ]}
+    \hlstd{c1} \hlkwb{<-} \hlkwd{c}\hlstd{(n[}\hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V5),} \hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V1),} \hlnum{1}\hlstd{,} \hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V2)]} \hlopt{==}
+        \hlstd{v}\hlopt{$}\hlstd{V6)}
+    \hlstd{c2} \hlkwb{<-} \hlkwd{c}\hlstd{(wt[}\hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V5),} \hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V1),} \hlnum{1}\hlstd{,} \hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V2)]} \hlopt{==}
+        \hlstd{v}\hlopt{$}\hlstd{V7)}
+    \hlkwa{if} \hlstd{(}\hlkwd{missing}\hlstd{(hrv)) \{}
+        \hlstd{c1} \hlopt{+} \hlstd{c2} \hlopt{==} \hlnum{2}
+    \hlstd{\}} \hlkwa{else} \hlstd{\{}
+        \hlstd{c3} \hlkwb{<-} \hlkwd{c}\hlstd{(hrv[}\hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V5),} \hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V1),} \hlnum{1}\hlstd{,} \hlkwd{as.character}\hlstd{(v}\hlopt{$}\hlstd{V2)]} \hlopt{==}
+            \hlstd{v}\hlopt{$}\hlstd{V8)}
+        \hlstd{c1} \hlopt{+} \hlstd{c2} \hlopt{+} \hlstd{c3} \hlopt{==} \hlnum{3}
+    \hlstd{\}}
+\hlstd{\}}
 
-# and a plot for later
-plotS4 <- function(object, linktext = "typeof", main = "S4 class", ...) {
-    args <- list(...)
-    obj <- getClass(as.character(object))
-    df0 <- data.frame(names(obj@slots), unlist(lapply(obj@slots, "[[", 1)))
-    nms <- c(t(df0))
-    nslts <- length(nms)/2
-    M <- matrix(nrow = length(nms), ncol = length(nms), byrow = TRUE, data = 0)
-    for (i in 1:nslts) {
-        M[i * 2, i * 2 - 1] <- linktext
-    }
-    args$A = M
-    args$pos = rep(2, length(nms)/2)
-    args$name = nms
-    args$main = main
-    do.call("plotmat", args)
-}
-\end{verbatim}
+\hlcom{# and a plot for later}
+\hlstd{plotS4} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{object}\hlstd{,} \hlkwc{linktext} \hlstd{=} \hlstr{"typeof"}\hlstd{,} \hlkwc{main} \hlstd{=} \hlstr{"S4 class"}\hlstd{,} \hlkwc{...}\hlstd{) \{}
+    \hlstd{args} \hlkwb{<-} \hlkwd{list}\hlstd{(...)}
+    \hlstd{obj} \hlkwb{<-} \hlkwd{getClass}\hlstd{(}\hlkwd{as.character}\hlstd{(object))}
+    \hlstd{df0} \hlkwb{<-} \hlkwd{data.frame}\hlstd{(}\hlkwd{names}\hlstd{(obj}\hlopt{@}\hlkwc{slots}\hlstd{),} \hlkwd{unlist}\hlstd{(}\hlkwd{lapply}\hlstd{(obj}\hlopt{@}\hlkwc{slots}\hlstd{,} \hlstr{"[["}\hlstd{,} \hlnum{1}\hlstd{)))}
+    \hlstd{nms} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlkwd{t}\hlstd{(df0))}
+    \hlstd{nslts} \hlkwb{<-} \hlkwd{length}\hlstd{(nms)}\hlopt{/}\hlnum{2}
+    \hlstd{M} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlkwc{nrow} \hlstd{=} \hlkwd{length}\hlstd{(nms),} \hlkwc{ncol} \hlstd{=} \hlkwd{length}\hlstd{(nms),} \hlkwc{byrow} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{data} \hlstd{=} \hlnum{0}\hlstd{)}
+    \hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlstd{nslts) \{}
+        \hlstd{M[i} \hlopt{*} \hlnum{2}\hlstd{, i} \hlopt{*} \hlnum{2} \hlopt{-} \hlnum{1}\hlstd{]} \hlkwb{<-} \hlstd{linktext}
+    \hlstd{\}}
+    \hlstd{args}\hlopt{$}\hlstd{A} \hlkwb{=} \hlstd{M}
+    \hlstd{args}\hlopt{$}\hlstd{pos} \hlkwb{=} \hlkwd{rep}\hlstd{(}\hlnum{2}\hlstd{,} \hlkwd{length}\hlstd{(nms)}\hlopt{/}\hlnum{2}\hlstd{)}
+    \hlstd{args}\hlopt{$}\hlstd{name} \hlkwb{=} \hlstd{nms}
+    \hlstd{args}\hlopt{$}\hlstd{main} \hlkwb{=} \hlstd{main}
+    \hlkwd{do.call}\hlstd{(}\hlstr{"plotmat"}\hlstd{, args)}
+\hlstd{\}}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
@@ -262,32 +262,32 @@ In this section we read in the Gadget data files, and transform them into FLR ob
 First we read in the files as data frames and recode some variables.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# catch
-cth.orig <- read.table("data/catch.len", skip = 5)
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# catch}
+\hlstd{cth.orig} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"data/catch.len"}\hlstd{,} \hlkwc{skip} \hlstd{=} \hlnum{5}\hlstd{)}
 
-# stock
-stk.orig <- read.table("data/red.len", skip = 4)
+\hlcom{# stock}
+\hlstd{stk.orig} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"data/red.len"}\hlstd{,} \hlkwc{skip} \hlstd{=} \hlnum{4}\hlstd{)}
 
-# surveys
-idx.orig <- read.table("data/survey.len", skip = 5)
-idxJmp.orig <- read.table("data/jump.survey.len", skip = 5)
-idxTrd.orig <- read.table("data/tend.survey.len", skip = 5)
+\hlcom{# surveys}
+\hlstd{idx.orig} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"data/survey.len"}\hlstd{,} \hlkwc{skip} \hlstd{=} \hlnum{5}\hlstd{)}
+\hlstd{idxJmp.orig} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"data/jump.survey.len"}\hlstd{,} \hlkwc{skip} \hlstd{=} \hlnum{5}\hlstd{)}
+\hlstd{idxTrd.orig} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"data/tend.survey.len"}\hlstd{,} \hlkwc{skip} \hlstd{=} \hlnum{5}\hlstd{)}
 
-# Recode the length categories into something usable
+\hlcom{# Recode the length categories into something usable}
 
-# catch
-cth.orig[, 5] <- qt2qt(cth.orig)
+\hlcom{# catch}
+\hlstd{cth.orig[,} \hlnum{5}\hlstd{]} \hlkwb{<-} \hlkwd{qt2qt}\hlstd{(cth.orig)}
 
-# stock
-stk.orig[, 5] <- qt2qt(stk.orig)
+\hlcom{# stock}
+\hlstd{stk.orig[,} \hlnum{5}\hlstd{]} \hlkwb{<-} \hlkwd{qt2qt}\hlstd{(stk.orig)}
 
-# surveys
-idx.orig[, 5] <- qt2qt(idx.orig)
-idxJmp.orig[, 5] <- qt2qt(idxJmp.orig)
-idxTrd.orig[, 5] <- qt2qt(idxTrd.orig)
-\end{verbatim}
+\hlcom{# surveys}
+\hlstd{idx.orig[,} \hlnum{5}\hlstd{]} \hlkwb{<-} \hlkwd{qt2qt}\hlstd{(idx.orig)}
+\hlstd{idxJmp.orig[,} \hlnum{5}\hlstd{]} \hlkwb{<-} \hlkwd{qt2qt}\hlstd{(idxJmp.orig)}
+\hlstd{idxTrd.orig[,} \hlnum{5}\hlstd{]} \hlkwb{<-} \hlkwd{qt2qt}\hlstd{(idxTrd.orig)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
@@ -295,28 +295,28 @@ idxTrd.orig[, 5] <- qt2qt(idxTrd.orig)
 Then we reshape the data frames into six dimensional arrays using cast from package 'reshape2'.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# catch
-cth.n <- acast(V5 ~ V1 ~ 1 ~ V2 ~ 1 ~ 1, value.var = "V6", data = cth.orig)
-cth.wt <- acast(V5 ~ V1 ~ 1 ~ V2 ~ 1 ~ 1, value.var = "V7", data = cth.orig)
-hrv <- acast(V5 ~ V1 ~ 1 ~ V2 ~ 1 ~ 1, value.var = "V8", data = cth.orig)
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# catch}
+\hlstd{cth.n} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V6"}\hlstd{,} \hlkwc{data} \hlstd{= cth.orig)}
+\hlstd{cth.wt} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V7"}\hlstd{,} \hlkwc{data} \hlstd{= cth.orig)}
+\hlstd{hrv} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V8"}\hlstd{,} \hlkwc{data} \hlstd{= cth.orig)}
 
-# stock
-stk.n <- acast(V5 ~ V1 ~ 1 ~ V2 ~ 1 ~ 1, value.var = "V6", data = stk.orig)
-stk.wt <- acast(V5 ~ V1 ~ 1 ~ V2 ~ 1 ~ 1, value.var = "V7", data = stk.orig)
+\hlcom{# stock}
+\hlstd{stk.n} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V6"}\hlstd{,} \hlkwc{data} \hlstd{= stk.orig)}
+\hlstd{stk.wt} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V7"}\hlstd{,} \hlkwc{data} \hlstd{= stk.orig)}
 
-# surveys
-idx.n <- acast(V5 ~ V1 ~ 1 ~ V2 ~ 1 ~ 1, value.var = "V6", data = idx.orig)
-idx.wt <- acast(V5 ~ V1 ~ 1 ~ V2 ~ 1 ~ 1, value.var = "V7", data = idx.orig)
-idx.hrv <- acast(V5 ~ V1 ~ 1 ~ V2 ~ 1 ~ 1, value.var = "V8", data = idx.orig)
-idxJmp.n <- acast(V5 ~ V1 ~ 1 ~ V2 ~ 1 ~ 1, value.var = "V6", data = idxJmp.orig)
-idxJmp.wt <- acast(V5 ~ V1 ~ 1 ~ V2 ~ 1 ~ 1, value.var = "V7", data = idxJmp.orig)
-idxJmp.hrv <- acast(V5 ~ V1 ~ 1 ~ V2 ~ 1 ~ 1, value.var = "V8", data = idxJmp.orig)
-idxTrd.n <- acast(V5 ~ V1 ~ 1 ~ V2 ~ 1 ~ 1, value.var = "V6", data = idxTrd.orig)
-idxTrd.wt <- acast(V5 ~ V1 ~ 1 ~ V2 ~ 1 ~ 1, value.var = "V7", data = idxTrd.orig)
-idxTrd.hrv <- acast(V5 ~ V1 ~ 1 ~ V2 ~ 1 ~ 1, value.var = "V8", data = idxTrd.orig)
-\end{verbatim}
+\hlcom{# surveys}
+\hlstd{idx.n} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V6"}\hlstd{,} \hlkwc{data} \hlstd{= idx.orig)}
+\hlstd{idx.wt} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V7"}\hlstd{,} \hlkwc{data} \hlstd{= idx.orig)}
+\hlstd{idx.hrv} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V8"}\hlstd{,} \hlkwc{data} \hlstd{= idx.orig)}
+\hlstd{idxJmp.n} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V6"}\hlstd{,} \hlkwc{data} \hlstd{= idxJmp.orig)}
+\hlstd{idxJmp.wt} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V7"}\hlstd{,} \hlkwc{data} \hlstd{= idxJmp.orig)}
+\hlstd{idxJmp.hrv} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V8"}\hlstd{,} \hlkwc{data} \hlstd{= idxJmp.orig)}
+\hlstd{idxTrd.n} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V6"}\hlstd{,} \hlkwc{data} \hlstd{= idxTrd.orig)}
+\hlstd{idxTrd.wt} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V7"}\hlstd{,} \hlkwc{data} \hlstd{= idxTrd.orig)}
+\hlstd{idxTrd.hrv} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V8"}\hlstd{,} \hlkwc{data} \hlstd{= idxTrd.orig)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
@@ -324,46 +324,46 @@ idxTrd.hrv <- acast(V5 ~ V1 ~ 1 ~ V2 ~ 1 ~ 1, value.var = "V8", data = idxTrd.or
 We take the arrays and make \class{FLQuant} objects from them.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# catch
-dnms <- dimnames(cth.n)
-names(dnms) <- names(dimnames(FLQuant()))
-names(dnms)[1] <- "len"
-cth.n <- FLQuant(cth.n, dimnames = dnms)
-cth.wt <- FLQuant(cth.wt, dimnames = dnms)
-hrv <- FLQuant(hrv, dimnames = dnms)
-units(hrv) <- "f"
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# catch}
+\hlstd{dnms} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(cth.n)}
+\hlkwd{names}\hlstd{(dnms)} \hlkwb{<-} \hlkwd{names}\hlstd{(}\hlkwd{dimnames}\hlstd{(}\hlkwd{FLQuant}\hlstd{()))}
+\hlkwd{names}\hlstd{(dnms)[}\hlnum{1}\hlstd{]} \hlkwb{<-} \hlstr{"len"}
+\hlstd{cth.n} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(cth.n,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{cth.wt} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(cth.wt,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{hrv} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(hrv,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlkwd{units}\hlstd{(hrv)} \hlkwb{<-} \hlstr{"f"}
 
-# stock
-dnms <- dimnames(stk.n)
-names(dnms) <- names(dimnames(FLQuant()))
-names(dnms)[1] <- "len"
-stk.n <- FLQuant(stk.n, dimnames = dnms)
-stk.wt <- FLQuant(stk.wt, dimnames = dnms)
+\hlcom{# stock}
+\hlstd{dnms} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(stk.n)}
+\hlkwd{names}\hlstd{(dnms)} \hlkwb{<-} \hlkwd{names}\hlstd{(}\hlkwd{dimnames}\hlstd{(}\hlkwd{FLQuant}\hlstd{()))}
+\hlkwd{names}\hlstd{(dnms)[}\hlnum{1}\hlstd{]} \hlkwb{<-} \hlstr{"len"}
+\hlstd{stk.n} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(stk.n,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{stk.wt} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(stk.wt,} \hlkwc{dimnames} \hlstd{= dnms)}
 
-# surveys
-dnms <- dimnames(idx.n)
-names(dnms) <- names(dimnames(FLQuant()))
-names(dnms)[1] <- "len"
-idx.n <- FLQuant(idx.n, dimnames = dnms)
-idx.wt <- FLQuant(idx.wt, dimnames = dnms)
-idx.hrv <- FLQuant(idx.hrv, dimnames = dnms)
+\hlcom{# surveys}
+\hlstd{dnms} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(idx.n)}
+\hlkwd{names}\hlstd{(dnms)} \hlkwb{<-} \hlkwd{names}\hlstd{(}\hlkwd{dimnames}\hlstd{(}\hlkwd{FLQuant}\hlstd{()))}
+\hlkwd{names}\hlstd{(dnms)[}\hlnum{1}\hlstd{]} \hlkwb{<-} \hlstr{"len"}
+\hlstd{idx.n} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idx.n,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{idx.wt} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idx.wt,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{idx.hrv} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idx.hrv,} \hlkwc{dimnames} \hlstd{= dnms)}
 
-dnms <- dimnames(idxJmp.n)
-names(dnms) <- names(dimnames(FLQuant()))
-names(dnms)[1] <- "len"
-idxJmp.n <- FLQuant(idxJmp.n, dimnames = dnms)
-idxJmp.wt <- FLQuant(idxJmp.wt, dimnames = dnms)
-idxJmp.hrv <- FLQuant(idxJmp.hrv, dimnames = dnms)
+\hlstd{dnms} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(idxJmp.n)}
+\hlkwd{names}\hlstd{(dnms)} \hlkwb{<-} \hlkwd{names}\hlstd{(}\hlkwd{dimnames}\hlstd{(}\hlkwd{FLQuant}\hlstd{()))}
+\hlkwd{names}\hlstd{(dnms)[}\hlnum{1}\hlstd{]} \hlkwb{<-} \hlstr{"len"}
+\hlstd{idxJmp.n} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idxJmp.n,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{idxJmp.wt} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idxJmp.wt,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{idxJmp.hrv} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idxJmp.hrv,} \hlkwc{dimnames} \hlstd{= dnms)}
 
-dnms <- dimnames(idxTrd.n)
-names(dnms) <- names(dimnames(FLQuant()))
-names(dnms)[1] <- "len"
-idxTrd.n <- FLQuant(idxTrd.n, dimnames = dnms)
-idxTrd.wt <- FLQuant(idxTrd.wt, dimnames = dnms)
-idxTrd.hrv <- FLQuant(idxTrd.hrv, dimnames = dnms)
-\end{verbatim}
+\hlstd{dnms} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(idxTrd.n)}
+\hlkwd{names}\hlstd{(dnms)} \hlkwb{<-} \hlkwd{names}\hlstd{(}\hlkwd{dimnames}\hlstd{(}\hlkwd{FLQuant}\hlstd{()))}
+\hlkwd{names}\hlstd{(dnms)[}\hlnum{1}\hlstd{]} \hlkwb{<-} \hlstr{"len"}
+\hlstd{idxTrd.n} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idxTrd.n,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{idxTrd.wt} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idxTrd.wt,} \hlkwc{dimnames} \hlstd{= dnms)}
+\hlstd{idxTrd.hrv} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(idxTrd.hrv,} \hlkwc{dimnames} \hlstd{= dnms)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
@@ -371,22 +371,38 @@ idxTrd.hrv <- FLQuant(idxTrd.hrv, dimnames = dnms)
 Some sanity checks to check that the resulting objects have matching dimensions.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# catch}
+\hlkwd{cim}\hlstd{(cth.orig, cth.n, cth.wt, hrv)}
+\end{alltt}
 \begin{verbatim}
-# catch
-cim(cth.orig, cth.n, cth.wt, hrv)
 ## [1] TRUE
-
-# stock
-cim(stk.orig, stk.n, stk.wt)
+\end{verbatim}
+\begin{alltt}
+\hlcom{# stock}
+\hlkwd{cim}\hlstd{(stk.orig, stk.n, stk.wt)}
+\end{alltt}
+\begin{verbatim}
 ## [1] TRUE
-
-# surveys
-cim(idx.orig, idx.n, idx.wt, idx.hrv)
+\end{verbatim}
+\begin{alltt}
+\hlcom{# surveys}
+\hlkwd{cim}\hlstd{(idx.orig, idx.n, idx.wt, idx.hrv)}
+\end{alltt}
+\begin{verbatim}
 ## [1] TRUE
-cim(idxJmp.orig, idxJmp.n, idxJmp.wt, idxJmp.hrv)
+\end{verbatim}
+\begin{alltt}
+\hlkwd{cim}\hlstd{(idxJmp.orig, idxJmp.n, idxJmp.wt, idxJmp.hrv)}
+\end{alltt}
+\begin{verbatim}
 ## [1] TRUE
-cim(idxTrd.orig, idxTrd.n, idxTrd.wt, idxTrd.hrv)
+\end{verbatim}
+\begin{alltt}
+\hlkwd{cim}\hlstd{(idxTrd.orig, idxTrd.n, idxTrd.wt, idxTrd.hrv)}
+\end{alltt}
+\begin{verbatim}
 ## [1] TRUE
 \end{verbatim}
 \end{kframe}
@@ -406,28 +422,28 @@ cim(idxTrd.orig, idxTrd.n, idxTrd.wt, idxTrd.hrv)
 Finally, we make FLR objects from the data.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# stock
-rfLen.stk <- FLStockLen(stock.n = stk.n, stock.wt = stk.wt, stock = quantSums(stk.wt * 
-    stk.n), catch.n = cth.n, catch.wt = cth.wt/cth.n, catch = quantSums(cth.wt), 
-    harvest = hrv)
-m(rfLen.stk)[] <- 0.05
-mat(rfLen.stk)[] <- m.spwn(rfLen.stk)[] <- harvest.spwn(rfLen.stk)[] <- 0
-mat(rfLen.stk)[38:59, , , 3:4] <- 1
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# stock}
+\hlstd{rfLen.stk} \hlkwb{<-} \hlkwd{FLStockLen}\hlstd{(}\hlkwc{stock.n} \hlstd{= stk.n,} \hlkwc{stock.wt} \hlstd{= stk.wt,} \hlkwc{stock} \hlstd{=} \hlkwd{quantSums}\hlstd{(stk.wt} \hlopt{*}
+    \hlstd{stk.n),} \hlkwc{catch.n} \hlstd{= cth.n,} \hlkwc{catch.wt} \hlstd{= cth.wt}\hlopt{/}\hlstd{cth.n,} \hlkwc{catch} \hlstd{=} \hlkwd{quantSums}\hlstd{(cth.wt),}
+    \hlkwc{harvest} \hlstd{= hrv)}
+\hlkwd{m}\hlstd{(rfLen.stk)[]} \hlkwb{<-} \hlnum{0.05}
+\hlkwd{mat}\hlstd{(rfLen.stk)[]} \hlkwb{<-} \hlkwd{m.spwn}\hlstd{(rfLen.stk)[]} \hlkwb{<-} \hlkwd{harvest.spwn}\hlstd{(rfLen.stk)[]} \hlkwb{<-} \hlnum{0}
+\hlkwd{mat}\hlstd{(rfLen.stk)[}\hlnum{38}\hlopt{:}\hlnum{59}\hlstd{, , ,} \hlnum{3}\hlopt{:}\hlnum{4}\hlstd{]} \hlkwb{<-} \hlnum{1}
 
-# surveys
-rfTrawl.idx <- FLIndex(index = idx.n, catch.n = idx.n, catch.wt = idx.wt, sel.pattern = idx.hrv)
-effort(rfTrawl.idx)[] <- 100
+\hlcom{# surveys}
+\hlstd{rfTrawl.idx} \hlkwb{<-} \hlkwd{FLIndex}\hlstd{(}\hlkwc{index} \hlstd{= idx.n,} \hlkwc{catch.n} \hlstd{= idx.n,} \hlkwc{catch.wt} \hlstd{= idx.wt,} \hlkwc{sel.pattern} \hlstd{= idx.hrv)}
+\hlkwd{effort}\hlstd{(rfTrawl.idx)[]} \hlkwb{<-} \hlnum{100}
 
-rfTrawlJmp.idx <- FLIndex(index = idxJmp.n, catch.n = idxJmp.n, catch.wt = idxJmp.wt, 
-    sel.pattern = idxJmp.hrv)
-effort(rfTrawlJmp.idx)[] <- 100
+\hlstd{rfTrawlJmp.idx} \hlkwb{<-} \hlkwd{FLIndex}\hlstd{(}\hlkwc{index} \hlstd{= idxJmp.n,} \hlkwc{catch.n} \hlstd{= idxJmp.n,} \hlkwc{catch.wt} \hlstd{= idxJmp.wt,}
+    \hlkwc{sel.pattern} \hlstd{= idxJmp.hrv)}
+\hlkwd{effort}\hlstd{(rfTrawlJmp.idx)[]} \hlkwb{<-} \hlnum{100}
 
-rfTrawlTrd.idx <- FLIndex(index = idxTrd.n, catch.n = idxTrd.n, catch.wt = idxTrd.wt, 
-    sel.pattern = idxTrd.hrv)
-effort(rfTrawlTrd.idx)[] <- 100
-\end{verbatim}
+\hlstd{rfTrawlTrd.idx} \hlkwb{<-} \hlkwd{FLIndex}\hlstd{(}\hlkwc{index} \hlstd{= idxTrd.n,} \hlkwc{catch.n} \hlstd{= idxTrd.n,} \hlkwc{catch.wt} \hlstd{= idxTrd.wt,}
+    \hlkwc{sel.pattern} \hlstd{= idxTrd.hrv)}
+\hlkwd{effort}\hlstd{(rfTrawlTrd.idx)[]} \hlkwb{<-} \hlnum{100}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
@@ -435,18 +451,20 @@ effort(rfTrawlTrd.idx)[] <- 100
 \pagebreak
 \section{Converting length data to age}
 
-The stock assessment framework is based on age dynamics. To use length information it must be pre-processed before used for assessment. The rationale is that the pre-processing should give the analyst the flexibility to use a range of sources of information, \emph{e.g.} literature or online databases, to grab information about the species growth and the uncertainty about the model parameters.
+The stock assessment framework is based on age dynamics. Therefore, to use length information it must be processed before it can be used in an assessment. The rationale is that the processing should give the analyst the flexibility to use a range of sources of information, \emph{e.g.} literature or online databases, to grab information about the species growth and the uncertainty about the model parameters.
 
 Within the a4a framework this is handled using the \class{a4aGr} class. In this section we introduce the \class{a4aGr} class and look at the variety of ways that parameter uncertainty can be included.
 
 \subsection{a4aGr - The growth class}
 
-The convertion of length data to age is performed through the use of a growth model. The implementation is done through the \class{a4aGr} class.
+The conversion of length data to age is performed through the use of a growth model. The implementation is done through the \class{a4aGr} class.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{showClass}\hlstd{(}\hlstr{"a4aGr"}\hlstd{)}
+\end{alltt}
 \begin{verbatim}
-showClass("a4aGr")
 ## Class "a4aGr" [package "FLa4a"]
 ## 
 ## Slots:
@@ -466,22 +484,28 @@ showClass("a4aGr")
 A simple construction of \class{a4aGr} objects requires the model and parameters to be provided.
 Check the help file for more information.
 
-Here we show an example using the von Bertalanffy growth model. To create the \class{a4aGr} object it's necessary to pass the model equation ($length \sim time$), the inverse model equation ($time \sim length$) and the parameters. Any growth model can be used as long as it's possible to write the equation in the form explained.
+Here we show an example using the von Bertalanffy growth model. To create the \class{a4aGr} object it's necessary to pass the model equation ($length \sim time$), the inverse model equation ($time \sim length$) and the parameters. Any growth model can be used as long as it's possible to write the equation as an R formula.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-vbObj <- a4aGr(grMod = ~linf * (1 - exp(-k * (t - t0))), grInvMod = ~t0 - 1/k * 
-    log(1 - len/linf), params = FLPar(linf = 58.5, k = 0.086, t0 = 0.001, units = c("cm", 
-    "ano-1", "ano")))
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{vbObj} \hlkwb{<-} \hlkwd{a4aGr}\hlstd{(}\hlkwc{grMod} \hlstd{=} \hlopt{~}\hlstd{linf} \hlopt{*} \hlstd{(}\hlnum{1} \hlopt{-} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{k} \hlopt{*} \hlstd{(t} \hlopt{-} \hlstd{t0))),} \hlkwc{grInvMod} \hlstd{=} \hlopt{~}\hlstd{t0} \hlopt{-} \hlnum{1}\hlopt{/}\hlstd{k} \hlopt{*}
+    \hlkwd{log}\hlstd{(}\hlnum{1} \hlopt{-} \hlstd{len}\hlopt{/}\hlstd{linf),} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{linf} \hlstd{=} \hlnum{58.5}\hlstd{,} \hlkwc{k} \hlstd{=} \hlnum{0.086}\hlstd{,} \hlkwc{t0} \hlstd{=} \hlnum{0.001}\hlstd{,} \hlkwc{units} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"cm"}\hlstd{,}
+    \hlstr{"ano-1"}\hlstd{,} \hlstr{"ano"}\hlstd{)))}
 
-# Check the model and its inverse
-lc = 20
-predict(vbObj, len = lc)
+\hlcom{# Check the model and its inverse}
+\hlstd{lc} \hlkwb{=} \hlnum{20}
+\hlkwd{predict}\hlstd{(vbObj,} \hlkwc{len} \hlstd{= lc)}
+\end{alltt}
+\begin{verbatim}
 ##    iter
 ##         1
 ##   1 4.866
-predict(vbObj, t = predict(vbObj, len = lc)) == lc
+\end{verbatim}
+\begin{alltt}
+\hlkwd{predict}\hlstd{(vbObj,} \hlkwc{t} \hlstd{=} \hlkwd{predict}\hlstd{(vbObj,} \hlkwc{len} \hlstd{= lc))} \hlopt{==} \hlstd{lc}
+\end{alltt}
+\begin{verbatim}
 ##    iter
 ##        1
 ##   1 TRUE
@@ -493,9 +517,11 @@ predict(vbObj, t = predict(vbObj, len = lc)) == lc
 The predict method allows the transformation between age and lengths.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{predict}\hlstd{(vbObj,} \hlkwc{len} \hlstd{=} \hlnum{5}\hlopt{:}\hlnum{10} \hlopt{+} \hlnum{0.5}\hlstd{)}
+\end{alltt}
 \begin{verbatim}
-predict(vbObj, len = 5:10 + 0.5)
 ##    iter
 ##         1
 ##   1 1.149
@@ -504,7 +530,11 @@ predict(vbObj, len = 5:10 + 0.5)
 ##   4 1.827
 ##   5 2.062
 ##   6 2.301
-predict(vbObj, t = 5:10 + 0.5)
+\end{verbatim}
+\begin{alltt}
+\hlkwd{predict}\hlstd{(vbObj,} \hlkwc{t} \hlstd{=} \hlnum{5}\hlopt{:}\hlnum{10} \hlopt{+} \hlnum{0.5}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
 ##    iter
 ##         1
 ##   1 22.04
@@ -526,34 +556,38 @@ This is done by making use of the parameter variance-covariance matrix (the \cod
 Here we set the variance-covariance matrix by scaling a correlation matrix, using a cv of 0.2.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Make an empty cor matrix}
+\hlstd{cm} \hlkwb{<-} \hlkwd{diag}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{1}\hlstd{,} \hlnum{1}\hlstd{))}
+\hlcom{# k and linf are negatively correlated while t0 is independent}
+\hlstd{cm[}\hlnum{1}\hlstd{,} \hlnum{2}\hlstd{]} \hlkwb{<-} \hlstd{cm[}\hlnum{2}\hlstd{,} \hlnum{1}\hlstd{]} \hlkwb{<-} \hlopt{-}\hlnum{0.5}
+\hlcom{# scale cor to var using CV=0.2 and some made up values}
+\hlstd{cv} \hlkwb{<-} \hlnum{0.2}
+\hlstd{p} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlkwc{linf} \hlstd{=} \hlnum{60}\hlstd{,} \hlkwc{k} \hlstd{=} \hlnum{0.09}\hlstd{,} \hlkwc{t0} \hlstd{=} \hlopt{-}\hlnum{0.01}\hlstd{)}
+\hlstd{vc} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlnum{1}\hlstd{,} \hlkwc{ncol} \hlstd{=} \hlnum{3}\hlstd{,} \hlkwc{nrow} \hlstd{=} \hlnum{3}\hlstd{)}
+\hlstd{l} \hlkwb{<-} \hlstd{vc}
+\hlstd{l[}\hlnum{1}\hlstd{, ]} \hlkwb{<-} \hlstd{l[,} \hlnum{1}\hlstd{]} \hlkwb{<-} \hlstd{p[}\hlnum{1}\hlstd{]} \hlopt{*} \hlstd{cv}
+\hlstd{k} \hlkwb{<-} \hlstd{vc}
+\hlstd{k[,} \hlnum{2}\hlstd{]} \hlkwb{<-} \hlstd{k[}\hlnum{2}\hlstd{, ]} \hlkwb{<-} \hlstd{p[}\hlnum{2}\hlstd{]} \hlopt{*} \hlstd{cv}
+\hlstd{t} \hlkwb{<-} \hlstd{vc}
+\hlstd{t[}\hlnum{3}\hlstd{, ]} \hlkwb{<-} \hlstd{t[,} \hlnum{3}\hlstd{]} \hlkwb{<-} \hlstd{p[}\hlnum{3}\hlstd{]} \hlopt{*} \hlstd{cv}
+\hlstd{mm} \hlkwb{<-} \hlstd{t} \hlopt{*} \hlstd{k} \hlopt{*} \hlstd{l}
+\hlkwd{diag}\hlstd{(mm)} \hlkwb{<-} \hlkwd{diag}\hlstd{(mm)}\hlopt{^}\hlnum{2}
+\hlstd{mm} \hlkwb{<-} \hlstd{mm} \hlopt{*} \hlstd{cm}
+\hlcom{# check that we have the correlation foreseen}
+\hlkwd{all.equal}\hlstd{(cm,} \hlkwd{cov2cor}\hlstd{(mm))}
+\end{alltt}
 \begin{verbatim}
-# Make an empty cor matrix
-cm <- diag(c(1, 1, 1))
-# k and linf are negatively correlated while t0 is independent
-cm[1, 2] <- cm[2, 1] <- -0.5
-# scale cor to var using CV=0.2 and some made up values
-cv <- 0.2
-p <- c(linf = 60, k = 0.09, t0 = -0.01)
-vc <- matrix(1, ncol = 3, nrow = 3)
-l <- vc
-l[1, ] <- l[, 1] <- p[1] * cv
-k <- vc
-k[, 2] <- k[2, ] <- p[2] * cv
-t <- vc
-t[3, ] <- t[, 3] <- p[3] * cv
-mm <- t * k * l
-diag(mm) <- diag(mm)^2
-mm <- mm * cm
-# check that we have the correlation foreseen
-all.equal(cm, cov2cor(mm))
 ## [1] TRUE
-# Create the a4aGr object as before but now we also include arguments for
-# multivariate normal uncertainty
-vbObj <- a4aGr(grMod = ~linf * (1 - exp(-k * (t - t0))), grInvMod = ~t0 - 1/k * 
-    log(1 - len/linf), params = FLPar(linf = p["linf"], k = p["k"], t0 = p["t0"], 
-    units = c("cm", "ano-1", "ano")), vcov = mm)
 \end{verbatim}
+\begin{alltt}
+\hlcom{# Create the a4aGr object as before but now we also include the vcov}
+\hlcom{# argument for the variance-covariance matrix}
+\hlstd{vbObj} \hlkwb{<-} \hlkwd{a4aGr}\hlstd{(}\hlkwc{grMod} \hlstd{=} \hlopt{~}\hlstd{linf} \hlopt{*} \hlstd{(}\hlnum{1} \hlopt{-} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{k} \hlopt{*} \hlstd{(t} \hlopt{-} \hlstd{t0))),} \hlkwc{grInvMod} \hlstd{=} \hlopt{~}\hlstd{t0} \hlopt{-} \hlnum{1}\hlopt{/}\hlstd{k} \hlopt{*}
+    \hlkwd{log}\hlstd{(}\hlnum{1} \hlopt{-} \hlstd{len}\hlopt{/}\hlstd{linf),} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{linf} \hlstd{= p[}\hlstr{"linf"}\hlstd{],} \hlkwc{k} \hlstd{= p[}\hlstr{"k"}\hlstd{],} \hlkwc{t0} \hlstd{= p[}\hlstr{"t0"}\hlstd{],}
+    \hlkwc{units} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"cm"}\hlstd{,} \hlstr{"ano-1"}\hlstd{,} \hlstr{"ano"}\hlstd{)),} \hlkwc{vcov} \hlstd{= mm)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
@@ -563,33 +597,47 @@ First we show a simple example where we assume that the parameters are represent
 % If the parameters or the covariance matrix have iterations then the medians accross iterations are computed before simulating. Check help for \code{mvrnorm} for more information.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Note that the object we have just created has a single iteration of each}
+\hlcom{# parameter}
+\hlstd{vbObj}\hlopt{@}\hlkwc{params}
+\end{alltt}
 \begin{verbatim}
-# Note that the object we have just created has a single iteration of each
-# parameter
-vbObj@params
 ## An object of class "FLPar"
 ## params
 ##  linf     k    t0 
 ## 60.00  0.09 -0.01 
 ## units:  cm ano-1 ano
-dim(vbObj@params)
+\end{verbatim}
+\begin{alltt}
+\hlkwd{dim}\hlstd{(vbObj}\hlopt{@}\hlkwc{params}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
 ## [1] 3 1
-# We simulate from the a4aGr object by calling mvrnorm().  Here we create
-# 10000 iterations.  This uses the variance-covariance matrix we created
-# earlier
-vbNorm <- mvrnorm(10000, vbObj)
-# Now we have 10000 iterations of each parameter, randomly sampled from the
-# multivariate normal distribution
-vbNorm@params
+\end{verbatim}
+\begin{alltt}
+\hlcom{# We simulate from the a4aGr object by calling mvrnorm().  Here we create}
+\hlcom{# 10000 iterations.  This uses the variance-covariance matrix we created}
+\hlcom{# earlier}
+\hlstd{vbNorm} \hlkwb{<-} \hlkwd{mvrnorm}\hlstd{(}\hlnum{10000}\hlstd{, vbObj)}
+\hlcom{# Now we have 10000 iterations of each parameter, randomly sampled from the}
+\hlcom{# multivariate normal distribution}
+\hlstd{vbNorm}\hlopt{@}\hlkwc{params}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLPar"
 ## iters:  10000 
 ## 
 ## params
-##                 linf                    k                   t0 
-## 59.7760559(12.05990)  0.0902350( 0.01816) -0.0099635( 0.00199) 
+##                linf                   k                  t0 
+## 59.946340(12.11590)  0.089772( 0.01809) -0.010003( 0.00199) 
 ## units:  cm ano-1 ano
-dim(vbNorm@params)
+\end{verbatim}
+\begin{alltt}
+\hlkwd{dim}\hlstd{(vbNorm}\hlopt{@}\hlkwc{params}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
 ## [1]     3 10000
 \end{verbatim}
 \end{kframe}
@@ -599,21 +647,27 @@ dim(vbNorm@params)
 We can now convert from length to ages data based on the 10000 parameter iterations. This gives us 10000 sets of ages data. For example, here we convert a single length vector: 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{ages} \hlkwb{<-} \hlkwd{predict}\hlstd{(vbNorm,} \hlkwc{len} \hlstd{=} \hlnum{5}\hlopt{:}\hlnum{10} \hlopt{+} \hlnum{0.5}\hlstd{)}
+\hlkwd{dim}\hlstd{(ages)}
+\end{alltt}
 \begin{verbatim}
-ages <- predict(vbNorm, len = 5:10 + 0.5)
-dim(ages)
 ## [1]     6 10000
-# We show the first ten only as an illustration
-ages[, 1:10]
+\end{verbatim}
+\begin{alltt}
+\hlcom{# We show the first ten iterations only as an illustration}
+\hlstd{ages[,} \hlnum{1}\hlopt{:}\hlnum{10}\hlstd{]}
+\end{alltt}
+\begin{verbatim}
 ##    iter
-##         1     2     3     4     5      6      7     8     9    10
-##   1 1.266 1.237 1.055 1.044 1.745 0.9814 0.9611 1.045 1.112 1.051
-##   2 1.515 1.484 1.261 1.248 2.085 1.1723 1.1488 1.247 1.329 1.255
-##   3 1.771 1.737 1.471 1.456 2.432 1.3666 1.3404 1.452 1.550 1.462
-##   4 2.033 1.997 1.685 1.669 2.787 1.5647 1.5359 1.662 1.776 1.672
-##   5 2.302 2.265 1.903 1.886 3.150 1.7666 1.7355 1.874 2.005 1.887
-##   6 2.578 2.542 2.126 2.108 3.521 1.9724 1.9394 2.091 2.240 2.105
+##          1     2     3      4      5     6     7     8     9    10
+##   1 0.8943 0.989 1.002 0.8527 0.8238 1.288 1.345 1.460 1.739 1.280
+##   2 1.0692 1.182 1.196 1.0176 0.9808 1.535 1.605 1.751 2.076 1.538
+##   3 1.2476 1.378 1.392 1.1853 1.1397 1.785 1.869 2.051 2.419 1.805
+##   4 1.4295 1.578 1.592 1.3556 1.3007 2.038 2.138 2.359 2.769 2.081
+##   5 1.6151 1.782 1.794 1.5289 1.4639 2.296 2.411 2.676 3.126 2.367
+##   6 1.8046 1.990 2.000 1.7050 1.6293 2.557 2.689 3.004 3.489 2.663
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -621,20 +675,20 @@ ages[, 1:10]
 
 The marginal distributions can be seen in Figure~\ref{fig:plot_norm_params}.
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-par(mfrow = c(3, 1))
-hist(c(params(vbNorm)["linf", ]), main = "linf", xlab = "")
-hist(c(params(vbNorm)["k", ]), main = "k", prob = TRUE, xlab = "")
-hist(c(params(vbNorm)["t0", ]), main = "t0", xlab = "")
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{par}\hlstd{(}\hlkwc{mfrow} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,} \hlnum{1}\hlstd{))}
+\hlkwd{hist}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{params}\hlstd{(vbNorm)[}\hlstr{"linf"}\hlstd{, ]),} \hlkwc{main} \hlstd{=} \hlstr{"linf"}\hlstd{,} \hlkwc{xlab} \hlstd{=} \hlstr{""}\hlstd{)}
+\hlkwd{hist}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{params}\hlstd{(vbNorm)[}\hlstr{"k"}\hlstd{, ]),} \hlkwc{main} \hlstd{=} \hlstr{"k"}\hlstd{,} \hlkwc{prob} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{xlab} \hlstd{=} \hlstr{""}\hlstd{)}
+\hlkwd{hist}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{params}\hlstd{(vbNorm)[}\hlstr{"t0"}\hlstd{, ]),} \hlkwc{main} \hlstd{=} \hlstr{"t0"}\hlstd{,} \hlkwc{xlab} \hlstd{=} \hlstr{""}\hlstd{)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/example_norm_parameter_distributions} 
 
@@ -650,28 +704,28 @@ hist(c(params(vbNorm)["t0", ]), main = "t0", xlab = "")
 
 The shape of the correlation can be seen in Figure~\ref{fig:plot_norm_scatter}.
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# Plotting scatter plot of growth parameters
-splom(data.frame(t(params(vbNorm)@.Data)), pch = ".")
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Plotting scatter plot of growth parameters}
+\hlkwd{splom}\hlstd{(}\hlkwd{data.frame}\hlstd{(}\hlkwd{t}\hlstd{(}\hlkwd{params}\hlstd{(vbNorm)}\hlopt{@}\hlkwc{.Data}\hlstd{)),} \hlkwc{pch} \hlstd{=} \hlstr{"."}\hlstd{)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# Generating and plotting growth curves
-boxplot(t(predict(vbNorm, t = 0:50 + 0.5)))
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Generating and plotting growth curves}
+\hlkwd{boxplot}\hlstd{(}\hlkwd{t}\hlstd{(}\hlkwd{predict}\hlstd{(vbNorm,} \hlkwc{t} \hlstd{=} \hlnum{0}\hlopt{:}\hlnum{50} \hlopt{+} \hlnum{0.5}\hlstd{)))}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/example_norm_parameter_scatter} 
 
@@ -689,7 +743,7 @@ Growth curves for the 1000 iterations can be seen in Figure~\ref{fig:plot_mv_gro
 
 \begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/example_mv_growth_curve_plot} 
 
@@ -706,64 +760,47 @@ Growth curves for the 1000 iterations can be seen in Figure~\ref{fig:plot_mv_gro
 \subsection{Adding parameter uncertainty with a multivariate triangle distribution}
 \label{sec:growth_triangle_cop}
 
-One alternative to using normal distributions, (\url{http://en.wikipedia.org/wiki/Triangle_distribution}). These distributions are parametrized using the minimum, maximum and median values. This can be very attractive if the analyst needs to scrape information from the web or literature and perform some kind of meta-analysis.
+One alternative to using normal distributions is to use a triangle distribution (\url{http://en.wikipedia.org/wiki/Triangle_distribution}). These distributions are parametrized using the minimum, maximum and median values. This can be very attractive if the analyst needs to scrape information from the web or literature and perform some kind of meta-analysis.
 
-Example of setting a triangle distribution with values taken from FishBase.
+Here we show an example of setting a triangle distribution with values taken from Fishbase.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# The web address for the growth parameters for redfish (Sebastes
-# norvegicus)
-addr <- "http://www.fishbase.org/PopDyn/PopGrowthList.php?ID=501"
-# Scrape the data
-tab <- try(readHTMLTable(addr))
-# Interrogate the data table and get vectors of the values
-linf <- as.numeric(as.character(tab$dataTable[, 2]))
-k <- as.numeric(as.character(tab$dataTable[, 4]))
-t0 <- as.numeric(as.character(tab$dataTable[, 5]))
-# Set the min (a), max (b) and median (c) values for the parameter as a list
-# of lists Note that t0 has no 'c' (median) value. This makes the
-# distribution symmetrical
-triPars <- list(list(a = min(linf), b = max(linf), c = median(linf)), list(a = min(k), 
-    b = max(k), c = median(k)), list(a = median(t0, na.rm = T) - IQR(t0, na.rm = T)/2, 
-    b = median(t0, na.rm = T) + IQR(t0, na.rm = T)/2))
-# Simulate 10000 times using mvrtriangle
-vbTri <- mvrtriangle(10000, vbObj, paramMargins = triPars)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# The web address for the growth parameters for redfish (Sebastes}
+\hlcom{# norvegicus)}
+\hlstd{addr} \hlkwb{<-} \hlstr{"http://www.fishbase.org/PopDyn/PopGrowthList.php?ID=501"}
+\hlcom{# Scrape the data}
+\hlstd{tab} \hlkwb{<-} \hlkwd{try}\hlstd{(}\hlkwd{readHTMLTable}\hlstd{(addr))}
+\hlcom{# Interrogate the data table and get vectors of the values}
+\hlstd{linf} \hlkwb{<-} \hlkwd{as.numeric}\hlstd{(}\hlkwd{as.character}\hlstd{(tab}\hlopt{$}\hlstd{dataTable[,} \hlnum{2}\hlstd{]))}
+\hlstd{k} \hlkwb{<-} \hlkwd{as.numeric}\hlstd{(}\hlkwd{as.character}\hlstd{(tab}\hlopt{$}\hlstd{dataTable[,} \hlnum{4}\hlstd{]))}
+\hlstd{t0} \hlkwb{<-} \hlkwd{as.numeric}\hlstd{(}\hlkwd{as.character}\hlstd{(tab}\hlopt{$}\hlstd{dataTable[,} \hlnum{5}\hlstd{]))}
+\hlcom{# Set the min (a), max (b) and median (c) values for the parameter as a list}
+\hlcom{# of lists Note that t0 has no 'c' (median) value. This makes the}
+\hlcom{# distribution symmetrical}
+\hlstd{triPars} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlkwd{list}\hlstd{(}\hlkwc{a} \hlstd{=} \hlkwd{min}\hlstd{(linf),} \hlkwc{b} \hlstd{=} \hlkwd{max}\hlstd{(linf),} \hlkwc{c} \hlstd{=} \hlkwd{median}\hlstd{(linf)),} \hlkwd{list}\hlstd{(}\hlkwc{a} \hlstd{=} \hlkwd{min}\hlstd{(k),}
+    \hlkwc{b} \hlstd{=} \hlkwd{max}\hlstd{(k),} \hlkwc{c} \hlstd{=} \hlkwd{median}\hlstd{(k)),} \hlkwd{list}\hlstd{(}\hlkwc{a} \hlstd{=} \hlkwd{median}\hlstd{(t0,} \hlkwc{na.rm} \hlstd{= T)} \hlopt{-} \hlkwd{IQR}\hlstd{(t0,} \hlkwc{na.rm} \hlstd{= T)}\hlopt{/}\hlnum{2}\hlstd{,}
+    \hlkwc{b} \hlstd{=} \hlkwd{median}\hlstd{(t0,} \hlkwc{na.rm} \hlstd{= T)} \hlopt{+} \hlkwd{IQR}\hlstd{(t0,} \hlkwc{na.rm} \hlstd{= T)}\hlopt{/}\hlnum{2}\hlstd{))}
+\hlcom{# Simulate 10000 times using mvrtriangle}
+\hlstd{vbTri} \hlkwb{<-} \hlkwd{mvrtriangle}\hlstd{(}\hlnum{10000}\hlstd{, vbObj,} \hlkwc{paramMargins} \hlstd{= triPars)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
-The marginals will reflect the uncertainty on the parameter values that were scraped from FishBase but, as we don't really believe the parameters are multivariate normal we adopted a more relaxed distribution based on a \emph{t} copula with triangle marginals.
+The marginals will reflect the uncertainty on the parameter values that were scraped from Fishbase but, as we don't really believe the parameters are multivariate normal, here we adopted a distribution based on a \emph{t} copula with triangle marginals.
 The marginal distributions can be seen in Figure~\ref{fig:plot_tri_params} and the shape of the correlation can be seen in Figure~\ref{fig:plot_tri_scatter}.
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# Plot histogram of the marginals
-par(mfrow = c(3, 1))
-hist(c(params(vbTri)["linf", ]), main = "linf", xlab = "")
-hist(c(params(vbTri)["k", ]), main = "k", prob = TRUE, xlab = "")
-hist(c(params(vbTri)["t0", ]), main = "t0", xlab = "")
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# Scatter plot of the parameter values
-splom(data.frame(t(params(vbTri)@.Data)), pch = ".")
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
+
+
 
 
 \begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/example_tri_parameter_distributions} 
 
@@ -780,7 +817,7 @@ splom(data.frame(t(params(vbTri)@.Data)), pch = ".")
 
 \begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/example_tri_parameter_scatter} 
 
@@ -796,19 +833,12 @@ splom(data.frame(t(params(vbTri)@.Data)), pch = ".")
 
 We can still use \code{predict()} to get see the growth model uncertainty (Figure~\ref{fig:plot_tri_growth}).
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# PLot growth curve
-boxplot(t(predict(vbTri, t = 0:20 + 0.5)))
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
+
 
 
 \begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/example_tri_parameter_growth} 
 
@@ -822,8 +852,8 @@ boxplot(t(predict(vbTri, t = 0:20 + 0.5)))
 \label{fig:plot_tri_growth}
 \end{figure}
 
-Remember that the above examples use a variance-covariance matrix that we made up.
-If you want to be really geeky, you can scrape the entire growth parameters dataset from FishBase and compute the shape of the variance-covariance matrix yourself.
+Remember that the above examples use a variance-covariance matrix that we essentially made up.
+An alternative would be to scrape the entire growth parameters dataset from FishBase and compute the shape of the variance-covariance matrix yourself.
 
 \subsection{Adding parameter uncertainty with other copulas}
 
@@ -833,39 +863,26 @@ This is possible with the \code{mvrcop()} function. The example below keeps the 
 % Needs more explanation
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-vbCop <- mvrcop(10000, vbObj, copula = "archmCopula", family = "clayton", param = 2, 
-    margins = "triangle", paramMargins = triPars)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{vbCop} \hlkwb{<-} \hlkwd{mvrcop}\hlstd{(}\hlnum{10000}\hlstd{, vbObj,} \hlkwc{copula} \hlstd{=} \hlstr{"archmCopula"}\hlstd{,} \hlkwc{family} \hlstd{=} \hlstr{"clayton"}\hlstd{,} \hlkwc{param} \hlstd{=} \hlnum{2}\hlstd{,}
+    \hlkwc{margins} \hlstd{=} \hlstr{"triangle"}\hlstd{,} \hlkwc{paramMargins} \hlstd{= triPars)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 The shape of the correlation changes (Figure~\ref{fig:plot_cop_tri_scatter}) as well as the resulting growth curves (Figure~\ref{fig:plot_cop_tri_growth}). 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# Scatter plot of parameter values
-splom(data.frame(t(params(vbCop)@.Data)), pch = ".")
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-boxplot(t(predict(vbCop, t = 0:20 + 0.5)))
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
+
+
 
 
 \begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/example_cop_tri_scatter} 
 
@@ -881,7 +898,7 @@ boxplot(t(predict(vbCop, t = 0:20 + 0.5)))
 
 \begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/example_cop_tri_growth} 
 
@@ -906,20 +923,22 @@ If the values are abundances then the values should be summed. Summing other typ
 We demonstrate the method by converting a catch-at-length \class{FLQuant} to a catch-at-age \class{FLQuant}. First we make an \class{a4aGr} object with a multivariate triangle distribution. We use 10 iterations as an example. And call \code{l2a} by passing in the length-based \class{FLQuant} and the \class{a4aGr} object.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-vbTriSmall <- mvrtriangle(10, vbObj, paramMargins = triPars)
-cth.n <- l2a(catch.n(rfLen.stk), vbTriSmall)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{vbTriSmall} \hlkwb{<-} \hlkwd{mvrtriangle}\hlstd{(}\hlnum{10}\hlstd{, vbObj,} \hlkwc{paramMargins} \hlstd{= triPars)}
+\hlstd{cth.n} \hlkwb{<-} \hlkwd{l2a}\hlstd{(}\hlkwd{catch.n}\hlstd{(rfLen.stk), vbTriSmall)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{dim}\hlstd{(cth.n)}
+\end{alltt}
 \begin{verbatim}
-dim(cth.n)
-## [1] 63 26  1  4  1 10
+## [1] 65 26  1  4  1 10
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -933,12 +952,16 @@ As well as converting one \class{FLQuant} at a time, we can convert entire \clas
 The method for \class{FLStock} classes takes an additional argument for the plusgroup.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{aStk} \hlkwb{<-} \hlkwd{l2a}\hlstd{(rfLen.stk, vbTriSmall,} \hlkwc{plusgroup} \hlstd{=} \hlnum{14}\hlstd{)}
+\end{alltt}
 \begin{verbatim}
-aStk <- l2a(rfLen.stk, vbTriSmall, plusgroup = 14)
 ## [1] "maxfbar has been changed to accomodate new plusgroup"
-aIdx <- l2a(rfTrawl.idx, vbTriSmall)
 \end{verbatim}
+\begin{alltt}
+\hlstd{aIdx} \hlkwb{<-} \hlkwd{l2a}\hlstd{(rfTrawl.idx, vbTriSmall)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
@@ -969,9 +992,11 @@ In this section we go through each of the steps in detail using a variety of dif
 Natural mortality is implemented in a class named \class{a4aM}. This class is made up of three models of the class \class{FLModelSim}. Each model represents one effect: an age or length effect, a scaling (level) effect and a time trend, named \code{shape}, \code{level} and \code{trend}, respectively. The impact of the models is multiplicative, i.e. the overal natural mortality is given by \class{shape} x  \class{level} x \class{trend}. Check the help files for more information.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{showClass}\hlstd{(}\hlstr{"a4aM"}\hlstd{)}
+\end{alltt}
 \begin{verbatim}
-showClass("a4aM")
 ## Class "a4aM" [package "FLa4a"]
 ## 
 ## Slots:
@@ -988,11 +1013,13 @@ showClass("a4aM")
 The \class{a4aM} constructor requires that the models and parameters are provided. The default method will build each of these models as a constant value of 1. For example the usual "0.2" guessestimate could be set up by setting the \code{level} model to have a single parameter with a fixed value, while the other two models, \class{shape} and \class{trend}, have a default value of 1 (effectively, they have no effect).
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{mod02} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{a,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{a} \hlstd{=} \hlnum{0.2}\hlstd{))}
+\hlstd{m1} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{level} \hlstd{= mod02)}
+\hlstd{m1}
+\end{alltt}
 \begin{verbatim}
-mod02 <- FLModelSim(model = ~a, params = FLPar(a = 0.2))
-m1 <- a4aM(level = mod02)
-m1
 ## a4aM object:
 ##   shape: ~1
 ##   level: ~a
@@ -1005,12 +1032,14 @@ m1
 More interesting natural mortality shapes can be set up using biological knowledge. The following example uses an exponential decay over ages (implying that resulting \class{FLQuant} generated by the \code{m()} method will be age beased). We also use Jensen's second estimator (Kenshington, 2013) as a scaling \code{level} model. This is based on the von Bertalanffy $K$ parameter, $M=1.5K$. 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{shape2} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{age} \hlopt{-} \hlnum{0.5}\hlstd{))}
+\hlstd{level2} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlnum{1.5} \hlopt{*} \hlstd{k,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{k} \hlstd{=} \hlnum{0.4}\hlstd{))}
+\hlstd{m2} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= shape2,} \hlkwc{level} \hlstd{= level2)}
+\hlstd{m2}
+\end{alltt}
 \begin{verbatim}
-shape2 <- FLModelSim(model = ~exp(-age - 0.5))
-level2 <- FLModelSim(model = ~1.5 * k, params = FLPar(k = 0.4))
-m2 <- a4aM(shape = shape2, level = level2)
-m2
 ## a4aM object:
 ##   shape: ~exp(-age - 0.5)
 ##   level: ~1.5 * k
@@ -1031,12 +1060,12 @@ We use the default \code{level} and \class{trend} models.
 Check a length-base shape model.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-shape_len <- FLModelSim(model = ~K * (linf/len)^1.5, params = FLPar(linf = 60, 
-    K = 0.4))
-m_len <- a4aM(shape = shape_len)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{shape_len} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{K} \hlopt{*} \hlstd{(linf}\hlopt{/}\hlstd{len)}\hlopt{^}\hlnum{1.5}\hlstd{,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{linf} \hlstd{=} \hlnum{60}\hlstd{,}
+    \hlkwc{K} \hlstd{=} \hlnum{0.4}\hlstd{))}
+\hlstd{m_len} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= shape_len)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
@@ -1046,25 +1075,27 @@ As an alternative, an external factor may impact the natural mortality. This can
 We use this to make a complicated natural mortality model with an age based shape model, a level model based on $K$ and a trend model driven by NAO, where M increases 50\% if NAO is positive on the first quarter.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Get NAO}
+\hlstd{nao.orig} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"http://www.cdc.noaa.gov/data/correlation/nao.data"}\hlstd{,}
+    \hlkwc{skip} \hlstd{=} \hlnum{1}\hlstd{,} \hlkwc{nrow} \hlstd{=} \hlnum{62}\hlstd{,} \hlkwc{na.strings} \hlstd{=} \hlstr{"-99.90"}\hlstd{)}
+\hlstd{dnms} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlkwc{quant} \hlstd{=} \hlstr{"nao"}\hlstd{,} \hlkwc{year} \hlstd{=} \hlnum{1948}\hlopt{:}\hlnum{2009}\hlstd{,} \hlkwc{unit} \hlstd{=} \hlstr{"unique"}\hlstd{,} \hlkwc{season} \hlstd{=} \hlnum{1}\hlopt{:}\hlnum{12}\hlstd{,}
+    \hlkwc{area} \hlstd{=} \hlstr{"unique"}\hlstd{)}
+\hlcom{# Build an FLQuant from the NAO data}
+\hlstd{nao.flq} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(}\hlkwd{unlist}\hlstd{(nao.orig[,} \hlopt{-}\hlnum{1}\hlstd{]),} \hlkwc{dimnames} \hlstd{= dnms,} \hlkwc{units} \hlstd{=} \hlstr{"nao"}\hlstd{)}
+\hlcom{# Build covar by calculating mean over the first 3 months}
+\hlstd{nao} \hlkwb{<-} \hlkwd{seasonMeans}\hlstd{(nao.flq[, , ,} \hlnum{1}\hlopt{:}\hlnum{3}\hlstd{])}
+\hlcom{# Turn into Boolean}
+\hlstd{nao} \hlkwb{<-} \hlstd{(nao} \hlopt{>} \hlnum{0}\hlstd{)}
+\hlstd{trend3} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlnum{1} \hlopt{+} \hlstd{b} \hlopt{*} \hlstd{nao,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{b} \hlstd{=} \hlnum{0.5}\hlstd{))}
+\hlcom{# Constructor}
+\hlstd{shape3} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{age} \hlopt{-} \hlnum{0.5}\hlstd{))}
+\hlstd{level3} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlnum{1.5} \hlopt{*} \hlstd{k,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{k} \hlstd{=} \hlnum{0.4}\hlstd{))}
+\hlstd{m3} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= shape3,} \hlkwc{level} \hlstd{= level3,} \hlkwc{trend} \hlstd{= trend3)}
+\hlstd{m3}
+\end{alltt}
 \begin{verbatim}
-# Get NAO
-nao.orig <- read.table("http://www.cdc.noaa.gov/data/correlation/nao.data", 
-    skip = 1, nrow = 62, na.strings = "-99.90")
-dnms <- list(quant = "nao", year = 1948:2009, unit = "unique", season = 1:12, 
-    area = "unique")
-# Build an FLQuant from the NAO data
-nao.flq <- FLQuant(unlist(nao.orig[, -1]), dimnames = dnms, units = "nao")
-# Build covar by calculating mean over the first 3 months
-nao <- seasonMeans(nao.flq[, , , 1:3])
-# Turn into Boolean
-nao <- (nao > 0)
-trend3 <- FLModelSim(model = ~1 + b * nao, params = FLPar(b = 0.5))
-# Constructor
-shape3 <- FLModelSim(model = ~exp(-age - 0.5))
-level3 <- FLModelSim(model = ~1.5 * k, params = FLPar(k = 0.4))
-m3 <- a4aM(shape = shape3, level = level3, trend = trend3)
-m3
 ## a4aM object:
 ##   shape: ~exp(-age - 0.5)
 ##   level: ~1.5 * k
@@ -1079,21 +1110,27 @@ m3
 Uncertainty on natural mortality is added through uncertainty on the parameters. In the case of the \class{a4aM} class it makes use of the \class{FLModelSim} \code{mvr()} methods. A wrapper for \code{mvrnorm} was implemented, but all the other options must be carried out in each sub-model at the time.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{shape4} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{age} \hlopt{-} \hlnum{0.5}\hlstd{))}
+\hlstd{level4} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{k}\hlopt{^}\hlnum{0.66} \hlopt{*} \hlstd{t}\hlopt{^}\hlnum{0.57}\hlstd{,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{k} \hlstd{=} \hlnum{0.4}\hlstd{,} \hlkwc{t} \hlstd{=} \hlnum{10}\hlstd{),}
+    \hlkwc{vcov} \hlstd{=} \hlkwd{array}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{0.002}\hlstd{,} \hlnum{0.01}\hlstd{,} \hlnum{0.01}\hlstd{,} \hlnum{1}\hlstd{),} \hlkwc{dim} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,} \hlnum{2}\hlstd{)))}
+\hlstd{trend4} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlnum{1} \hlopt{+} \hlstd{b} \hlopt{*} \hlstd{nao,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{b} \hlstd{=} \hlnum{0.5}\hlstd{),} \hlkwc{vcov} \hlstd{=} \hlkwd{matrix}\hlstd{(}\hlnum{0.02}\hlstd{))}
+\hlstd{m4} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= shape4,} \hlkwc{level} \hlstd{= level4,} \hlkwc{trend} \hlstd{= trend4)}
+\hlstd{m4} \hlkwb{<-} \hlkwd{mvrnorm}\hlstd{(}\hlnum{100}\hlstd{, m4)}
+\hlstd{m4}
+\end{alltt}
 \begin{verbatim}
-shape4 <- FLModelSim(model = ~exp(-age - 0.5))
-level4 <- FLModelSim(model = ~k^0.66 * t^0.57, params = FLPar(k = 0.4, t = 10), 
-    vcov = array(c(0.002, 0.01, 0.01, 1), dim = c(2, 2)))
-trend4 <- FLModelSim(model = ~1 + b * nao, params = FLPar(b = 0.5), vcov = matrix(0.02))
-m4 <- a4aM(shape = shape4, level = level4, trend = trend4)
-m4 <- mvrnorm(100, m4)
-m4
 ## a4aM object:
 ##   shape: ~exp(-age - 0.5)
 ##   level: ~k^0.66 * t^0.57
 ##   trend: ~1 + b * nao
-# Look at the level model (for example)
-m4@level
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Look at the level model (for example)}
+\hlstd{m4}\hlopt{@}\hlkwc{level}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLModelSim"
 ## Slot "model":
 ## ~k^0.66 * t^0.57
@@ -1104,7 +1141,7 @@ m4@level
 ## 
 ## params
 ##               k               t 
-## 0.40051(0.0433) 9.87680(1.1132) 
+## 0.40837(0.0359) 9.87833(1.0043) 
 ## units:  NA 
 ## 
 ## Slot "vcov":
@@ -1114,17 +1151,25 @@ m4@level
 ## 
 ## Slot "distr":
 ## [1] "norm"
-# Note the variance in the parameters The trend model also has uncertainty
-params(trend(m4))
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Note the variance in the parameters The trend model also has uncertainty}
+\hlkwd{params}\hlstd{(}\hlkwd{trend}\hlstd{(m4))}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLPar"
 ## iters:  100 
 ## 
 ## params
 ##              b 
-## 0.50257(0.128) 
+## 0.50625(0.159) 
 ## units:  NA
-# However, the shape model has no parameters and no uncertainty
-params(shape(m4))
+\end{verbatim}
+\begin{alltt}
+\hlcom{# However, the shape model has no parameters and no uncertainty}
+\hlkwd{params}\hlstd{(}\hlkwd{shape}\hlstd{(m4))}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLPar"
 ## param
 ##    
@@ -1140,11 +1185,11 @@ In this particular case, the \code{shape} model will not be randomized because i
 The same model could be achieved using \code{mnrnorm()} on each model component:
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-m4 <- a4aM(shape = shape4, level = mvrnorm(100, level4), trend = mvrnorm(100, 
-    trend4))
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{m4} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= shape4,} \hlkwc{level} \hlstd{=} \hlkwd{mvrnorm}\hlstd{(}\hlnum{100}\hlstd{, level4),} \hlkwc{trend} \hlstd{=} \hlkwd{mvrnorm}\hlstd{(}\hlnum{100}\hlstd{,}
+    \hlstd{trend4))}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
@@ -1160,29 +1205,35 @@ We can also use copulas add parameter uncertainty to the natural mortality model
 In the following example we'll use Gislason's second estimator (REF), $M_l=K(\frac{L_inf}{l})^1.5$ and a triangle copula to model parameter uncertainty in natural mortality.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{linf} \hlkwb{<-} \hlnum{60}
+\hlstd{k} \hlkwb{<-} \hlnum{0.4}
+\hlcom{# vcov matrix (make up some values)}
+\hlstd{mm} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlnum{NA}\hlstd{,} \hlkwc{ncol} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{nrow} \hlstd{=} \hlnum{2}\hlstd{)}
+\hlcom{# 10% cv}
+\hlkwd{diag}\hlstd{(mm)} \hlkwb{<-} \hlkwd{c}\hlstd{((linf} \hlopt{*} \hlnum{0.1}\hlstd{)}\hlopt{^}\hlnum{2}\hlstd{, (k} \hlopt{*} \hlnum{0.1}\hlstd{)}\hlopt{^}\hlnum{2}\hlstd{)}
+\hlcom{# 0.2 correlation}
+\hlstd{mm[}\hlkwd{upper.tri}\hlstd{(mm)]} \hlkwb{<-} \hlstd{mm[}\hlkwd{lower.tri}\hlstd{(mm)]} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{0.05}\hlstd{)}
+\hlcom{# a good way to check is using cov2cor}
+\hlkwd{cov2cor}\hlstd{(mm)}
+\end{alltt}
 \begin{verbatim}
-linf <- 60
-k <- 0.4
-# vcov matrix (make up some values)
-mm <- matrix(NA, ncol = 2, nrow = 2)
-# 10% cv
-diag(mm) <- c((linf * 0.1)^2, (k * 0.1)^2)
-# 0.2 correlation
-mm[upper.tri(mm)] <- mm[lower.tri(mm)] <- c(0.05)
-# a good way to check is using cov2cor
-cov2cor(mm)
 ##        [,1]   [,2]
 ## [1,] 1.0000 0.2083
 ## [2,] 0.2083 1.0000
-# create object
-mgis2 <- FLModelSim(model = ~k * (linf/len)^1.5, params = FLPar(linf = linf, 
-    k = k), vcov = mm)
-# set the lower, upper and (optionally) centre of the parameters Without the
-# centre, the triangle is symmetrical
-pars <- list(list(a = 55, b = 65), list(a = 0.3, b = 0.6, c = 0.35))
-mgis2 <- mvrtriangle(1000, mgis2, paramMargins = pars)
-mgis2
+\end{verbatim}
+\begin{alltt}
+\hlcom{# create object}
+\hlstd{mgis2} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{k} \hlopt{*} \hlstd{(linf}\hlopt{/}\hlstd{len)}\hlopt{^}\hlnum{1.5}\hlstd{,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{linf} \hlstd{= linf,}
+    \hlkwc{k} \hlstd{= k),} \hlkwc{vcov} \hlstd{= mm)}
+\hlcom{# set the lower, upper and (optionally) centre of the parameters Without the}
+\hlcom{# centre, the triangle is symmetrical}
+\hlstd{pars} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlkwd{list}\hlstd{(}\hlkwc{a} \hlstd{=} \hlnum{55}\hlstd{,} \hlkwc{b} \hlstd{=} \hlnum{65}\hlstd{),} \hlkwd{list}\hlstd{(}\hlkwc{a} \hlstd{=} \hlnum{0.3}\hlstd{,} \hlkwc{b} \hlstd{=} \hlnum{0.6}\hlstd{,} \hlkwc{c} \hlstd{=} \hlnum{0.35}\hlstd{))}
+\hlstd{mgis2} \hlkwb{<-} \hlkwd{mvrtriangle}\hlstd{(}\hlnum{1000}\hlstd{, mgis2,} \hlkwc{paramMargins} \hlstd{= pars)}
+\hlstd{mgis2}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLModelSim"
 ## Slot "model":
 ## ~k * (linf/len)^1.5
@@ -1193,7 +1244,7 @@ mgis2
 ## 
 ## params
 ##             linf                k 
-## 60.09018(2.1772)  0.40586(0.0705) 
+## 60.02687(2.0070)  0.40618(0.0741) 
 ## units:  NA 
 ## 
 ## Slot "vcov":
@@ -1211,28 +1262,28 @@ mgis2
 The resulting parameter estimates and marginal distributions can be seen in Figure~\ref{fig:plot_tri_gis_m} and \ref{fig:plot_tri_gis_m_hist}
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-splom(t(params(mgis2)@.Data))
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{splom}\hlstd{(}\hlkwd{t}\hlstd{(}\hlkwd{params}\hlstd{(mgis2)}\hlopt{@}\hlkwc{.Data}\hlstd{))}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-par(mfrow = c(2, 1))
-hist(c(params(mgis2)["linf", ]), main = "Linf", xlab = "")
-hist(c(params(mgis2)["k", ]), main = "K", xlab = "")
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{par}\hlstd{(}\hlkwc{mfrow} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,} \hlnum{1}\hlstd{))}
+\hlkwd{hist}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{params}\hlstd{(mgis2)[}\hlstr{"linf"}\hlstd{, ]),} \hlkwc{main} \hlstd{=} \hlstr{"Linf"}\hlstd{,} \hlkwc{xlab} \hlstd{=} \hlstr{""}\hlstd{)}
+\hlkwd{hist}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{params}\hlstd{(mgis2)[}\hlstr{"k"}\hlstd{, ]),} \hlkwc{main} \hlstd{=} \hlstr{"K"}\hlstd{,} \hlkwc{xlab} \hlstd{=} \hlstr{""}\hlstd{)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/example_tri_gis_m_scatter} 
 
@@ -1248,7 +1299,7 @@ hist(c(params(mgis2)["k", ]), main = "K", xlab = "")
 
 \begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/example_tri_gis_m_hist} 
 
@@ -1265,13 +1316,13 @@ hist(c(params(mgis2)["k", ]), main = "K", xlab = "")
 We now have a new model that can be used for the \code{shape} model. Use the constructor or the set method to add the new model. Note that we have a quite complex method now for \emph{M}. A length based \code{shape} model from Gislason's work, Jensen's third based temperature \code{level} and a time \code{trend} depending on NAO. All of the component models have uncertainty in their parameters.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-m5 <- a4aM(shape = mgis2, level = level4, trend = trend4)
-# or
-m5 <- m4
-shape(m5) <- mgis2
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{m5} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= mgis2,} \hlkwc{level} \hlstd{= level4,} \hlkwc{trend} \hlstd{= trend4)}
+\hlcom{# or}
+\hlstd{m5} \hlkwb{<-} \hlstd{m4}
+\hlkwd{shape}\hlstd{(m5)} \hlkwb{<-} \hlstd{mgis2}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
@@ -1291,20 +1342,30 @@ The name of the first dimension of the output \class{FLQuant} (e.g. 'age' or 'le
 Using the m method to make an FLQuant of constant natural mortality:
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Start with the simplest model}
+\hlstd{m1}
+\end{alltt}
 \begin{verbatim}
-# Start with the simplest model
-m1
 ## a4aM object:
 ##   shape: ~1
 ##   level: ~a
 ##   trend: ~1
-# Check the range
-range(m1)
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Check the range}
+\hlkwd{range}\hlstd{(m1)}
+\end{alltt}
+\begin{verbatim}
 ##       min       max plusgroup   minyear   maxyear   minmbar   maxmbar 
 ##         0         0         0         0         0         0         0
-# Simple - no ages or years
-m(m1)
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Simple - no ages or years}
+\hlkwd{m}\hlstd{(m1)}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLQuant"
 ## , , unit = unique, season = all, area = unique
 ## 
@@ -1313,12 +1374,20 @@ m(m1)
 ##     0 0.2
 ## 
 ## units:  NA
-# Set the quant range
-rngquant(m1) <- c(0, 7)  # set the quant range
-range(m1)
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Set the quant range}
+\hlkwd{rngquant}\hlstd{(m1)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{7}\hlstd{)}  \hlcom{# set the quant range}
+\hlkwd{range}\hlstd{(m1)}
+\end{alltt}
+\begin{verbatim}
 ##       min       max plusgroup   minyear   maxyear   minmbar   maxmbar 
 ##         0         7         0         0         0         0         0
-m(m1)
+\end{verbatim}
+\begin{alltt}
+\hlkwd{m}\hlstd{(m1)}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLQuant"
 ## , , unit = unique, season = all, area = unique
 ## 
@@ -1334,12 +1403,20 @@ m(m1)
 ##     7 0.2
 ## 
 ## units:  NA
-# Set the year range too
-rngyear(m1) <- c(2000, 2010)  # set the year range
-range(m1)
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Set the year range too}
+\hlkwd{rngyear}\hlstd{(m1)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{2000}\hlstd{,} \hlnum{2010}\hlstd{)}  \hlcom{# set the year range}
+\hlkwd{range}\hlstd{(m1)}
+\end{alltt}
+\begin{verbatim}
 ##       min       max plusgroup   minyear   maxyear   minmbar   maxmbar 
 ##         0         7         0      2000      2010         0         0
-m(m1)
+\end{verbatim}
+\begin{alltt}
+\hlkwd{m}\hlstd{(m1)}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLQuant"
 ## , , unit = unique, season = all, area = unique
 ## 
@@ -1355,8 +1432,10 @@ m(m1)
 ##     7 0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2  0.2 
 ## 
 ## units:  NA
-# Note the name of the first dimension is 'quant'
 \end{verbatim}
+\begin{alltt}
+\hlcom{# Note the name of the first dimension is 'quant'}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
@@ -1368,16 +1447,22 @@ The \emph{mbar} range can be changed with the \code{rngmbar()} method.
 Using the m method to make an FLQuant with age varying natural mortality:
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Remind ourselves of the model}
+\hlstd{m2}
+\end{alltt}
 \begin{verbatim}
-# Remind ourselves of the model
-m2
 ## a4aM object:
 ##   shape: ~exp(-age - 0.5)
 ##   level: ~1.5 * k
 ##   trend: ~1
-# Simple with no ages or years - note that the first dimension is 'age'
-m(m2)
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Simple with no ages or years - note that the first dimension is 'age'}
+\hlkwd{m}\hlstd{(m2)}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLQuant"
 ## , , unit = unique, season = all, area = unique
 ## 
@@ -1386,9 +1471,13 @@ m(m2)
 ##   0 0.6
 ## 
 ## units:  NA
-# With ages
-rngquant(m2) <- c(0, 7)
-m(m2)
+\end{verbatim}
+\begin{alltt}
+\hlcom{# With ages}
+\hlkwd{rngquant}\hlstd{(m2)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{7}\hlstd{)}
+\hlkwd{m}\hlstd{(m2)}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLQuant"
 ## , , unit = unique, season = all, area = unique
 ## 
@@ -1404,9 +1493,13 @@ m(m2)
 ##   7 0.00054713
 ## 
 ## units:  NA
-# With ages and years
-rngyear(m2) <- c(2000, 2003)
-m(m2)
+\end{verbatim}
+\begin{alltt}
+\hlcom{# With ages and years}
+\hlkwd{rngyear}\hlstd{(m2)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{2000}\hlstd{,} \hlnum{2003}\hlstd{)}
+\hlkwd{m}\hlstd{(m2)}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLQuant"
 ## , , unit = unique, season = all, area = unique
 ## 
@@ -1422,13 +1515,21 @@ m(m2)
 ##   7 0.00054713 0.00054713 0.00054713 0.00054713
 ## 
 ## units:  NA
-# Note that the level value is:
-predict(level(m2))
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Note that the level value is:}
+\hlkwd{predict}\hlstd{(}\hlkwd{level}\hlstd{(m2))}
+\end{alltt}
+\begin{verbatim}
 ##    iter
 ##       1
 ##   1 0.6
-# Is the same as
-m(m2)["0"]
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Is the same as}
+\hlkwd{m}\hlstd{(m2)[}\hlstr{"0"}\hlstd{]}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLQuant"
 ## , , unit = unique, season = all, area = unique
 ## 
@@ -1437,18 +1538,30 @@ m(m2)["0"]
 ##   0 0.6  0.6  0.6  0.6 
 ## 
 ## units:  NA
-# This is because the mbar range is currently set to '0' and '0'
-range(m2)
+\end{verbatim}
+\begin{alltt}
+\hlcom{# This is because the mbar range is currently set to '0' and '0'}
+\hlkwd{range}\hlstd{(m2)}
+\end{alltt}
+\begin{verbatim}
 ##       min       max plusgroup   minyear   maxyear   minmbar   maxmbar 
 ##         0         7         0      2000      2003         0         0
-# The mean natural mortality value over this range is given by the level
-# model We can change the mbar range
-rngmbar(m2) <- c(0, 5)
-range(m2)
+\end{verbatim}
+\begin{alltt}
+\hlcom{# The mean natural mortality value over this range is given by the level}
+\hlcom{# model We can change the mbar range}
+\hlkwd{rngmbar}\hlstd{(m2)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{5}\hlstd{)}
+\hlkwd{range}\hlstd{(m2)}
+\end{alltt}
+\begin{verbatim}
 ##       min       max plusgroup   minyear   maxyear   minmbar   maxmbar 
 ##         0         7         0      2000      2003         0         5
-# This rescales the natural mortality at age:
-m(m2)
+\end{verbatim}
+\begin{alltt}
+\hlcom{# This rescales the natural mortality at age:}
+\hlkwd{m}\hlstd{(m2)}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLQuant"
 ## , , unit = unique, season = all, area = unique
 ## 
@@ -1464,9 +1577,13 @@ m(m2)
 ##   7 0.0020803 0.0020803 0.0020803 0.0020803
 ## 
 ## units:  NA
-# Check that the mortality over the mean range is the same as the level
-# model
-quantMeans(m(m2)[as.character(0:5)])
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Check that the mortality over the mean range is the same as the level}
+\hlcom{# model}
+\hlkwd{quantMeans}\hlstd{(}\hlkwd{m}\hlstd{(m2)[}\hlkwd{as.character}\hlstd{(}\hlnum{0}\hlopt{:}\hlnum{5}\hlstd{)])}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLQuant"
 ## , , unit = unique, season = all, area = unique
 ## 
@@ -1485,10 +1602,12 @@ The next example uses a time trend for the \code{trend} model. We use the \code{
 Using the m method to make an FLQuant with a time trend:
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Simple, pass in a single nao value (only one year)}
+\hlkwd{m}\hlstd{(m3,} \hlkwc{nao} \hlstd{=} \hlnum{1}\hlstd{)}
+\end{alltt}
 \begin{verbatim}
-# Simple, pass in a single nao value (only one year)
-m(m3, nao = 1)
 ## An object of class "FLQuant"
 ## , , unit = unique, season = all, area = unique
 ## 
@@ -1497,9 +1616,13 @@ m(m3, nao = 1)
 ##   0 0.9
 ## 
 ## units:  NA
-# Set some ages
-rngquant(m3) <- c(0, 7)
-m(m3, nao = 0)
+\end{verbatim}
+\begin{alltt}
+\hlcom{# Set some ages}
+\hlkwd{rngquant}\hlstd{(m3)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{7}\hlstd{)}
+\hlkwd{m}\hlstd{(m3,} \hlkwc{nao} \hlstd{=} \hlnum{0}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLQuant"
 ## , , unit = unique, season = all, area = unique
 ## 
@@ -1515,9 +1638,13 @@ m(m3, nao = 0)
 ##   7 0.00054713
 ## 
 ## units:  NA
-# With ages and years - passing in the NAO data as numeric (1,0,1,0)
-rngyear(m3) <- c(2000, 2003)
-m(m3, nao = as.numeric(nao[, as.character(2000:2003)]))
+\end{verbatim}
+\begin{alltt}
+\hlcom{# With ages and years - passing in the NAO data as numeric (1,0,1,0)}
+\hlkwd{rngyear}\hlstd{(m3)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{2000}\hlstd{,} \hlnum{2003}\hlstd{)}
+\hlkwd{m}\hlstd{(m3,} \hlkwc{nao} \hlstd{=} \hlkwd{as.numeric}\hlstd{(nao[,} \hlkwd{as.character}\hlstd{(}\hlnum{2000}\hlopt{:}\hlnum{2003}\hlstd{)]))}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLQuant"
 ## , , unit = unique, season = all, area = unique
 ## 
@@ -1543,10 +1670,12 @@ The final example show how \code{m()} can be used to make an \class{FLQuant} wit
 Using the m method to make an FLQuant with uncertainty:
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# Simple - no time trend but with iterations}
+\hlkwd{m}\hlstd{(m4,} \hlkwc{nao} \hlstd{=} \hlnum{1}\hlstd{)}
+\end{alltt}
 \begin{verbatim}
-# Simple - no time trend but with iterations
-m(m4, nao = 1)
 ## An object of class "FLQuant"
 ## iters:  100 
 ## 
@@ -1554,15 +1683,23 @@ m(m4, nao = 1)
 ## 
 ##    year
 ## age 0            
-##   0 3.0477(0.504)
+##   0 3.0061(0.422)
 ## 
 ## units:  NA
-dim(m(m4, nao = 1))
+\end{verbatim}
+\begin{alltt}
+\hlkwd{dim}\hlstd{(}\hlkwd{m}\hlstd{(m4,} \hlkwc{nao} \hlstd{=} \hlnum{1}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
 ##    age   year   unit season   area   iter 
 ##      1      1      1      1      1    100
-# With ages
-rngquant(m4) <- c(0, 7)
-m(m4, nao = 0)
+\end{verbatim}
+\begin{alltt}
+\hlcom{# With ages}
+\hlkwd{rngquant}\hlstd{(m4)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{7}\hlstd{)}
+\hlkwd{m}\hlstd{(m4,} \hlkwc{nao} \hlstd{=} \hlnum{0}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLQuant"
 ## iters:  100 
 ## 
@@ -1570,22 +1707,30 @@ m(m4, nao = 0)
 ## 
 ##    year
 ## age 0                  
-##   0 2.0323736(0.185070)
-##   1 0.7476685(0.068083)
-##   2 0.2750519(0.025046)
-##   3 0.1011859(0.009214)
-##   4 0.0372242(0.003390)
-##   5 0.0136940(0.001247)
-##   6 0.0050378(0.000459)
-##   7 0.0018533(0.000169)
+##   0 2.0270459(0.150528)
+##   1 0.7457085(0.055376)
+##   2 0.2743308(0.020372)
+##   3 0.1009207(0.007494)
+##   4 0.0371266(0.002757)
+##   5 0.0136581(0.001014)
+##   6 0.0050245(0.000373)
+##   7 0.0018484(0.000137)
 ## 
 ## units:  NA
-dim(m(m4, nao = 0))
+\end{verbatim}
+\begin{alltt}
+\hlkwd{dim}\hlstd{(}\hlkwd{m}\hlstd{(m4,} \hlkwc{nao} \hlstd{=} \hlnum{0}\hlstd{))}
+\end{alltt}
+\begin{verbatim}
 ##    age   year   unit season   area   iter 
 ##      8      1      1      1      1    100
-# With ages and years
-rngyear(m4) <- c(2000, 2003)
-m(m4, nao = as.numeric(nao[, as.character(2000:2003)]))
+\end{verbatim}
+\begin{alltt}
+\hlcom{# With ages and years}
+\hlkwd{rngyear}\hlstd{(m4)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{2000}\hlstd{,} \hlnum{2003}\hlstd{)}
+\hlkwd{m}\hlstd{(m4,} \hlkwc{nao} \hlstd{=} \hlkwd{as.numeric}\hlstd{(nao[,} \hlkwd{as.character}\hlstd{(}\hlnum{2000}\hlopt{:}\hlnum{2003}\hlstd{)]))}
+\end{alltt}
+\begin{verbatim}
 ## An object of class "FLQuant"
 ## iters:  100 
 ## 
@@ -1593,27 +1738,31 @@ m(m4, nao = as.numeric(nao[, as.character(2000:2003)]))
 ## 
 ##    year
 ## age 2000                2001                2002               
-##   0 3.0476562(0.504044) 2.0323736(0.185070) 3.0476562(0.504044)
-##   1 1.1211701(0.185427) 0.7476685(0.068083) 1.1211701(0.185427)
-##   2 0.4124554(0.068215) 0.2750519(0.025046) 0.4124554(0.068215)
-##   3 0.1517339(0.025095) 0.1011859(0.009214) 0.1517339(0.025095)
-##   4 0.0558198(0.009232) 0.0372242(0.003390) 0.0558198(0.009232)
-##   5 0.0205349(0.003396) 0.0136940(0.001247) 0.0205349(0.003396)
-##   6 0.0075544(0.001249) 0.0050378(0.000459) 0.0075544(0.001249)
-##   7 0.0027791(0.000460) 0.0018533(0.000169) 0.0027791(0.000460)
+##   0 3.0060923(0.422256) 2.0270459(0.150528) 3.0060923(0.422256)
+##   1 1.1058796(0.155339) 0.7457085(0.055376) 1.1058796(0.155339)
+##   2 0.4068304(0.057146) 0.2743308(0.020372) 0.4068304(0.057146)
+##   3 0.1496645(0.021023) 0.1009207(0.007494) 0.1496645(0.021023)
+##   4 0.0550585(0.007734) 0.0371266(0.002757) 0.0550585(0.007734)
+##   5 0.0202549(0.002845) 0.0136581(0.001014) 0.0202549(0.002845)
+##   6 0.0074514(0.001047) 0.0050245(0.000373) 0.0074514(0.001047)
+##   7 0.0027412(0.000385) 0.0018484(0.000137) 0.0027412(0.000385)
 ##    year
 ## age 2003               
-##   0 2.0323736(0.185070)
-##   1 0.7476685(0.068083)
-##   2 0.2750519(0.025046)
-##   3 0.1011859(0.009214)
-##   4 0.0372242(0.003390)
-##   5 0.0136940(0.001247)
-##   6 0.0050378(0.000459)
-##   7 0.0018533(0.000169)
+##   0 2.0270459(0.150528)
+##   1 0.7457085(0.055376)
+##   2 0.2743308(0.020372)
+##   3 0.1009207(0.007494)
+##   4 0.0371266(0.002757)
+##   5 0.0136581(0.001014)
+##   6 0.0050245(0.000373)
+##   7 0.0018484(0.000137)
 ## 
 ## units:  NA
-dim(m(m4, nao = as.numeric(nao[, as.character(2000:2003)])))
+\end{verbatim}
+\begin{alltt}
+\hlkwd{dim}\hlstd{(}\hlkwd{m}\hlstd{(m4,} \hlkwc{nao} \hlstd{=} \hlkwd{as.numeric}\hlstd{(nao[,} \hlkwd{as.character}\hlstd{(}\hlnum{2000}\hlopt{:}\hlnum{2003}\hlstd{)])))}
+\end{alltt}
+\begin{verbatim}
 ##    age   year   unit season   area   iter 
 ##      8      4      1      1      1    100
 \end{verbatim}
@@ -1622,17 +1771,17 @@ dim(m(m4, nao = as.numeric(nao[, as.character(2000:2003)])))
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-bwplot(data ~ factor(age) | year, data = m(m4, nao = as.numeric(nao[, as.character(2000:2003)])))
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{bwplot}\hlstd{(data} \hlopt{~} \hlkwd{factor}\hlstd{(age)} \hlopt{|} \hlstd{year,} \hlkwc{data} \hlstd{=} \hlkwd{m}\hlstd{(m4,} \hlkwc{nao} \hlstd{=} \hlkwd{as.numeric}\hlstd{(nao[,} \hlkwd{as.character}\hlstd{(}\hlnum{2000}\hlopt{:}\hlnum{2003}\hlstd{)])))}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/plot_uncertain_m} 
 
@@ -1652,60 +1801,35 @@ bwplot(data ~ factor(age) | year, data = m(m4, nao = as.numeric(nao[, as.charact
 
 In the \code{a4a} assessment model, the model structure is defined by submodels. These are models for the different parts of a statistical catch at age model that requires structural assumptions.
 
-There are effectively 5 submodels in operation: the model for F-at-age, a model for initial age structure, a model for recruitment, a (list) of model(s) for survey catchability-at-age, and a list of models for the observation variance of catch.n and the survey indices. In practice, we fix the variance models and the initial age structure models, but in theory these can be changed.
+There are effectively 5 submodels in operation: the model for F-at-age, a model for the initial age structure, a model for recruitment, a (list) of model(s) for abundance indices catchability-at-age, and a list of models for the observation variance of catch-at-age and abundance indices. In practice, we fix the variance models and the initial age structure models, but in theory these can be changed.
 
-The submodels form is given using linear models, which opens the possibility of using the linear modelling tools available in R: see for example gam formulas, or factorial design formulas using lm. In R's linear modelling lanquage, a constant model is coded as $\sim 1$, while a slope over age would simply be $\sim age$.  Extending this we can write a traditional year/age separable F model like $\sim factor(age) + factor(year)$.
+The submodels form is given using linear models, which opens the possibility of using the linear modelling tools available in R: see for example gam formulas, or factorial design formulas using lm. In R's linear modelling language, a constant model is coded as $\sim 1$, while a slope over age would simply be $\sim age$. For example we can write a traditional year/age separable F model like $\sim factor(age) + factor(year)$.
 
-There are two basic types of assessments available from using \code{a4a}: the management procedure fit and the full assessment fit. The management procedure fit does not compute estimates of covariances and is therefore quicker to execute, while the full assessment fit returns parameter estimates and their covariances at the expense of longer fitting time.
+There are two basic types of assessments available from using \code{a4a}, the management procedure fit and the full assessment fit. The management procedure fit does not compute estimates of covariances and is therefore quicker to execute, while the full assessment fit returns parameter estimates and their covariances at the expense of longer fitting time.
 
 \subsection{Stock assessment model details}
 
-The statistical catch at age model is based on the well known Baranov catch equation. 
+The statistical catch at age model is based on the well known Baranov catch equation 
 
 \begin{equation*}
 e^{\E{\log C}} = \frac{\color{red}F}{{\color{red}F}+M}\left(1 - e^{-{\color{red}F}-M}\right) {\color{red}R}e^{-\sum {\color{red}F} + M}
 \end{equation*}
 
-and
+and the survival equation
 
 \begin{equation*}
 e^{\E{\log I}} = {\color{red}Q} {\color{red}R}e^{-\sum {\color{red}F} + M}
 \end{equation*}
 
-and
+where 
 
 \begin{equation*}
 \Var{\log C_{ay}} = {\color{red}\sigma^2_{ay}} \qquad \Var{\log I_{ays}} = {\color{red}\tau^2_{ays}}
 \end{equation*}
 
-linear models for
-\begin{itemize}
-  \item log F
-  \item log Q
-  \item log observation variances
-  \item log initial age structure  
-\end{itemize}
+The quantities $log F$, $log Q$, $log R$, $log observation variances$ and $log initial age structure$ (in red in the equations above), need to be given form, which is done using linear models. Recruitment is a special case. It's modelled as a fixed variance random effect, using the hard coded models Ricker, Beverton Holt, smooth hockeystick or geometric mean, which can use linear models for their parameters $\log{a}$ or $log b$, where relevant. In alternative it can use a linear model like the other submodels 
 
-Recruitment is modelled as a \bf{fixed variance} random effect with linear models for
-\begin{itemize}
-  \item log a
-  \item log b
-\end{itemize}
-where relevant.  Models available: Ricker, Beverton Holt, smooth hockeystick, geometric mean
-
-It is not always obvious that stock assessments are often composed of linear models.
-
-For example, the classical separable F assumption is simply that
-\begin{align*}
-F_{ay} = S_a \times F_y 
-\end{align*}
-which, in linear modelling parlance is
-\begin{align*}
-\log F \sim \text{age} + \text{year} 
-\end{align*}
-
-The "language" of linear models has been developing within the statistical community for many years:
-
+The 'language' of linear models has been developing within the statistical community for many years, and constitutes an elegant way of defining models without going through the complexity of mathematical representations. This approach makes it also easier to communicate among scientists 
   \begin{itemize}
   \item 1965 J. A. Nelder, notation for randomized block design
   \item 1973 Wilkinson and Rodgers, symbolic description for factorial designs
@@ -1713,49 +1837,17 @@ The "language" of linear models has been developing within the statistical commu
   \item 1991 Chambers and Hastie, further developed for use in S
   \end{itemize}
 
-Many modelling software use this language:  Minitab, spss, genstat, SAS, R, S-plus.
-
-A separable model where the level of F is smooth through time
-
-\begin{align*}
-  \log F \sim \text{age} + \text{s(year)}
-\end{align*}
-
-A separable model where F is smooth over age
-
-\begin{align*}
-  \log F \sim \text{s(age)} + \text{year}
-\end{align*}
-
-F is smooth over age and year
-
-\begin{align*}
-  \log F \sim \text{s(age, year)}
-\end{align*}
-
-A basic set of submodels would be
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-fmodel <- ~factor(age) + factor(year)
-qmodel <- list(~factor(age))
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-
 \subsection{Quick and dirty}
 
-The default settings of the stock assessment model work reasoably well. It's an area of research that will improve with time.
+The default settings of the stock assessment model work reasonably well. It's an area of research that will improve with time.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-data(ple4)
-data(ple4.indices)
-fit <- sca(ple4, ple4.indices)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{data}\hlstd{(ple4)}
+\hlkwd{data}\hlstd{(ple4.indices)}
+\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices)}
+\end{alltt}
 
 
 {\ttfamily\noindent\itshape\color{messagecolor}{\#\# Note: The following observations are treated as being missing at random:\\\#\# 	\ \ \ \ \ \  fleet year age\\\#\# 	\ \ \ \ BTS-Isis 1997\ \  1\\\#\# 	\ \ \ \ BTS-Isis 1997\ \  2\\\#\# 	 BTS-Tridens 1997\ \  1\\\#\# 	 BTS-Tridens 1997\ \  2\\\#\# 	\ \ \ \ \ \ \ \  SNS 1997\ \  1\\\#\# 	\ \ \ \ \ \ \ \  SNS 1997\ \  2\\\#\# 	\ \ \ \ \ \ \ \  SNS 2003\ \  1\\\#\# 	\ \ \ \ \ \ \ \  SNS 2003\ \  2\\\#\# 	\ \ \ \ \ \ \ \  SNS 2003\ \  3\\\#\#\ \ \ \ \ \  Predictions will be made for missing observations.}}\end{kframe}
@@ -1765,16 +1857,28 @@ fit <- sca(ple4, ple4.indices)
 Note that because the survey index for plaice has missing values we get a warning saying that we assume these values are missing at random, and not because the observations were zero.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-res <- residuals(fit, ple4, ple4.indices)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{res} \hlkwb{<-} \hlkwd{residuals}\hlstd{(fit, ple4, ple4.indices)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4} 
+
+}
+
+
+
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-5} 
 
@@ -1786,21 +1890,9 @@ res <- residuals(fit, ple4, ple4.indices)
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-6} 
-
-}
-
-
-
-\end{knitrout}
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-7} 
 
 }
 
@@ -1812,7 +1904,19 @@ res <- residuals(fit, ple4, ple4.indices)
 We can inspect the summaries from this fit my adding it to the origional stock object, for example to see the fitted fbar we can do
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-7} 
+
+}
+
+
+
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-8} 
 
@@ -1824,7 +1928,7 @@ We can inspect the summaries from this fit my adding it to the origional stock o
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-9} 
 
@@ -1836,21 +1940,9 @@ We can inspect the summaries from this fit my adding it to the origional stock o
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-10} 
-
-}
-
-
-
-\end{knitrout}
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-11} 
 
 }
 
@@ -1864,9 +1956,11 @@ We can inspect the summaries from this fit my adding it to the origional stock o
 The basic model output is contained in the \texttt{a4aFit} class. This object contains only the fitted values.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{showClass}\hlstd{(}\hlstr{"a4aFit"}\hlstd{)}
+\end{alltt}
 \begin{verbatim}
-showClass("a4aFit")
 ## Class "a4aFit" [package "FLa4a"]
 ## 
 ## Slots:
@@ -1886,9 +1980,9 @@ showClass("a4aFit")
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-13} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-12} 
 
 }
 
@@ -1902,9 +1996,11 @@ Fitted values are stored in the \texttt{stock.n}, \texttt{harvest}, \texttt{catc
 The full assessment fit returns an object of \texttt{a4aFitSA} class:
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{showClass}\hlstd{(}\hlstr{"a4aFitSA"}\hlstd{)}
+\end{alltt}
 \begin{verbatim}
-showClass("a4aFitSA")
 ## Class "a4aFitSA" [package "FLa4a"]
 ## 
 ## Slots:
@@ -1924,9 +2020,9 @@ showClass("a4aFitSA")
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-15} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-14} 
 
 }
 
@@ -1938,16 +2034,22 @@ showClass("a4aFitSA")
 The additional slots in the assessment output is the \texttt{fitSumm} and \texttt{pars} slots which are containers for model summaries and the model parameters.  The \texttt{pars} slot is a class of type \texttt{SCAPars} which is itself composed of sub-classes, designed to contain the information necessary to simulate from the model.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{showClass}\hlstd{(}\hlstr{"SCAPars"}\hlstd{)}
+\end{alltt}
 \begin{verbatim}
-showClass("SCAPars")
 ## Class "SCAPars" [package "FLa4a"]
 ## 
 ## Slots:
 ##                                              
 ## Name:      stkmodel       qmodel       vmodel
 ## Class: a4aStkParams    submodels    submodels
-showClass("a4aStkParams")
+\end{verbatim}
+\begin{alltt}
+\hlkwd{showClass}\hlstd{(}\hlstr{"a4aStkParams"}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
 ## Class "a4aStkParams" [package "FLa4a"]
 ## 
 ## Slots:
@@ -1959,7 +2061,11 @@ showClass("a4aStkParams")
 ## Class: character   FLQuant character character character   numeric
 ## 
 ## Extends: "FLComp"
-showClass("submodel")
+\end{verbatim}
+\begin{alltt}
+\hlkwd{showClass}\hlstd{(}\hlstr{"submodel"}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
 ## Class "submodel" [package "FLa4a"]
 ## 
 ## Slots:
@@ -1977,7 +2083,19 @@ showClass("submodel")
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-16} 
+
+}
+
+
+
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-17} 
 
@@ -1989,21 +2107,9 @@ showClass("submodel")
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
 {\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-18} 
-
-}
-
-
-
-\end{knitrout}
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-19} 
 
 }
 
@@ -2029,20 +2135,20 @@ Please note that each of these model \emph{structures} lets say, have not been t
 \subsubsection{Fishing mortality submodel}
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-qmodel <- list(~factor(age))
-fmodel <- ~factor(age) + factor(year)
-fit <- sca(stock = ple4, indices = ple4.indices[1], fmodel = fmodel, qmodel = qmodel)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{factor}\hlstd{(age))}
+\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{factor}\hlstd{(age)} \hlopt{+} \hlkwd{factor}\hlstd{(year)}
+\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(}\hlkwc{stock} \hlstd{= ple4,} \hlkwc{indices} \hlstd{= ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{fmodel} \hlstd{= fmodel,} \hlkwc{qmodel} \hlstd{= qmodel)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-21} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-20} 
 
 }
 
@@ -2052,19 +2158,19 @@ fit <- sca(stock = ple4, indices = ple4.indices[1], fmodel = fmodel, qmodel = qm
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-fmodel <- ~s(age, k = 4) + s(year, k = 20)
-fit1 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{)}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-23} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-22} 
 
 }
 
@@ -2074,19 +2180,19 @@ fit1 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-fmodel <- ~s(age, k = 4) + s(year, k = 20) + te(age, year, k = c(3, 3))
-fit2 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{)} \hlopt{+} \hlkwd{te}\hlstd{(age, year,} \hlkwc{k} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,} \hlnum{3}\hlstd{))}
+\hlstd{fit2} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-25} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-24} 
 
 }
 
@@ -2096,19 +2202,19 @@ fit2 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-fmodel <- ~te(age, year, k = c(4, 20))
-fit3 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{te}\hlstd{(age, year,} \hlkwc{k} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,} \hlnum{20}\hlstd{))}
+\hlstd{fit3} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-27} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-26} 
 
 }
 
@@ -2118,20 +2224,20 @@ fit3 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-fmodel <- ~te(age, year, k = c(4, 20)) + s(year, k = 5, by = as.numeric(age == 
-    1))
-fit4 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{te}\hlstd{(age, year,} \hlkwc{k} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,} \hlnum{20}\hlstd{))} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{5}\hlstd{,} \hlkwc{by} \hlstd{=} \hlkwd{as.numeric}\hlstd{(age} \hlopt{==}
+    \hlnum{1}\hlstd{))}
+\hlstd{fit4} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-29} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-28} 
 
 }
 
@@ -2143,33 +2249,33 @@ fit4 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
 \subsubsection{Catchability submodel}
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-sfrac <- mean(range(ple4.indices[[1]])[c("startf", "endf")])
-fmodel <- ~factor(age) + factor(year)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{sfrac} \hlkwb{<-} \hlkwd{mean}\hlstd{(}\hlkwd{range}\hlstd{(ple4.indices[[}\hlnum{1}\hlstd{]])[}\hlkwd{c}\hlstd{(}\hlstr{"startf"}\hlstd{,} \hlstr{"endf"}\hlstd{)])}
+\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{factor}\hlstd{(age)} \hlopt{+} \hlkwd{factor}\hlstd{(year)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-qmodel <- list(~factor(age))
-fit <- sca(ple4, ple4.indices[1], fmodel, qmodel)
-Z <- (m(ple4) + harvest(fit)) * sfrac
-lst <- dimnames(fit@index[[1]])
-lst$x <- stock.n(fit) * exp(-Z)
-stkn <- do.call("trim", lst)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{factor}\hlstd{(age))}
+\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel)}
+\hlstd{Z} \hlkwb{<-} \hlstd{(}\hlkwd{m}\hlstd{(ple4)} \hlopt{+} \hlkwd{harvest}\hlstd{(fit))} \hlopt{*} \hlstd{sfrac}
+\hlstd{lst} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(fit}\hlopt{@}\hlkwc{index}\hlstd{[[}\hlnum{1}\hlstd{]])}
+\hlstd{lst}\hlopt{$}\hlstd{x} \hlkwb{<-} \hlkwd{stock.n}\hlstd{(fit)} \hlopt{*} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{Z)}
+\hlstd{stkn} \hlkwb{<-} \hlkwd{do.call}\hlstd{(}\hlstr{"trim"}\hlstd{, lst)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-32} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-31} 
 
 }
 
@@ -2179,23 +2285,23 @@ stkn <- do.call("trim", lst)
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-qmodel <- list(~s(age, k = 4))
-fit1 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
-Z <- (m(ple4) + harvest(fit1)) * sfrac
-lst <- dimnames(fit1@index[[1]])
-lst$x <- stock.n(fit1) * exp(-Z)
-stkn <- do.call("trim", lst)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{))}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel)}
+\hlstd{Z} \hlkwb{<-} \hlstd{(}\hlkwd{m}\hlstd{(ple4)} \hlopt{+} \hlkwd{harvest}\hlstd{(fit1))} \hlopt{*} \hlstd{sfrac}
+\hlstd{lst} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(fit1}\hlopt{@}\hlkwc{index}\hlstd{[[}\hlnum{1}\hlstd{]])}
+\hlstd{lst}\hlopt{$}\hlstd{x} \hlkwb{<-} \hlkwd{stock.n}\hlstd{(fit1)} \hlopt{*} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{Z)}
+\hlstd{stkn} \hlkwb{<-} \hlkwd{do.call}\hlstd{(}\hlstr{"trim"}\hlstd{, lst)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-34} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-33} 
 
 }
 
@@ -2205,23 +2311,23 @@ stkn <- do.call("trim", lst)
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-qmodel <- list(~te(age, year, k = c(3, 40)))
-fit2 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
-Z <- (m(ple4) + harvest(fit2)) * sfrac
-lst <- dimnames(fit2@index[[1]])
-lst$x <- stock.n(fit2) * exp(-Z)
-stkn <- do.call("trim", lst)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{te}\hlstd{(age, year,} \hlkwc{k} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,} \hlnum{40}\hlstd{)))}
+\hlstd{fit2} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel)}
+\hlstd{Z} \hlkwb{<-} \hlstd{(}\hlkwd{m}\hlstd{(ple4)} \hlopt{+} \hlkwd{harvest}\hlstd{(fit2))} \hlopt{*} \hlstd{sfrac}
+\hlstd{lst} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(fit2}\hlopt{@}\hlkwc{index}\hlstd{[[}\hlnum{1}\hlstd{]])}
+\hlstd{lst}\hlopt{$}\hlstd{x} \hlkwb{<-} \hlkwd{stock.n}\hlstd{(fit2)} \hlopt{*} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{Z)}
+\hlstd{stkn} \hlkwb{<-} \hlkwd{do.call}\hlstd{(}\hlstr{"trim"}\hlstd{, lst)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-36} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-35} 
 
 }
 
@@ -2231,23 +2337,23 @@ stkn <- do.call("trim", lst)
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-qmodel <- list(~s(age, k = 4) + year)
-fit3 <- sca(ple4, ple4.indices[1], fmodel, qmodel)
-Z <- (m(ple4) + harvest(fit3)) * sfrac
-lst <- dimnames(fit3@index[[1]])
-lst$x <- stock.n(fit3) * exp(-Z)
-stkn <- do.call("trim", lst)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlstd{year)}
+\hlstd{fit3} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel)}
+\hlstd{Z} \hlkwb{<-} \hlstd{(}\hlkwd{m}\hlstd{(ple4)} \hlopt{+} \hlkwd{harvest}\hlstd{(fit3))} \hlopt{*} \hlstd{sfrac}
+\hlstd{lst} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(fit3}\hlopt{@}\hlkwc{index}\hlstd{[[}\hlnum{1}\hlstd{]])}
+\hlstd{lst}\hlopt{$}\hlstd{x} \hlkwb{<-} \hlkwd{stock.n}\hlstd{(fit3)} \hlopt{*} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{Z)}
+\hlstd{stkn} \hlkwb{<-} \hlkwd{do.call}\hlstd{(}\hlstr{"trim"}\hlstd{, lst)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-38} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-37} 
 
 }
 
@@ -2261,47 +2367,49 @@ stkn <- do.call("trim", lst)
 Age aggregated indices (biomass, DEPM, etc) have to be passed in the FLIndices object with the name "bio". At the moment only one "bio" index is allowed. Note that in this case the qmodel should be set without age factors. It could have a "year" component though. 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# creating an index}
+\hlstd{bioidx} \hlkwb{<-} \hlkwd{FLIndex}\hlstd{(}\hlkwd{FLQuant}\hlstd{(}\hlnum{NA}\hlstd{,} \hlkwc{dimnames} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{age} \hlstd{=} \hlstr{"all"}\hlstd{,} \hlkwc{year} \hlstd{=} \hlkwd{range}\hlstd{(ple4)[}\hlstr{"minyear"}\hlstd{]}\hlopt{:}\hlkwd{range}\hlstd{(ple4)[}\hlstr{"maxyear"}\hlstd{])))}
+\hlkwd{index}\hlstd{(bioidx)} \hlkwb{<-} \hlkwd{stock}\hlstd{(ple4)} \hlopt{*} \hlnum{0.001}
+\hlkwd{index}\hlstd{(bioidx)} \hlkwb{<-} \hlkwd{index}\hlstd{(bioidx)} \hlopt{*} \hlkwd{exp}\hlstd{(}\hlkwd{rnorm}\hlstd{(}\hlkwd{index}\hlstd{(bioidx),} \hlkwc{sd} \hlstd{=} \hlnum{0.1}\hlstd{))}
+\hlkwd{range}\hlstd{(bioidx)[}\hlkwd{c}\hlstd{(}\hlstr{"startf"}\hlstd{,} \hlstr{"endf"}\hlstd{)]} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{0}\hlstd{)}
+\hlcom{# fitting the model}
+\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4,} \hlkwd{FLIndices}\hlstd{(}\hlkwc{bio} \hlstd{= bioidx),} \hlkwc{qmodel} \hlstd{=} \hlkwd{list}\hlstd{(}\hlopt{~}\hlnum{1}\hlstd{))}
+\hlcom{# how is it fiting catchability ? not too well ...}
+\hlkwd{index}\hlstd{(fit)[[}\hlnum{1}\hlstd{]]}\hlopt{/}\hlstd{(}\hlkwd{quantSums}\hlstd{(}\hlkwd{stock.n}\hlstd{(fit)} \hlopt{*} \hlkwd{stock.wt}\hlstd{(ple4)))}
+\end{alltt}
 \begin{verbatim}
-# creating an index
-bioidx <- FLIndex(FLQuant(NA, dimnames = list(age = "all", year = range(ple4)["minyear"]:range(ple4)["maxyear"])))
-index(bioidx) <- stock(ple4) * 0.001
-index(bioidx) <- index(bioidx) * exp(rnorm(index(bioidx), sd = 0.1))
-range(bioidx)[c("startf", "endf")] <- c(0, 0)
-# fitting the model
-fit <- sca(ple4, FLIndices(bio = bioidx), qmodel = list(~1))
-# how is it fiting catchability ? not too well ...
-index(fit)[[1]]/(quantSums(stock.n(fit) * stock.wt(ple4)))
 ## An object of class "FLQuant"
 ## , , unit = unique, season = all, area = unique
 ## 
 ##      year
-## age   1957      1958      1959      1960      1961      1962     
-##   all 5.309e-05 5.309e-05 5.309e-05 5.309e-05 5.309e-05 5.309e-05
+## age   1957       1958       1959       1960       1961       1962      
+##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
 ##      year
-## age   1963      1964      1965      1966      1967      1968     
-##   all 5.309e-05 5.309e-05 5.309e-05 5.309e-05 5.309e-05 5.309e-05
+## age   1963       1964       1965       1966       1967       1968      
+##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
 ##      year
-## age   1969      1970      1971      1972      1973      1974     
-##   all 5.309e-05 5.309e-05 5.309e-05 5.309e-05 5.309e-05 5.309e-05
+## age   1969       1970       1971       1972       1973       1974      
+##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
 ##      year
-## age   1975      1976      1977      1978      1979      1980     
-##   all 5.309e-05 5.309e-05 5.309e-05 5.309e-05 5.309e-05 5.309e-05
+## age   1975       1976       1977       1978       1979       1980      
+##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
 ##      year
-## age   1981      1982      1983      1984      1985      1986     
-##   all 5.309e-05 5.309e-05 5.309e-05 5.309e-05 5.309e-05 5.309e-05
+## age   1981       1982       1983       1984       1985       1986      
+##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
 ##      year
-## age   1987      1988      1989      1990      1991      1992     
-##   all 5.309e-05 5.309e-05 5.309e-05 5.309e-05 5.309e-05 5.309e-05
+## age   1987       1988       1989       1990       1991       1992      
+##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
 ##      year
-## age   1993      1994      1995      1996      1997      1998     
-##   all 5.309e-05 5.309e-05 5.309e-05 5.309e-05 5.309e-05 5.309e-05
+## age   1993       1994       1995       1996       1997       1998      
+##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
 ##      year
-## age   1999      2000      2001      2002      2003      2004     
-##   all 5.309e-05 5.309e-05 5.309e-05 5.309e-05 5.309e-05 5.309e-05
+## age   1999       2000       2001       2002       2003       2004      
+##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
 ##      year
-## age   2005      2006      2007      2008     
-##   all 5.309e-05 5.309e-05 5.309e-05 5.309e-05
+## age   2005       2006       2007       2008      
+##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
 ## 
 ## units:  kg
 \end{verbatim}
@@ -2315,9 +2423,9 @@ Residuals are not so good ... one shouldn't expect much from a model with only o
 The results are not so bad because most information is coming from the catch at age information.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-40} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-39} 
 
 }
 
@@ -2329,41 +2437,41 @@ The results are not so bad because most information is coming from the catch at 
 \subsubsection{Stock-recruitment submodel}
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-fmodel <- ~s(age, k = 4) + s(year, k = 20)
-qmodel <- list(~s(age, k = 4))
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{)}
+\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{))}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-srmodel <- ~factor(year)
-fit <- sca(ple4, ple4.indices[1], fmodel = fmodel, qmodel = qmodel, srmodel = srmodel)
-srmodel <- ~s(year, k = 20)
-fit1 <- sca(ple4, ple4.indices[1], fmodel, qmodel, srmodel)
-srmodel <- ~ricker(CV = 0.05)
-fit2 <- sca(ple4, ple4.indices[1], fmodel, qmodel, srmodel)
-srmodel <- ~bevholt(CV = 0.05)
-fit3 <- sca(ple4, ple4.indices[1], fmodel, qmodel, srmodel)
-srmodel <- ~hockey(CV = 0.05)
-fit4 <- sca(ple4, ple4.indices[1], fmodel, qmodel, srmodel)
-srmodel <- ~geomean(CV = 0.05)
-fit5 <- sca(ple4, ple4.indices[1], fmodel, qmodel, srmodel)
-flqs <- FLQuants(fac = stock.n(fit)[1], smo = stock.n(fit1)[1], ric = stock.n(fit2)[1], 
-    bh = stock.n(fit3)[1], hs = stock.n(fit4)[1], gm = stock.n(fit5)[1])
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{srmodel} \hlkwb{<-} \hlopt{~}\hlkwd{factor}\hlstd{(year)}
+\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{fmodel} \hlstd{= fmodel,} \hlkwc{qmodel} \hlstd{= qmodel,} \hlkwc{srmodel} \hlstd{= srmodel)}
+\hlstd{srmodel} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{)}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel, srmodel)}
+\hlstd{srmodel} \hlkwb{<-} \hlopt{~}\hlkwd{ricker}\hlstd{(}\hlkwc{CV} \hlstd{=} \hlnum{0.05}\hlstd{)}
+\hlstd{fit2} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel, srmodel)}
+\hlstd{srmodel} \hlkwb{<-} \hlopt{~}\hlkwd{bevholt}\hlstd{(}\hlkwc{CV} \hlstd{=} \hlnum{0.05}\hlstd{)}
+\hlstd{fit3} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel, srmodel)}
+\hlstd{srmodel} \hlkwb{<-} \hlopt{~}\hlkwd{hockey}\hlstd{(}\hlkwc{CV} \hlstd{=} \hlnum{0.05}\hlstd{)}
+\hlstd{fit4} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel, srmodel)}
+\hlstd{srmodel} \hlkwb{<-} \hlopt{~}\hlkwd{geomean}\hlstd{(}\hlkwc{CV} \hlstd{=} \hlnum{0.05}\hlstd{)}
+\hlstd{fit5} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel, srmodel)}
+\hlstd{flqs} \hlkwb{<-} \hlkwd{FLQuants}\hlstd{(}\hlkwc{fac} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit)[}\hlnum{1}\hlstd{],} \hlkwc{smo} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit1)[}\hlnum{1}\hlstd{],} \hlkwc{ric} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit2)[}\hlnum{1}\hlstd{],}
+    \hlkwc{bh} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit3)[}\hlnum{1}\hlstd{],} \hlkwc{hs} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit4)[}\hlnum{1}\hlstd{],} \hlkwc{gm} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit5)[}\hlnum{1}\hlstd{])}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-43} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-42} 
 
 }
 
@@ -2377,12 +2485,14 @@ flqs <- FLQuants(fac = stock.n(fit)[1], smo = stock.n(fit1)[1], ric = stock.n(fi
 The default fit is "assessment", which means that the hessian is going to e computed by default.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# fmodel <- ~ s(age, k=4) + s(year, k = 20) qmodel <- list( ~ s(age, k=4) +}
+\hlcom{# year) srmodel <- ~s(year, k=20)}
+\hlstd{fit} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{])}
+\hlkwd{submodels}\hlstd{(fit)}
+\end{alltt}
 \begin{verbatim}
-# fmodel <- ~ s(age, k=4) + s(year, k = 20) qmodel <- list( ~ s(age, k=4) +
-# year) srmodel <- ~s(year, k=20)
-fit <- a4aSCA(ple4, ple4.indices[1])
-submodels(fit)
 ## 	 fmodel: ~s(age, k = 3) + factor(year)
 ## 	srmodel: ~factor(year)
 ## 	n1model: ~factor(age)
@@ -2399,20 +2509,20 @@ submodels(fit)
 \subsubsection{N1 model}
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-n1model <- ~s(age, k = 4)
-fit1 <- a4aSCA(ple4, ple4.indices[1], n1model = n1model)
-flqs <- FLQuants(smo = stock.n(fit1)[, 1], fac = stock.n(fit)[, 1])
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{n1model} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{n1model} \hlstd{= n1model)}
+\hlstd{flqs} \hlkwb{<-} \hlkwd{FLQuants}\hlstd{(}\hlkwc{smo} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit1)[,} \hlnum{1}\hlstd{],} \hlkwc{fac} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit)[,} \hlnum{1}\hlstd{])}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-46} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-45} 
 
 }
 
@@ -2428,22 +2538,22 @@ One important subject related with fisheries data used for input to stock assess
 By default the model assumes constant variance over time and ages (~ 1 model) but it can use other models specified by the user. This feature requires a call to the a4aInternal method, which gives more options than the a4a method, which in fact is a wrapper.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-vmodel <- list(~1, ~1)
-fit1 <- a4aSCA(ple4, ple4.indices[1], vmodel = vmodel)
-vmodel <- list(~s(age, k = 4), ~1)
-fit2 <- a4aSCA(ple4, ple4.indices[1], vmodel = vmodel)
-flqs <- FLQuants(cts = catch.n(fit1), smo = catch.n(fit2))
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{vmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlnum{1}\hlstd{,} \hlopt{~}\hlnum{1}\hlstd{)}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{vmodel} \hlstd{= vmodel)}
+\hlstd{vmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{),} \hlopt{~}\hlnum{1}\hlstd{)}
+\hlstd{fit2} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{vmodel} \hlstd{= vmodel)}
+\hlstd{flqs} \hlkwb{<-} \hlkwd{FLQuants}\hlstd{(}\hlkwc{cts} \hlstd{=} \hlkwd{catch.n}\hlstd{(fit1),} \hlkwc{smo} \hlstd{=} \hlkwd{catch.n}\hlstd{(fit2))}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-48} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-47} 
 
 }
 
@@ -2455,35 +2565,35 @@ flqs <- FLQuants(cts = catch.n(fit1), smo = catch.n(fit2))
 \subsubsection{Working with covariates}
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-nao <- read.table("http://www.cdc.noaa.gov/data/correlation/nao.data", skip = 1, 
-    nrow = 62, na.strings = "-99.90")
-dnms <- list(quant = "nao", year = 1948:2009, unit = "unique", season = 1:12, 
-    area = "unique")
-nao <- FLQuant(unlist(nao[, -1]), dimnames = dnms, units = "nao")
-nao <- seasonMeans(trim(nao, year = dimnames(stock.n(ple4))$year))
-nao <- as.numeric(nao)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{nao} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"http://www.cdc.noaa.gov/data/correlation/nao.data"}\hlstd{,} \hlkwc{skip} \hlstd{=} \hlnum{1}\hlstd{,}
+    \hlkwc{nrow} \hlstd{=} \hlnum{62}\hlstd{,} \hlkwc{na.strings} \hlstd{=} \hlstr{"-99.90"}\hlstd{)}
+\hlstd{dnms} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlkwc{quant} \hlstd{=} \hlstr{"nao"}\hlstd{,} \hlkwc{year} \hlstd{=} \hlnum{1948}\hlopt{:}\hlnum{2009}\hlstd{,} \hlkwc{unit} \hlstd{=} \hlstr{"unique"}\hlstd{,} \hlkwc{season} \hlstd{=} \hlnum{1}\hlopt{:}\hlnum{12}\hlstd{,}
+    \hlkwc{area} \hlstd{=} \hlstr{"unique"}\hlstd{)}
+\hlstd{nao} \hlkwb{<-} \hlkwd{FLQuant}\hlstd{(}\hlkwd{unlist}\hlstd{(nao[,} \hlopt{-}\hlnum{1}\hlstd{]),} \hlkwc{dimnames} \hlstd{= dnms,} \hlkwc{units} \hlstd{=} \hlstr{"nao"}\hlstd{)}
+\hlstd{nao} \hlkwb{<-} \hlkwd{seasonMeans}\hlstd{(}\hlkwd{trim}\hlstd{(nao,} \hlkwc{year} \hlstd{=} \hlkwd{dimnames}\hlstd{(}\hlkwd{stock.n}\hlstd{(ple4))}\hlopt{$}\hlstd{year))}
+\hlstd{nao} \hlkwb{<-} \hlkwd{as.numeric}\hlstd{(nao)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-srmodel <- ~nao
-fit2 <- a4aSCA(ple4, ple4.indices[1], qmodel = list(~s(age, k = 4)), srmodel = srmodel)
-flqs <- FLQuants(fac = stock.n(fit)[1], cvar = stock.n(fit2)[1])
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{srmodel} \hlkwb{<-} \hlopt{~}\hlstd{nao}
+\hlstd{fit2} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{qmodel} \hlstd{=} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)),} \hlkwc{srmodel} \hlstd{= srmodel)}
+\hlstd{flqs} \hlkwb{<-} \hlkwd{FLQuants}\hlstd{(}\hlkwc{fac} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit)[}\hlnum{1}\hlstd{],} \hlkwc{cvar} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit2)[}\hlnum{1}\hlstd{])}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-51} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-50} 
 
 }
 
@@ -2493,20 +2603,20 @@ flqs <- FLQuants(fac = stock.n(fit)[1], cvar = stock.n(fit2)[1])
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-srmodel <- ~ricker(a = ~nao, CV = 0.1)
-fit3 <- a4aSCA(ple4, ple4.indices[1], qmodel = list(~s(age, k = 4)), srmodel = srmodel)
-flqs <- FLQuants(fac = stock.n(fit)[1], cvar = stock.n(fit3)[1])
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{srmodel} \hlkwb{<-} \hlopt{~}\hlkwd{ricker}\hlstd{(}\hlkwc{a} \hlstd{=} \hlopt{~}\hlstd{nao,} \hlkwc{CV} \hlstd{=} \hlnum{0.1}\hlstd{)}
+\hlstd{fit3} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{qmodel} \hlstd{=} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)),} \hlkwc{srmodel} \hlstd{= srmodel)}
+\hlstd{flqs} \hlkwb{<-} \hlkwd{FLQuants}\hlstd{(}\hlkwc{fac} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit)[}\hlnum{1}\hlstd{],} \hlkwc{cvar} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit3)[}\hlnum{1}\hlstd{])}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-53} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-52} 
 
 }
 
@@ -2520,10 +2630,12 @@ flqs <- FLQuants(fac = stock.n(fit)[1], cvar = stock.n(fit3)[1])
 To inspect the ADMB files the user must specify the working dir and all files will be left there.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(stk, idx,} \hlkwc{wkdir} \hlstd{=} \hlstr{"mytest"}\hlstd{)}
+\end{alltt}
 \begin{verbatim}
-fit1 <- a4aSCA(stk, idx, wkdir = "mytest")
-## Model and results are stored in working directory [mytest]
+## Model and results are stored in working directory [mytest-2]
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -2532,12 +2644,12 @@ fit1 <- a4aSCA(stk, idx, wkdir = "mytest")
 \subsection{Predict and simulate}
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# fmodel <- ~ s(age, k=4) + s(year, k = 20) qmodel <- list( ~ s(age, k=4) +
-# year) srmodel <- ~s(year, k=20)
-fit <- a4aSCA(ple4, ple4.indices[1])
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# fmodel <- ~ s(age, k=4) + s(year, k = 20) qmodel <- list( ~ s(age, k=4) +}
+\hlcom{# year) srmodel <- ~s(year, k=20)}
+\hlstd{fit} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{])}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
@@ -2545,10 +2657,12 @@ fit <- a4aSCA(ple4, ple4.indices[1])
 \subsubsection{Predict}
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fit.pred} \hlkwb{<-} \hlkwd{predict}\hlstd{(fit)}
+\hlkwd{lapply}\hlstd{(fit.pred, names)}
+\end{alltt}
 \begin{verbatim}
-fit.pred <- predict(fit)
-lapply(fit.pred, names)
 ## $stkmodel
 ## [1] "harvest" "rec"     "ny1"    
 ## 
@@ -2565,19 +2679,19 @@ lapply(fit.pred, names)
 \subsubsection{simulate}
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-fits <- simulate(fit, 100)
-flqs <- FLQuants(sim = iterMedians(stock.n(fits)), det = stock.n(fit))
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fits} \hlkwb{<-} \hlkwd{simulate}\hlstd{(fit,} \hlnum{100}\hlstd{)}
+\hlstd{flqs} \hlkwb{<-} \hlkwd{FLQuants}\hlstd{(}\hlkwc{sim} \hlstd{=} \hlkwd{iterMedians}\hlstd{(}\hlkwd{stock.n}\hlstd{(fits)),} \hlkwc{det} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit))}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-58} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-57} 
 
 }
 
@@ -2587,9 +2701,9 @@ flqs <- FLQuants(sim = iterMedians(stock.n(fits)), det = stock.n(fit))
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-59} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-58} 
 
 }
 
@@ -2601,13 +2715,13 @@ flqs <- FLQuants(sim = iterMedians(stock.n(fits)), det = stock.n(fit))
 \subsection{Geeky stuff}
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# fmodel <- ~ s(age, k=4) + s(year, k = 20) qmodel <- list( ~ s(age, k=4) +
-# year) srmodel <- ~s(year, k=20)
-vmodel <- list(~1, ~1)
-fit <- a4aSCA(ple4, ple4.indices[1], vmodel = vmodel)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# fmodel <- ~ s(age, k=4) + s(year, k = 20) qmodel <- list( ~ s(age, k=4) +}
+\hlcom{# year) srmodel <- ~s(year, k=20)}
+\hlstd{vmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlnum{1}\hlstd{,} \hlopt{~}\hlnum{1}\hlstd{)}
+\hlstd{fit} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{vmodel} \hlstd{= vmodel)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
@@ -2618,30 +2732,30 @@ fit <- a4aSCA(ple4, ple4.indices[1], vmodel = vmodel)
 By default the likelihood components are weighted using inverse variance of the parameters estimates. However the user may change this weights by setting the variance of the input parameters, which is done by adding a variance matrix to the catch.n and index.n slots of the stock and index objects. 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-stk <- ple4
-idx <- ple4.indices[1]
-# variance of observed catches
-varslt <- catch.n(stk)
-varslt[] <- 0.4
-catch.n(stk) <- FLQuantDistr(catch.n(stk), varslt)
-# variance of observed indices
-varslt <- index(idx[[1]])
-varslt[] <- 0.1
-index.var(idx[[1]]) <- varslt
-# run
-fit1 <- a4aSCA(stk, idx, vmodel = vmodel)
-flqs <- FLQuants(nowgt = stock.n(fit), extwgt = stock.n(fit1))
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{stk} \hlkwb{<-} \hlstd{ple4}
+\hlstd{idx} \hlkwb{<-} \hlstd{ple4.indices[}\hlnum{1}\hlstd{]}
+\hlcom{# variance of observed catches}
+\hlstd{varslt} \hlkwb{<-} \hlkwd{catch.n}\hlstd{(stk)}
+\hlstd{varslt[]} \hlkwb{<-} \hlnum{0.4}
+\hlkwd{catch.n}\hlstd{(stk)} \hlkwb{<-} \hlkwd{FLQuantDistr}\hlstd{(}\hlkwd{catch.n}\hlstd{(stk), varslt)}
+\hlcom{# variance of observed indices}
+\hlstd{varslt} \hlkwb{<-} \hlkwd{index}\hlstd{(idx[[}\hlnum{1}\hlstd{]])}
+\hlstd{varslt[]} \hlkwb{<-} \hlnum{0.1}
+\hlkwd{index.var}\hlstd{(idx[[}\hlnum{1}\hlstd{]])} \hlkwb{<-} \hlstd{varslt}
+\hlcom{# run}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(stk, idx,} \hlkwc{vmodel} \hlstd{= vmodel)}
+\hlstd{flqs} \hlkwb{<-} \hlkwd{FLQuants}\hlstd{(}\hlkwc{nowgt} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit),} \hlkwc{extwgt} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit1))}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-62} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-61} 
 
 }
 
@@ -2653,20 +2767,20 @@ flqs <- FLQuants(nowgt = stock.n(fit), extwgt = stock.n(fit1))
 \subsubsection{More models}
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# constant fishing mortality for ages older than 5
-fmodel = ~s(replace(age, age > 5, 5), k = 4) + s(year, k = 20)
-fit <- sca(ple4, ple4.indices, fmodel = fmodel)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# constant fishing mortality for ages older than 5}
+\hlstd{fmodel} \hlkwb{=} \hlopt{~}\hlkwd{s}\hlstd{(}\hlkwd{replace}\hlstd{(age, age} \hlopt{>} \hlnum{5}\hlstd{,} \hlnum{5}\hlstd{),} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{)}
+\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices,} \hlkwc{fmodel} \hlstd{= fmodel)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-64} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-63} 
 
 }
 
@@ -2676,20 +2790,20 @@ fit <- sca(ple4, ple4.indices, fmodel = fmodel)
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# the same model for two periods
-fmodel = ~s(age, k = 3, by = breakpts(year, 1990))
-fit <- sca(ple4, ple4.indices, fmodel = fmodel)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# the same model for two periods}
+\hlstd{fmodel} \hlkwb{=} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{3}\hlstd{,} \hlkwc{by} \hlstd{=} \hlkwd{breakpts}\hlstd{(year,} \hlnum{1990}\hlstd{))}
+\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices,} \hlkwc{fmodel} \hlstd{= fmodel)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-66} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-65} 
 
 }
 
@@ -2699,20 +2813,20 @@ fit <- sca(ple4, ple4.indices, fmodel = fmodel)
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-# smoother for each age
-fmodel <- ~factor(age) + s(year, k = 10, by = breakpts(age, c(2:8)))
-fit <- sca(ple4, ple4.indices, fmodel = fmodel)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# smoother for each age}
+\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{factor}\hlstd{(age)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{10}\hlstd{,} \hlkwc{by} \hlstd{=} \hlkwd{breakpts}\hlstd{(age,} \hlkwd{c}\hlstd{(}\hlnum{2}\hlopt{:}\hlnum{8}\hlstd{)))}
+\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices,} \hlkwc{fmodel} \hlstd{= fmodel)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-68} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-67} 
 
 }
 
@@ -2725,43 +2839,45 @@ fit <- sca(ple4, ple4.indices, fmodel = fmodel)
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-fit <- sca(ple4, ple4.indices)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-nits <- 25
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{nits} \hlkwb{<-} \hlnum{25}
 
-shape2 <- FLModelSim(model = ~exp(-age - 0.5))
-level4 <- FLModelSim(model = ~k^0.66 * t^0.57, params = FLPar(k = 0.4, t = 10), 
-    vcov = matrix(c(0.002, 0.01, 0.01, 1), ncol = 2))
+\hlstd{shape2} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{age} \hlopt{-} \hlnum{0.5}\hlstd{))}
+\hlstd{level4} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{k}\hlopt{^}\hlnum{0.66} \hlopt{*} \hlstd{t}\hlopt{^}\hlnum{0.57}\hlstd{,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{k} \hlstd{=} \hlnum{0.4}\hlstd{,} \hlkwc{t} \hlstd{=} \hlnum{10}\hlstd{),}
+    \hlkwc{vcov} \hlstd{=} \hlkwd{matrix}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{0.002}\hlstd{,} \hlnum{0.01}\hlstd{,} \hlnum{0.01}\hlstd{,} \hlnum{1}\hlstd{),} \hlkwc{ncol} \hlstd{=} \hlnum{2}\hlstd{))}
 
-trend4 <- FLModelSim(model = ~b, params = FLPar(b = 0.5), vcov = matrix(0.02))
-m4 <- a4aM(shape = shape2, level = level4, trend = trend4)
-m4 <- mvrnorm(nits, m4)
-range(m4)[] <- range(ple4)[]
-range(m4)[c("minmbar", "maxmbar")] <- c(1, 1)
-flq <- m(m4)[]
-quant(flq) <- "age"
-stk <- propagate(ple4, nits)
-m(stk) <- flq
+\hlstd{trend4} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{b,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{b} \hlstd{=} \hlnum{0.5}\hlstd{),} \hlkwc{vcov} \hlstd{=} \hlkwd{matrix}\hlstd{(}\hlnum{0.02}\hlstd{))}
+\hlstd{m4} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= shape2,} \hlkwc{level} \hlstd{= level4,} \hlkwc{trend} \hlstd{= trend4)}
+\hlstd{m4} \hlkwb{<-} \hlkwd{mvrnorm}\hlstd{(nits, m4)}
+\hlkwd{range}\hlstd{(m4)[]} \hlkwb{<-} \hlkwd{range}\hlstd{(ple4)[]}
+\hlkwd{range}\hlstd{(m4)[}\hlkwd{c}\hlstd{(}\hlstr{"minmbar"}\hlstd{,} \hlstr{"maxmbar"}\hlstd{)]} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{1}\hlstd{)}
+\hlstd{flq} \hlkwb{<-} \hlkwd{m}\hlstd{(m4)[]}
+\hlkwd{quant}\hlstd{(flq)} \hlkwb{<-} \hlstr{"age"}
+\hlstd{stk} \hlkwb{<-} \hlkwd{propagate}\hlstd{(ple4, nits)}
+\hlkwd{m}\hlstd{(stk)} \hlkwb{<-} \hlstd{flq}
 
-fit1 <- sca(stk, ple4.indices)
-\end{verbatim}
-\end{kframe}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{sca}\hlstd{(stk, ple4.indices)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: cannot open the connection}}\end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-71} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-70} 
 
 }
 
@@ -2788,40 +2904,40 @@ fit1 <- sca(stk, ple4.indices)
 \subsubsection{WCSAM exercise - replicating itself}
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-fit <- sca(ple4, ple4.indices, fit = "assessment")
-nits <- 25
-stk <- ple4 + fit
-fits <- simulate(fit, nits)
-stks <- ple4 + fits
-idxs <- ple4.indices[1]
-index(idxs[[1]]) <- index(fits)[[1]]
-library(parallel)
-options(mc.cores = 4)
-lst <- lapply(split(1:nits, 1:nits), function(x) {
-    out <- try(sca(iter(stks, x), FLIndices(iter(idxs[[1]], x))))
-    if (is(out, "try-error")) 
-        NULL else out
-})
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices,} \hlkwc{fit} \hlstd{=} \hlstr{"assessment"}\hlstd{)}
+\hlstd{nits} \hlkwb{<-} \hlnum{25}
+\hlstd{stk} \hlkwb{<-} \hlstd{ple4} \hlopt{+} \hlstd{fit}
+\hlstd{fits} \hlkwb{<-} \hlkwd{simulate}\hlstd{(fit, nits)}
+\hlstd{stks} \hlkwb{<-} \hlstd{ple4} \hlopt{+} \hlstd{fits}
+\hlstd{idxs} \hlkwb{<-} \hlstd{ple4.indices[}\hlnum{1}\hlstd{]}
+\hlkwd{index}\hlstd{(idxs[[}\hlnum{1}\hlstd{]])} \hlkwb{<-} \hlkwd{index}\hlstd{(fits)[[}\hlnum{1}\hlstd{]]}
+\hlkwd{library}\hlstd{(parallel)}
+\hlkwd{options}\hlstd{(}\hlkwc{mc.cores} \hlstd{=} \hlnum{4}\hlstd{)}
+\hlstd{lst} \hlkwb{<-} \hlkwd{lapply}\hlstd{(}\hlkwd{split}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{nits,} \hlnum{1}\hlopt{:}\hlstd{nits),} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{) \{}
+    \hlstd{out} \hlkwb{<-} \hlkwd{try}\hlstd{(}\hlkwd{sca}\hlstd{(}\hlkwd{iter}\hlstd{(stks, x),} \hlkwd{FLIndices}\hlstd{(}\hlkwd{iter}\hlstd{(idxs[[}\hlnum{1}\hlstd{]], x))))}
+    \hlkwa{if} \hlstd{(}\hlkwd{is}\hlstd{(out,} \hlstr{"try-error"}\hlstd{))}
+        \hlkwa{NULL else} \hlstd{out}
+\hlstd{\})}
 
-stks2 <- stks
-for (i in 1:nits) {
-    iter(catch.n(stks2), i) <- catch.n(lst[[i]])
-    iter(stock.n(stks2), i) <- stock.n(lst[[i]])
-    iter(harvest(stks2), i) <- harvest(lst[[i]])
-}
-catch(stks2) <- computeCatch(stks2)
-stock(stks2) <- computeStock(stks2)
-\end{verbatim}
+\hlstd{stks2} \hlkwb{<-} \hlstd{stks}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlstd{nits) \{}
+    \hlkwd{iter}\hlstd{(}\hlkwd{catch.n}\hlstd{(stks2), i)} \hlkwb{<-} \hlkwd{catch.n}\hlstd{(lst[[i]])}
+    \hlkwd{iter}\hlstd{(}\hlkwd{stock.n}\hlstd{(stks2), i)} \hlkwb{<-} \hlkwd{stock.n}\hlstd{(lst[[i]])}
+    \hlkwd{iter}\hlstd{(}\hlkwd{harvest}\hlstd{(stks2), i)} \hlkwb{<-} \hlkwd{harvest}\hlstd{(lst[[i]])}
+\hlstd{\}}
+\hlkwd{catch}\hlstd{(stks2)} \hlkwb{<-} \hlkwd{computeCatch}\hlstd{(stks2)}
+\hlkwd{stock}\hlstd{(stks2)} \hlkwb{<-} \hlkwd{computeStock}\hlstd{(stks2)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-73} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-72} 
 
 }
 
@@ -2837,41 +2953,45 @@ This is an example of how to use the parallel package to run assessments. In thi
 Finnally, compare this code with the one for replicating WCSAM and note that it's exacly the same, except that we're using mclapply, which is in parallel, instead of lapply. 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-nits <- 20
-fit <- a4aSCA(ple4, ple4.indices[1])
-stk <- ple4 + fit
-fits <- simulate(fit, nits)
-stks <- ple4 + fits
-idxs <- ple4.indices[1]
-index(idxs[[1]]) <- index(fits)[[1]]
-library(parallel)
-options(mc.cores = 4)
-lst <- mclapply(split(1:nits, 1:nits), function(x) {
-    out <- try(sca(iter(stks, x), FLIndices(iter(idxs[[1]], x))))
-    if (is(out, "try-error")) 
-        NULL else out
-})
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{nits} \hlkwb{<-} \hlnum{20}
+\hlstd{fit} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{])}
+\hlstd{stk} \hlkwb{<-} \hlstd{ple4} \hlopt{+} \hlstd{fit}
+\hlstd{fits} \hlkwb{<-} \hlkwd{simulate}\hlstd{(fit, nits)}
+\hlstd{stks} \hlkwb{<-} \hlstd{ple4} \hlopt{+} \hlstd{fits}
+\hlstd{idxs} \hlkwb{<-} \hlstd{ple4.indices[}\hlnum{1}\hlstd{]}
+\hlkwd{index}\hlstd{(idxs[[}\hlnum{1}\hlstd{]])} \hlkwb{<-} \hlkwd{index}\hlstd{(fits)[[}\hlnum{1}\hlstd{]]}
+\hlkwd{library}\hlstd{(parallel)}
+\hlkwd{options}\hlstd{(}\hlkwc{mc.cores} \hlstd{=} \hlnum{4}\hlstd{)}
+\hlstd{lst} \hlkwb{<-} \hlkwd{mclapply}\hlstd{(}\hlkwd{split}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{nits,} \hlnum{1}\hlopt{:}\hlstd{nits),} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{) \{}
+    \hlstd{out} \hlkwb{<-} \hlkwd{try}\hlstd{(}\hlkwd{sca}\hlstd{(}\hlkwd{iter}\hlstd{(stks, x),} \hlkwd{FLIndices}\hlstd{(}\hlkwd{iter}\hlstd{(idxs[[}\hlnum{1}\hlstd{]], x))))}
+    \hlkwa{if} \hlstd{(}\hlkwd{is}\hlstd{(out,} \hlstr{"try-error"}\hlstd{))}
+        \hlkwa{NULL else} \hlstd{out}
+\hlstd{\})}
 
-stks2 <- stks
-for (i in 1:nits) {
-    iter(catch.n(stks2), i) <- catch.n(lst[[i]])
-    iter(stock.n(stks2), i) <- stock.n(lst[[i]])
-    iter(harvest(stks2), i) <- harvest(lst[[i]])
-}
-catch(stks2) <- computeCatch(stks2)
-stock(stks2) <- computeStock(stks2)
-stks3 <- FLStocks(orig = stk, sim = stks, fitsim = stks2)
-\end{verbatim}
+\hlstd{stks2} \hlkwb{<-} \hlstd{stks}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlstd{nits) \{}
+    \hlkwd{iter}\hlstd{(}\hlkwd{catch.n}\hlstd{(stks2), i)} \hlkwb{<-} \hlkwd{catch.n}\hlstd{(lst[[i]])}
+    \hlkwd{iter}\hlstd{(}\hlkwd{stock.n}\hlstd{(stks2), i)} \hlkwb{<-} \hlkwd{stock.n}\hlstd{(lst[[i]])}
+    \hlkwd{iter}\hlstd{(}\hlkwd{harvest}\hlstd{(stks2), i)} \hlkwb{<-} \hlkwd{harvest}\hlstd{(lst[[i]])}
+\hlstd{\}}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: unable to find an inherited method for function 'catch.n' for signature '"{}NULL"{}'}}\begin{alltt}
+\hlkwd{catch}\hlstd{(stks2)} \hlkwb{<-} \hlkwd{computeCatch}\hlstd{(stks2)}
+\hlkwd{stock}\hlstd{(stks2)} \hlkwb{<-} \hlkwd{computeStock}\hlstd{(stks2)}
+\hlstd{stks3} \hlkwb{<-} \hlkwd{FLStocks}\hlstd{(}\hlkwc{orig} \hlstd{= stk,} \hlkwc{sim} \hlstd{= stks,} \hlkwc{fitsim} \hlstd{= stks2)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-75} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-74} 
 
 }
 
@@ -2885,27 +3005,27 @@ stks3 <- FLStocks(orig = stk, sim = stks, fitsim = stks2)
 We follow the paper Colin et al. Only the AIC averaging is implemented for now.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-data(ple4)
-data(ple4.indices)
-f1 <- sca(ple4, ple4.indices, fmodel = ~factor(age) + s(year, k = 20), qmodel = list(~s(age, 
-    k = 4), ~s(age, k = 4), ~s(age, k = 3)), fit = "assessment")
-f2 <- sca(ple4, ple4.indices, fmodel = ~factor(age) + s(year, k = 20), qmodel = list(~s(age, 
-    k = 4) + year, ~s(age, k = 4), ~s(age, k = 3)), fit = "assessment")
-stock.sim <- ma(a4aFitSAs(list(f1 = f1, f2 = f2)), ple4, AIC, nsim = 100)
-stks <- FLStocks(f1 = ple4 + f1, f2 = ple4 + f2, ma = stock.sim)
-flqs <- lapply(stks, ssb)
-flqs <- lapply(flqs, iterMedians)
-\end{verbatim}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{data}\hlstd{(ple4)}
+\hlkwd{data}\hlstd{(ple4.indices)}
+\hlstd{f1} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices,} \hlkwc{fmodel} \hlstd{=} \hlopt{~}\hlkwd{factor}\hlstd{(age)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{),} \hlkwc{qmodel} \hlstd{=} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,}
+    \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{),} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{),} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{3}\hlstd{)),} \hlkwc{fit} \hlstd{=} \hlstr{"assessment"}\hlstd{)}
+\hlstd{f2} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices,} \hlkwc{fmodel} \hlstd{=} \hlopt{~}\hlkwd{factor}\hlstd{(age)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{),} \hlkwc{qmodel} \hlstd{=} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,}
+    \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlstd{year,} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{),} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{3}\hlstd{)),} \hlkwc{fit} \hlstd{=} \hlstr{"assessment"}\hlstd{)}
+\hlstd{stock.sim} \hlkwb{<-} \hlkwd{ma}\hlstd{(}\hlkwd{a4aFitSAs}\hlstd{(}\hlkwd{list}\hlstd{(}\hlkwc{f1} \hlstd{= f1,} \hlkwc{f2} \hlstd{= f2)), ple4, AIC,} \hlkwc{nsim} \hlstd{=} \hlnum{100}\hlstd{)}
+\hlstd{stks} \hlkwb{<-} \hlkwd{FLStocks}\hlstd{(}\hlkwc{f1} \hlstd{= ple4} \hlopt{+} \hlstd{f1,} \hlkwc{f2} \hlstd{= ple4} \hlopt{+} \hlstd{f2,} \hlkwc{ma} \hlstd{= stock.sim)}
+\hlstd{flqs} \hlkwb{<-} \hlkwd{lapply}\hlstd{(stks, ssb)}
+\hlstd{flqs} \hlkwb{<-} \hlkwd{lapply}\hlstd{(flqs, iterMedians)}
+\end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-77} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-76} 
 
 }
 
@@ -2915,9 +3035,9 @@ flqs <- lapply(flqs, iterMedians)
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{1, 1, 1}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-78} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-77} 
 
 }
 
