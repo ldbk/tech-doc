@@ -43,7 +43,7 @@
 \begin{document}
 %\SweaveOpts{concordance=TRUE}
 
-\title{Stock assessment and management advice with \initiative{a4a} methods \\ DRAFT}
+\title{Assessment for All initiative(a4a) \\ Stock assessment and management advice methods \\ DRAFT}
 
 \author[1]{Ernesto Jardim}
 \author[1]{Colin Millar}
@@ -59,10 +59,7 @@
 
 \subsection{Background}
 
-(This section is based on Jardim, et.al, 2014\footnote{Jardim,E., Millar,C.P., Mosqueira,I., Scott,F., Osio,G.C., Ferretti,M., Alzorriz,N., Orio,A. 2014. What if stock assessment is as simple as a linear model? The \initiative{a4a} initiative. ICES JMS. \url{http://icesjms.oxfordjournals.org/content/early/2014/04/03/icesjms.fsu050.abstract}
-})
-
-(\href{http://icesjms.oxfordjournals.org/content/early/2014/04/03/icesjms.fsu050.abstract}{Jardim, et.al, 2014})
+(This section is based on (\href{http://icesjms.oxfordjournals.org/content/early/2014/04/03/icesjms.fsu050.abstract}{Jardim, et.al, 2014}))
 
 The volume and availability of data useful for fisheries stock assessment is continually increasing. Time series of ‘traditional’ sources of information, such as surveys and landings data are not only getting longer, but also cover an increasing number of species.
 
@@ -70,7 +67,7 @@ For example, in Europe the 2009 revision of the Data Collection Regulation (EU, 
 
 Recognizing that the context above required new methodological developments, the European Commission Joint Research Centre (JRC) started its ‘Assessment for All’ Initiative (\initiative{a4a}), with the aim to develop, test, and distribute methods to assess a large numbers of stocks in an operational time frame, and to build the necessary capacity/expertise on stock assessment and advice provision. 
 
-The long-term strategy of \initiative{a4a} is to increase the number of stock assessments by reducing the workload required to run each analysis and by bringing more scientists/analysts into fisheries management advice. The first is achieved by developing a working framework with the methods required to run all the analysis a stock assessment needs, as well as developing methods to deal with recognized bottlenecks, \emph{e.g.} model averaging to deal with model selection (Colin, et.al, 2014\footnote{Millar,C.P., Jardim,E., Scott,F., Osio,G.C., Mosqueira,I., Alzorriz,N. 2014. Model averaging to streamline the stock assessment process. ICES JMS. \url{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}}). Such an approach should make the model exploration and selection processes easier, as well as decreasing the burden of moving between software platforms. The second can be achieved by making the analysis more intuitive, thereby attracting more experts to join stock assessment teams.
+The long-term strategy of \initiative{a4a} is to increase the number of stock assessments by reducing the workload required to run each analysis and by bringing more scientists/analysts into fisheries management advice. The first is achieved by developing a working framework with the methods required to run all the analysis a stock assessment needs, as well as developing methods to deal with recognized bottlenecks, \emph{e.g.} model averaging to deal with model selection (\href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Colin, et.al, 2014}). Such an approach should make the model exploration and selection processes easier, as well as decreasing the burden of moving between software platforms. The second can be achieved by making the analysis more intuitive, thereby attracting more experts to join stock assessment teams.
 
 To achieve these objectives, the Initiative identified a series of tasks, which were or are being carried out, namely:
 \begin{itemize}
@@ -107,7 +104,7 @@ The 'moderate data stock' constitutes the entry level of our analysis. It has at
 
 \subsubsection{The stock assessment framework}
 
-The stock assessment model framework is a non-linear catch-at-age model implemented in R/\pkg{FLR}/ADMB that can be applied rapidly to a wide range of situations with low parametrization requirements. Later we'll come back to these characteristics and it's application (Section~\ref{sec:running_assessments}).
+The stock assessment model framework is a non-linear catch-at-age model implemented in \pkg{R}/\pkg{FLR}/\pkg{ADMB} that can be applied rapidly to a wide range of situations with low parametrization requirements. Later we'll come back to these characteristics and it's application (Section~\ref{sec:running_assessments}).
 
 \subsubsection{MSE}
 
@@ -115,7 +112,7 @@ The MSE is a sophisticated forecasting algorithm that takes into account structu
 
 \subsubsection{Training}
 
-During the last 2 years JRC organized 4 courses of introduction to R and \pkg{FLR}: Varese, January 2012; Varese, ???; Barza, March 2013; FAO / GFCM, Rome, November 2013.
+During the last 2 years JRC organized 4 courses of introduction to R and \pkg{FLR}: Varese, January 2012; Varese, June, 2012; Barza, March 2013; FAO / GFCM, Rome, November 2013.
 
 In 2013 a short course about \initiative{a4a} methods was organized in Lisbon. The first full course on \pkg{FLR} and \initiative{a4a} methods was organized in CEFAS, March 2014 and another one is planned for August 2014.
 
@@ -136,9 +133,9 @@ These steps may be followed in sequence or independently, depending on the user'
 
 Analysis related to projections and biological reference points are dealt with by the \pkg{FLR} packages \pkg{FLash} and \pkg{FLBRP}. As such the Initiative does not provide specific methods for these analysis.
 
-In Steps 1 and 2 there is no fitting of growth models or natural mortality models. The rationale is to provide tools that allow the uncertainty associated with these processes to be carried on into the stock assessment, e.g. through parameter uncertainty. This approach allows the users to pick up the required information from other sources of information such as papers, PhDs, Fishbase, other stocks, etc. Bearing in mind that the stock under analysis may not have specific information on the growth or natural mortality processes, but generic information about life history invariants can be used, like the generic priors suggested by Bentley (2014\footnote{BBBBB}).
+In Steps 1 and 2 there is no fitting of growth models or natural mortality models. The rationale is to provide tools that allow the uncertainty associated with these processes to be carried on into the stock assessment, e.g. through parameter uncertainty. This approach allows the users to pick up the required information from other sources of information such as papers, PhDs, Fishbase, other stocks, etc. Bearing in mind that the stock under analysis may not have specific information on the growth or natural mortality processes, but generic information about life history invariants can be used, like the generic priors suggested by \href{http://icesjms.oxfordjournals.org/content/early/2014/03/04/icesjms.fsu023.abstract}{Bentley, (2014)}.
 
-Note that an environment like the one distributed by \initiative{a4a} promotes the exploration of different models for each process, giving the analyst a large flexibility, but also opens the possibility to efficiently include distinct models in the analysis. For example a stock assessment using two growth, or several models for natural mortality. Our suggestion to streamline the assessment process is to combine the final outcome using model averaging (Colin, et.al, 2014\footnote{Millar,C.P., Jardim,E., Scott,F., Osio,G.C., Mosqueira,I., Alzorriz,N. 2014. Model averaging to streamline the stock assessment process. ICES JMS. \url{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}}) but other solutions may be implemented, like scenario analysis, etc. What's important is to keep the data flowing smoothly and the models clear. R (R Core Team, 2014\footnote{RRRRR}) and \pkg{FLR} (Kell, et.al, 200\footnote{KKKKKKKKK}) are powerful platforms for it.
+Note that an environment like the one distributed by \initiative{a4a} promotes the exploration of different models for each process, giving the analyst a large flexibility, but also opens the possibility to efficiently include distinct models in the analysis. For example a stock assessment using two growth, or several models for natural mortality. Our suggestion to streamline the assessment process is to combine the final outcome using model averaging (\href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Colin, et.al, 2014}) but other solutions may be implemented, like scenario analysis, etc. What's important is to keep the data flowing smoothly and the models clear. R (\href{http://www.R-project.org/}{R Core Team, 2014}) and \pkg{FLR} (\href{http://icesjms.oxfordjournals.org/content/64/4/640.abstract}{Kell, et.al, 200}) are powerful platforms for it.
 
 \section{Loading libraries, data and defining some useful functions}
 
@@ -146,7 +143,7 @@ Note that an environment like the one distributed by \initiative{a4a} promotes t
 css = eclipse_theme(43)
 thm = knit_theme$get(css)
 knit_theme$set(thm)
-opts_chunk$set(dev='png', cache=TRUE, fig.align='center', warning=FALSE, message=FALSE, dev="png", dev.args=list(type="cairo"), dpi=96, highlight=TRUE, background='#F2F2F2')
+opts_chunk$set(dev='png', cache=TRUE, fig.align='center', warning=FALSE, message=FALSE, dev="png", dev.args=list(type="cairo"), dpi=96, highlight=TRUE, background='#F2F2F2', fig.lp="fig:", fig.pos="H")
 @
 
 <<load_libraries, message=FALSE, warning=FALSE>>=
@@ -204,7 +201,7 @@ plotS4 <- function(object, linktext="typeof", main="S4 class", ...){
 
 \section{Reading files and building \pkg{FLR} objects}
 
-For this document we'll use the plaice in ICES area IV dataset, provided by \pkg{FLR}, and a length-based simulated dataset based on red fish, using \pkg{Gadget}\footnote{url{http://www.hafro.is/gadget}}, provided by Daniel Howell (Institute of Marine Research, Norway).
+For this document we'll use the plaice in ICES area IV dataset, provided by \pkg{FLR}, and a length-based simulated dataset based on red fish, using \href{http://www.hafro.is/gadget}{\pkg{Gadget}}, provided by Daniel Howell (Institute of Marine Research, Norway).
 
 In this section we read in the \pkg{Gadget} data files, and transform them into \pkg{FLR} objects.
 
@@ -443,54 +440,29 @@ ages[,1:10]
 @
 
 The marginal distributions can be seen in Figure~\ref{fig:plot_norm_params}.
-<<plot_multinorm_marginal, eval=FALSE>>=
+
+<<plot_norm_params, fig.cap="The marginal distributions of each of the parameters from using a multivariate normal distribution.">>=
 par(mfrow=c(3,1))
 hist(c(params(vbNorm)["linf",]), main="linf", xlab="")
 hist(c(params(vbNorm)["k",]), main="k", prob=TRUE, xlab="")
 hist(c(params(vbNorm)["t0",]), main="t0", xlab="")
 @
 
-\begin{figure}[H]
-<<example_norm_parameter_distributions, echo=FALSE>>=
-<<plot_multinorm_marginal>>
-@
-\caption{The marginal distributions of each of the parameters from using a multivariate normal distribution.}
-\label{fig:plot_norm_params}
-\end{figure}
-
 The shape of the correlation can be seen in Figure~\ref{fig:plot_norm_scatter}.
-<<code_fig_plot_norm_scatter, eval=FALSE>>=
-# Plotting scatter plot of growth parameters
+<<plot_norm_scatter, fig.cap="Scatter plot of the 10000 samples parameter from the multivariate normal distribution.">>=
 splom(data.frame(t(params(vbNorm)@.Data)), pch=".")
 @
 
-<<code_plot_mv_growth, eval=FALSE>>=
-# Generating and plotting growth curves
-boxplot(t(predict(vbNorm, t=0:50+0.5)))
-@
-
-\begin{figure}[H]
-<<example_norm_parameter_scatter, echo=FALSE>>=
-<<code_fig_plot_norm_scatter>>
-@
-\caption{Scatter plot of the 10000 samples parameter from the multivariate normal distribution.}
-\label{fig:plot_norm_scatter}
-\end{figure}
-
 Growth curves for the 1000 iterations can be seen in Figure~\ref{fig:plot_mv_growth}.
 
-\begin{figure}[H]
-<<example_mv_growth_curve_plot, echo=FALSE>>=
-<<code_plot_mv_growth>>
+<<plot_mv_growth, fig.cap="Growth curves using parameters simulated from a multivariate normal distribution.">>=
+boxplot(t(predict(vbNorm, t=0:50+0.5)))
 @
-\caption{Growth curves using parameters simulated from a multivariate normal distribution.}
-\label{fig:plot_mv_growth}
-\end{figure}
 
 \subsection{Adding parameter uncertainty with a multivariate triangle distribution}
 \label{sec:growth_triangle_cop}
 
-One alternative to using normal distributions is to use a triangle distribution (\url{http://en.wikipedia.org/wiki/Triangle_distribution}). We use the package \pkg{triangle}\footnote{\url{http://cran.r-project.org/web/packages/triangle/index.html}}, where this distribution is parametrized using the minimum, maximum and median values. This can be very attractive if the analyst needs to scrape information from the web or literature and perform some kind of meta-analysis.
+One alternative to using normal distributions is to use a \href{http://en.wikipedia.org/wiki/Triangle\_distribution}{triangle distribution}. We use the package \href{http://cran.r-project.org/web/packages/triangle/index.html}{\pkg{triangle}}, where this distribution is parametrized using the minimum, maximum and median values. This can be very attractive if the analyst needs to scrape information from the web or literature and perform some kind of meta-analysis.
 
 Here we show an example of setting a triangle distribution with values taken from Fishbase.
 
@@ -512,60 +484,31 @@ triPars <- list(list(a=min(linf), b=max(linf), c=median(linf)),
 vbTri <- mvrtriangle(10000, vbObj, paramMargins=triPars)
 @
 
-The marginals will reflect the uncertainty on the parameter values that were scraped from Fishbase but, as we don't really believe the parameters are multivariate normal, here we adopted a distribution based on a \emph{t} copula with triangle marginals.
+The marginals will reflect the uncertainty on the parameter values that were scraped from \href{http://fishbase.org}{Fishbase} but, as we don't really believe the parameters are multivariate normal, here we adopted a distribution based on a \emph{t} copula with triangle marginals.
 The marginal distributions can be seen in Figure~\ref{fig:plot_tri_params} and the shape of the correlation can be seen in Figure~\ref{fig:plot_tri_scatter}.
 
-<<code_plot_tri_params, eval=FALSE, echo=FALSE>>=
-# Plot histogram of the marginals
+<<plot_tri_params, echo=FALSE, fig.cap="The marginal distributions of each of the parameters from using a multivariate triangle distribution.">>=
 par(mfrow=c(3,1))
 hist(c(params(vbTri)["linf",]), main="linf", xlab="")
 hist(c(params(vbTri)["k",]), main="k", prob=TRUE, xlab="")
 hist(c(params(vbTri)["t0",]), main="t0", xlab="")
 @
 
-<<code_plot_tri_scatter, eval=FALSE, echo=FALSE>>=
-# Scatter plot of the parameter values
+<<plot_tri_scatter, echo=FALSE, fig.cap="Scatter plot of the 10000 samples parameter from the multivariate triangle distribution.">>=
 splom(data.frame(t(params(vbTri)@.Data)), pch=".")
 @
 
-\begin{figure}[H]
-<<example_tri_parameter_distributions, echo=FALSE>>=
-<<code_plot_tri_params>>
-@
-\caption{The marginal distributions of each of the parameters from using a multivariate triangle distribution.}
-\label{fig:plot_tri_params}
-\end{figure}
-
-
-\begin{figure}[H]
-<<example_tri_parameter_scatter, echo=FALSE>>=
-<<code_plot_tri_scatter>>
-@
-\caption{Scatter plot of the 10000 samples parameter from the multivariate triangle distribution.}
-\label{fig:plot_tri_scatter}
-\end{figure}
-
 We can still use \code{predict()} to get see the growth model uncertainty (Figure~\ref{fig:plot_tri_growth}).
 
-<<code_plot_tri_growth, eval=FALSE, echo=FALSE>>=
-# PLot growth curve
+<<plot_tri_growth, echo=FALSE, fig.cap="Growth curves using parameters simulated from a multivariate triangle distribution.">>=
 boxplot(t(predict(vbTri, t=0:20+0.5)))
 @
 
-\begin{figure}[H]
-<<example_tri_parameter_growth, echo=FALSE>>=
-<<code_plot_tri_growth>>
-@
-\caption{Growth curves using parameters simulated from a multivariate triangle distribution.}
-\label{fig:plot_tri_growth}
-\end{figure}
-
-Remember that the above examples use a variance-covariance matrix that we essentially made up.
-An alternative would be to scrape the entire growth parameters dataset from FishBase and compute the shape of the variance-covariance matrix yourself.
+Remember that the above examples use a variance-covariance matrix that we essentially made up. An alternative would be to scrape the entire growth parameters dataset from FishBase and compute the shape of the variance-covariance matrix yourself.
 
 \subsection{Adding parameter uncertainty with copulas}
 
-A more general approach to adding parameter uncertainty is to make use of statistical copulas\footnote{\url{http://en.wikipedia.org/wiki/Copula_\%28probability_theory\%29}} and marginal distributions of choice. This is possible with the \code{mvrcop()} function borrowed from the package \pkg{copula}\footnote{\url{http://cran.r-project.org/web/packages/copula/index.html}}. The example below keeps the same parameters and changes only the copula type and family but a lot more can be done. Check the package \emph{copula} for more. 
+A more general approach to adding parameter uncertainty is to make use of statistical copulas\footnote{\url{http://en.wikipedia.org/wiki/Copula\_\%28probability\_theory\%29}} and marginal distributions of choice. This is possible with the \code{mvrcop()} function borrowed from the package \href{http://cran.r-project.org/web/packages/copula/}{\pkg{copula}}. The example below keeps the same parameters and changes only the copula type and family but a lot more can be done. Check the package \pkg{copula} for more. 
 
 % Needs more explanation
 
@@ -575,30 +518,13 @@ vbCop <- mvrcop(10000, vbObj, copula="archmCopula", family="clayton", param=2, m
 
 The shape of the correlation changes (Figure~\ref{fig:plot_cop_tri_scatter}) as well as the resulting growth curves (Figure~\ref{fig:plot_cop_tri_growth}). 
 
-<<code_plot_cop_tri_scatter, eval=FALSE, echo=FALSE>>=
-# Scatter plot of parameter values
+<<plot_cop_tri_scatter, echo=FALSE, fig.cap="Scatter plot of the 10000 samples parameter from the using an archmCopula copula with triangle margins.">>=
 splom(data.frame(t(params(vbCop)@.Data)), pch=".")
 @
 
-<<code_plot_cop_tri_growth, eval=FALSE, echo=FALSE>>=
+<<plot_cop_tri_growth, echo=FALSE, fig.cap="Growth curves from the using an archmCopula copula with triangle margins.">>=
 boxplot(t(predict(vbCop, t=0:20+0.5)))
 @
-
-\begin{figure}[H]
-<<example_cop_tri_scatter, echo=FALSE>>=
-<<code_plot_cop_tri_scatter>>
-@
-\caption{Scatter plot of the 10000 samples parameter from the using an archmCopula copula with triangle margins.}
-\label{fig:plot_cop_tri_scatter}
-\end{figure}
-
-\begin{figure}[H]
-<<example_cop_tri_growth, echo=FALSE>>=
-<<code_plot_cop_tri_growth>>
-@
-\caption{Growth curves from the using an archmCopula copula with triangle margins.}
-\label{fig:plot_cop_tri_growth}
-\end{figure}
 
 \subsection{The \code{l2a()} method}
 
@@ -668,7 +594,7 @@ m1 <- a4aM(level=mod02)
 m1
 @
 
-More interesting natural mortality shapes can be set up using biological knowledge. The following example uses an exponential decay over ages (implying that resulting \class{FLQuant} generated by the \code{m()} method will be age based). We also use Jensen's second estimator (Kenshington, 2013\footnote{REF}) as a scaling \code{level} model, which is based on the von Bertalanffy $K$ parameter, $M=1.5K$. 
+More interesting natural mortality shapes can be set up using biological knowledge. The following example uses an exponential decay over ages (implying that resulting \class{FLQuant} generated by the \code{m()} method will be age based). We also use Jensen's second estimator (\href{}{Kenshington, 2013}) as a scaling \code{level} model, which is based on the von Bertalanffy $K$ parameter, $M=1.5K$. 
 
 <<jensen_second_m>>=
 shape2 <- FLModelSim(model=~exp(-age-0.5))
@@ -679,7 +605,7 @@ m2
 
 Note that the \code{shape} model has \code{age} as a parameter of the model but is not set using the \code{params} argument.
 
-The \code{shape} model does not have to be age-based. For example, here we set up a \code{shape} model using Gislaon's second estimator (Kenshington, 2013\footnote{}):
+The \code{shape} model does not have to be age-based. For example, here we set up a \code{shape} model using Gislason's second estimator (\href{}{Kenshington, 2013}):
 $M_l=K(\frac{L_inf}{l})^{1.5}$. We use the default \code{level} and \class{trend} models.
 % Current m() method is not ideal for length based methods as you cannot specify length range and half-widths to make compatible with FLStockLen
 
@@ -725,8 +651,7 @@ m4 <- mvrnorm(100, m4)
 m4
 # Look at the level model (for example)
 m4@level
-# Note the variance in the parameters
-# The trend model also has uncertainty
+# Note the variance in the parameters. The trend model also has uncertainty
 params(trend(m4))
 # However, the shape model has no parameters and no uncertainty
 params(shape(m4))
@@ -748,7 +673,7 @@ We can also use copulas to add parameter uncertainty to the natural mortality mo
 
 % EXPAND...
 
-In the following example we'll use Gislason's second estimator (REF), $M_l=K(\frac{L_inf}{l})^{1.5}$ and a triangle copula to model parameter uncertainty in natural mortality.
+In the following example we'll use again Gislason's second estimator, $M_l=K(\frac{L_inf}{l})^{1.5}$ and a triangle copula to model parameter uncertainty in natural mortality.
 
 <<gis_copula>>=
 linf <- 60
@@ -771,31 +696,15 @@ mgis2
 
 The resulting parameter estimates and marginal distributions can be seen in Figure~\ref{fig:plot_tri_gis_m} and \ref{fig:plot_tri_gis_m_hist}
 
-<<code_plot_tri_gis_m, eval=FALSE>>=
+<<plot_tri_gis_m, echo=FALSE, fig.cap="Parameter estimates for Gislason's second natural mortality model from using a triangle distribution.">>=
 splom(t(params(mgis2)@.Data))
 @
 
-<<code_plot_tri_gis_m_hist, eval=FALSE>>=
+<<plot_tri_gis_m_hist, echo=FALSE, fig.cap="Marginal distributions of the parameters for Gislason's second natural mortality model using a triangle distribution.">>=
 par(mfrow=c(2,1))
 hist(c(params(mgis2)["linf",]), main="Linf", xlab="")
 hist(c(params(mgis2)["k",]), main="K", xlab="")
 @
-
-\begin{figure}[H]
-<<example_tri_gis_m_scatter, echo=FALSE>>=
-<<code_plot_tri_gis_m>>
-@
-\caption{Parameter estimates for Gislason's second natural mortality model from using a triangle distribution.}
-\label{fig:plot_tri_gis_m}
-\end{figure}
-
-\begin{figure}[H]
-<<example_tri_gis_m_hist, echo=FALSE>>=
-<<code_plot_tri_gis_m_hist>>
-@
-\caption{Marginal distributions of the parameters for Gislason's second natural mortality model using a triangle distribution.}
-\label{fig:plot_tri_gis_m_hist}
-\end{figure}
 
 We now have a new model that can be used for the \code{shape} model. Use the constructor or the set method to add the new model. Note that we have a quite complex method now for M. A length based \code{shape} model from Gislason's work, Jensen's third based temperature \code{level} and a time \code{trend} depending on NAO. All of the component models have uncertainty in their parameters.
 
@@ -904,21 +813,12 @@ m(m4, nao=as.numeric(nao[,as.character(2000:2003)]))
 dim(m(m4, nao=as.numeric(nao[,as.character(2000:2003)])))
 @
 
-<<code_uncertain_m, eval=FALSE>>=
+<<uncertain_m, echo=FALSE, fig.cap="Natural mortality with age and year trend.">>=
 bwplot(data~factor(age)|year, data=m(m4, nao=as.numeric(nao[,as.character(2000:2003)])))
 @
 
-\begin{figure}[H]
-<<plot_uncertain_m, echo=FALSE>>=
-<<code_uncertain_m>>
-@
-\caption{Natural mortality with age and year trend.}
-\label{fig:uncertain_m}
-\end{figure}
-
 \pagebreak
 \section{Running assessments}
-
 
 In the \initiative{a4a} assessment model, the model structure is defined by submodels, which are the different parts of a statistical catch at age model that requires structural assumptions.
 
@@ -974,47 +874,47 @@ The \code{residuals()} method will compute standardized residuals which can be p
 res <- residuals(fit, ple4, ple4.indices)
 @
 
-A scatterplot of residuals by age and survey, with a smoother to guide (or mis-guide ...) your visual analysis.
+Figure~\ref{fig:res} shows a scatterplot of residuals by age and survey, with a smoother to guide (or mis-guide ...) your visual analysis.
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
+<<res, fig.cap="Standardized residuals">>=
 plot(res, main="Residuals")
 @
 
-The common bubble plot by year and age for each survey. 
+The common bubble plot by year and age for each survey are shown in Figure~\ref{fig:bub}. 
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
+<<bub, fig.cap="Bubbles plot of standardized residuals.">>=
 bubbles(res)
 @
 
-Finally a quantile-quantile plot to assess how well do the residuals match the normal distribution.
+Finally, Figure~\ref{qq} shows a quantile-quantile plot to assess how well do the residuals match the normal distribution.
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
+<<qq, fig.cap="Quantile-quantile plot of standardized residuals.">>=
 qqmath(res)
 @
 
-To inspect the summaries (Fbar, SSB, catch and recruitment) of the fit the user may add the fit to the original stock object, using the method \code{+} and plotting the result.
+To inspect the summaries (Fbar, SSB, catch and recruitment) of the fit the user may add the fit to the original stock object, using the method \code{+} and plot the result (Figure~\ref{fig:summ}).
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
+<<summ, fig.cap="Stock summary">>=
 stk <- ple4 + fit
-plot(stk, main="Stock summary")
+plot(stk)
 @
 
-In more detail, one can plot a 3D representation of fishing mortality,
+In more detail, one can plot a 3D representation of fishing mortality (Figure~\ref{fig:F}),
 
-<<figure=TRUE,fig.pos="H">>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(stk)), drape = TRUE, main="Fishing mortality", screen = list(x = -90, y=-45))
+<<F,fig.cap="Fishing mortality">>=
+wireframe(data ~ age + year, data = as.data.frame(harvest(stk)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
-population abundance, 
+population abundance (Figure~\ref{fig:N}), 
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-wireframe(data ~ age + year, data = as.data.frame(stock.n(stk)), drape = TRUE, main="Population", screen = list(x = -90, y=-45))
+<<N, fig.cap="Population abundance">>=
+wireframe(data ~ age + year, data = as.data.frame(stock.n(stk)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
-or catch-at-age.
+or catch-at-age (Figure~\ref{fig:C}).
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-wireframe(data ~ age + year, data = as.data.frame(catch.n(stk)), drape = TRUE, main="Catches")
+<<C, fig.cap="Catches">>=
+wireframe(data ~ age + year, data = as.data.frame(catch.n(stk)), drape = TRUE)
 @
 
 \subsection{Data structures}
@@ -1023,29 +923,29 @@ As mentioned above, the output of the stock assessment method may be simpler, wi
 
 This section will describe the data structures of these classes and the classes that compose them.
 
-Starting with the basic model output class, \class{a4aFit}, the slots of this class are shown on the code and figure below.
+Starting with the basic model output class, \class{a4aFit}, the slots of this class are shown on the code below and Figure~\ref{fig:a4aFit}.
 
 <<>>=
 showClass("a4aFit")
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-plotS4("a4aFit", main="a4aFit class", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type = "square", box.prop = 0.3)
+<<a4aFit, echo=FALSE, fig.cap="The a4aFit class">>=
+plotS4("a4aFit", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type = "square", box.prop = 0.3)
 @
 
 Fitted values are stored in the \code{stock.n}, \code{harvest}, \code{catch.n} and \code{index} slots. It also contains information carried over from the stock object used to fit the model, like the the name of the stock in \code{name}, any description provided in \code{desc} and the age and year range and mean F range in \code{range}. There is also a wall clock that has a breakdown of the time taken o run the model in \code{clock}.
 
-The full assessment fit returns an object of class \class{a4aFitSA}, the slots of this class are shown on the code and figure below.
+The full assessment fit returns an object of class \class{a4aFitSA}, the slots of this class are shown on the code below and Figure~\ref{fig:a4aFitSA}.
 
 <<>>=
 showClass("a4aFitSA")
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-plotS4("a4aFitSA", main="a4aFitSA class", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type = "square", box.prop = 0.3)
+<<a4aFitSA, echo=FALSE, fig.cap="The a4aFitSA class">>=
+plotS4("a4aFitSA", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type = "square", box.prop = 0.3)
 @
 
-The additional slots in the assessment output are the \code{fitSumm} and \code{pars} slots, which are containers for model summaries and the model parameters. The \code{pars} slot is a class of type \class{SCAPars} which is itself composed of sub-classes, designed to contain the information necessary to simulate from the model.
+The additional slots in the assessment output are the \code{fitSumm} and \code{pars} slots, which are containers for model summaries and the model parameters. The \code{pars} slot is a class of type \class{SCAPars} (Figure~\ref{fig:SCAPars}) which is itself composed of sub-classes, designed to contain the information necessary to simulate from the model.
 
 <<>>=
 showClass("SCAPars")
@@ -1053,18 +953,18 @@ showClass("a4aStkParams")
 showClass("submodel")
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-plotS4("SCAPars", main="SCAPars class", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type = "square", box.prop = 0.3)
+<<SCAPars, echo=FALSE, fig.cap="The SCAPars class">>=
+plotS4("SCAPars", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type = "square", box.prop = 0.3)
 @
 
-The \class{SCAPars} is built using objects of class \class{a4aStkParams} and \class{submodel}. These classes have the following slots.
+The \class{SCAPars} is built using objects of class \class{a4aStkParams} (Figure~\ref{fig:a4aStkParams}) and \class{submodel} (Figure~\ref{fig:submod}). These classes have the following slots.
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-plotS4("a4aStkParams", main="a4aStkParams class", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type = "square", box.prop = 0.3)
+<<a4aStkParams, echo=FALSE, fig.cap="The a4aStkParams class">>=
+plotS4("a4aStkParams", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type = "square", box.prop = 0.3)
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-plotS4("submodel", main="submodel class", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type = "square", box.prop = 0.3)
+<<submod, echo=FALSE, fig.cap="The submodel class">>=
+plotS4("submodel", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type = "square", box.prop = 0.3)
 @
 
 For example, all the parameters required so simulate a time-series of mean F trends is contained in the \code{stkmodel} slot, which is a class of type \class{a4aStkParams}. This class contains the relevant submodels (see later), their parameters \code{params} and the joint covariance matrix \code{vcov} for all stock related parameters.
@@ -1083,7 +983,7 @@ Please note that each of these model \emph{forms} have not been tuned to the dat
 
 We will now take a look at some examples for F models and the forms that we can get. We'll fix the $Q$ and $R$ submodels. 
 
-Lets start with a separable model in which we model the age and year effects as dummy variables, using the \code{factor} coding provided by R. 
+Lets start with a separable model in which age and year effects are modelled as dummy variables, using the \code{factor} coding provided by R (Figure~\ref{fig:sep1}). 
 
 <<>>=
 qmod <- list(~ factor(age)) 
@@ -1092,19 +992,19 @@ srmod <- ~ factor(year)
 fit <- sca(stock = ple4, indices = ple4.indices[1], fmodel=fmod, qmodel=qmod, srmodel=srmod)
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45), main="Fishing mortality")
+<<sep1, echo=FALSE, fig.cap="Fishing mortality separable model">>=
+wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
-Next we may make things a bit more interesting by using an (unpenalised) thin plate spline, where we'll borrow the method \code{s()} provided by package \href{http://cran.r-project.org/web/packages/mgcv/index.html}{\pkg{mgcv}}. We're using the North Sea Plaice data again, and since it has 10 ages we will use a simple rule of thumb that the spline should have fewer than $\frac{10}{2} = 5$ degrees of freedom, and so we opt for 4 degrees of freedom. We will also do the same for year and model the change in F through time as a smoother with 20 degrees of freedom. Note that this is still a separable model, it's a smoothed version of the previous model.
+Next we may make things a bit more interesting by using an (unpenalised) thin plate spline, where we'll borrow the method \code{s()} provided by package \href{http://cran.r-project.org/web/packages/mgcv/}{\pkg{mgcv}}. We're using the North Sea Plaice data again, and since it has 10 ages we will use a simple rule of thumb that the spline should have fewer than $\frac{10}{2} = 5$ degrees of freedom, and so we opt for 4 degrees of freedom. We will also do the same for year and model the change in F through time as a smoother with 20 degrees of freedom. Note that this is still a separable model, it's a smoothed version of the previous model (Figure~\ref{fig:sep2}).
 
 <<>>=
 fmod <- ~ s(age, k=4) + s(year, k = 20)
 fit1 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(fit1)), drape = TRUE, screen = list(x = -90, y=-45), main="Fishing mortality")
+<<sep2, echo=FALSE, fig.cap="Fishing mortality smoothed separable model">>=
+wireframe(data ~ age + year, data = as.data.frame(harvest(fit1)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
 A non-separable model, where we consider age and year to interact can be modeled using a smooth interaction term in the fmodel using a tensor product of cubic splines with the \code{te} method, again borrowed from \href{http://cran.r-project.org/web/packages/mgcv/index.html}{\pkg{mgcv}}. 
@@ -1118,14 +1018,14 @@ fit3 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 wireframe(data ~ age + year, data = as.data.frame(harvest(fit3)), drape = TRUE, screen = list(x = -90, y=-45), main="Fishing mortality")
 @
 
-In the last examples the Fs are linked across age and time.  What if we want to free up a specific age class because in the residuals we see a consistent pattern.  This can happen, for example, if the spatial distribution of juveniles is disconnected to the distribution of adults.  The fishery focuses on the adult fish, and therefore the the F on young fish is a function of the distribution of the juveniles and could deserve a specific model. This can be achieved by adding a component for the year effect on age 1.
+In the last examples the Fs are linked across age and time.  What if we want to free up a specific age class because in the residuals we see a consistent pattern.  This can happen, for example, if the spatial distribution of juveniles is disconnected to the distribution of adults.  The fishery focuses on the adult fish, and therefore the the F on young fish is a function of the distribution of the juveniles and could deserve a specific model. This can be achieved by adding a component for the year effect on age 1 (Figure~\ref{fig:age1}).
 
 <<>>=
 fmod <- ~ te(age, year, k = c(4,20)) + s(year, k = 5, by = as.numeric(age==1))
 fit4 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
+<<age1, echo=FALSE, fig.cap="Fishing mortality age-year interaction model with extra age 1 smoother.">>=
 wireframe(data ~ age + year, data = as.data.frame(harvest(fit4)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 

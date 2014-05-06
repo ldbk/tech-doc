@@ -1,0 +1,42 @@
+.background {
+  color: #ffffff;
+}
+.num {
+  color: #333333;
+}
+.str {
+  color: #333333;
+}
+.com {
+  color: #334466;
+}
+.opt {
+  color: #333333;
+}
+.std {
+  color: #000000;
+}
+.kwa {
+  color: #5c8198;
+}
+.kwb {
+  color: #5c8198;
+}
+.kwc {
+  color: #5c8198;
+}
+.kwd {
+  color: #5c8198;
+}
+
+> thm
+$highlight
+[1] "\\definecolor{fgcolor}{rgb}{0, 0, 0}\n\\newcommand{\\hlnum}[1]{\\textcolor[rgb]{0.2,0.2,0.2}{#1}}%\n\\newcommand{\\hlstr}[1]{\\textcolor[rgb]{0.2,0.2,0.2}{#1}}%\n\\newcommand{\\hlcom}[1]{\\textcolor[rgb]{0.2,0.267,0.4}{#1}}%\n\\newcommand{\\hlopt}[1]{\\textcolor[rgb]{0.2,0.2,0.2}{#1}}%\n\\newcommand{\\hlstd}[1]{\\textcolor[rgb]{0,0,0}{#1}}%\n\\newcommand{\\hlkwa}[1]{\\textcolor[rgb]{0.361,0.506,0.596}{#1}}%\n\\newcommand{\\hlkwb}[1]{\\textcolor[rgb]{0.361,0.506,0.596}{#1}}%\n\\newcommand{\\hlkwc}[1]{\\textcolor[rgb]{0.361,0.506,0.596}{#1}}%\n\\newcommand{\\hlkwd}[1]{\\textcolor[rgb]{0.361,0.506,0.596}{#1}}%"
+
+$background
+[1] "#ffffff"
+
+$foreground
+[1] "#000000"
+
+
