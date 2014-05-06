@@ -564,6 +564,7 @@ When converting with \code{l2a()} all lengths above Linf are converted to the ma
 
 \pagebreak
 \section{Natural mortality}
+\label{sec:natmort}
 
 In the \initiative{a4a} natural mortality is dealt with as an external parameter to the stock assessment model. The rationale to modelling natural mortality is similar to that of growth: one should be able to grab information from a range of sources and feed it into the assessment.
 
@@ -824,17 +825,17 @@ bwplot(data~factor(age)|year, data=m(m4, nao=as.numeric(nao[,as.character(2000:2
 \section{Running assessments}
 \label{sec:running_assessments}
 
-In the \initiative{a4a} assessment model, the model structure is defined by submodels, which are the different parts of a statistical catch at age model that requires structural assumptions.
+In the \initiative{a4a} assessment model, the model structure is defined by submodels, which are the different parts of a statistical catch at age model that require structural assumptions.
 
-There are effectively 5 submodels in operation: the model for F-at-age, a model for the initial age structure, a model for recruitment, a (list) of model(s) for abundance indices catchability-at-age, and a list of models for the observation variance of catch-at-age and abundance indices. In practice, we fix the variance models and the initial age structure models, but in theory these can be changed.
+There are 5 submodels in operation: a model for F-at-age, a model for the initial age structure, a model for recruitment, a (list) of model(s) for abundance indices catchability-at-age, and a list of models for the observation variance of catch-at-age and abundance indices. In practice, we fix the variance models and the initial age structure models, but in theory these can be changed.
 
-The submodels form is given using linear models, which opens the possibility of using the linear modelling tools available in R: see for example gam formulas, or factorial design formulas using lm. In R's linear modelling language, a constant model is coded as $\sim 1$, while a slope over age would simply be $\sim age$. For example we can write a traditional year/age separable F model like $\sim factor(age) + factor(year)$.
+The submodels form use linear models. This opens the possibility of using the linear modelling tools available in R: see for example gam formulas, or factorial design formulas using \code{lm()}. In R's linear modelling language, a constant model is coded as $\sim 1$, while a slope over age would simply be $\sim age$. For example, we can write a traditional year/age separable F model like $\sim factor(age) + factor(year)$.
 
-There are two basic types of assessments available from using \initiative{a4a}, the management procedure fit and the full assessment fit. The management procedure fit does not compute estimates of covariances and is therefore quicker to execute, while the full assessment fit returns parameter estimates and their covariances at the expense of longer fitting time.
+There are two basic types of assessments available in \initiative{a4a}: the management procedure fit and the full assessment fit. The management procedure fit does not compute estimates of covariances and is therefore quicker to execute, while the full assessment fit returns parameter estimates and their covariances at the expense of longer fitting time.
 
 \subsection{Stock assessment model details}
 
-The statistical catch at age model is based on the well known Baranov catch equation 
+The statistical catch at age model is based on the well known Baranov catch equation: 
 
 \begin{equation*}
 e^{\E{\log C}} = \frac{\mathbf{F}}{\mathbf{F}+M}\left(1 - e^{-\mathbf{F}-M}\right) \mathbf{R}e^{-\sum \mathbf{F} + M}
@@ -852,7 +853,7 @@ where
 \Var{\log C_{ay}} = \mathbf{\sigma^2_{ay}} \qquad \Var{\log I_{ays}} = \mathbf{\tau^2_{ays}}
 \end{equation*}
 
-The quantities $\log{F}$, $\log{Q}$, $\log{R}$, $\log{observation\,variances}$ and $\log{ initial\,age\,structure}$ (in red in the equations above), need to be given form, which is done using linear models. Recruitment is a special case. It's modelled as a fixed variance random effect, using the hard coded models Ricker, Beverton Holt, smooth hockeystick or geometric mean, which can use linear models for their parameters $\log{a}$ or $\log{b}$, where relevant. In alternative the $\log{R}$ submodel can use a linear model like the other submodels 
+The quantities $\log{F}$, $\log{Q}$, $\log{R}$, $\log{observation\,variances}$ and $\log{ initial\,age\,structure}$ (in red in the equations above), need to be given a form, which is done using linear models. Recruitment is a special case. It is modelled as a fixed variance random effect, using the hard coded models Ricker, Beverton Holt, smooth hockeystick or geometric mean, which can use linear models for their parameters $\log{a}$ or $\log{b}$, where relevant. As an alternative the $\log{R}$ submodel can use a linear model like the other submodels 
 
 The 'language' of linear models has been developing within the statistical community for many years, and constitutes an elegant way of defining models without going through the complexity of mathematical representations. This approach makes it also easier to communicate among scientists 
   \begin{itemize}
@@ -864,7 +865,7 @@ The 'language' of linear models has been developing within the statistical commu
 
 \subsection{Quick and dirty}
 
-The default settings of the stock assessment model work reasonably well. It's an area of research that will improve with time. Note that because the survey index for plaice has missing values we get a warning saying that we assume these values are missing at random, and not because the observations were zero.
+Here we show a simple example of using the assessment model using plaice in the North Sea. The default settings of the stock assessment model work reasonably well. It's an area of research that will improve with time. Note that because the survey index for plaice has missing values we get a warning saying that we assume these values are missing at random, and not because the observations were zero.
 
 <<message=TRUE>>=
 data(ple4)
@@ -890,7 +891,7 @@ The common bubble plot by year and age for each survey are shown in Figure~\ref{
 bubbles(res)
 @
 
-Finally, Figure~\ref{qq} shows a quantile-quantile plot to assess how well do the residuals match the normal distribution.
+Finally, Figure~\ref{fig:qq} shows a quantile-quantile plot to assess how well do the residuals match the normal distribution.
 
 <<qq, fig.cap="Quantile-quantile plot of standardized residuals.">>=
 qqmath(res)
@@ -923,7 +924,7 @@ wireframe(data ~ age + year, data = as.data.frame(catch.n(stk)), drape = TRUE)
 
 \subsection{Data structures}
 
-As mentioned above, the output of the stock assessment method may be simpler, without all the information about the parameters of the model like the variance-covariance matrix, or may be more complex carrying all the information about the parameters. In the first case the class of the output object is \class{a4aFit} while in the second case is \class{a4aFitSA}.
+As mentioned above, the output of the stock assessment method may be simpler, with or without all the information about the parameters of the model like the variance-covariance matrix. In the first case the class of the output object is \class{a4aFitSA} while in the second case is \class{a4aFit}.
 
 This section will describe the data structures of these classes and the classes that compose them.
 
@@ -937,7 +938,7 @@ showClass("a4aFit")
 plotS4("a4aFit", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type = "square", box.prop = 0.3)
 @
 
-Fitted values are stored in the \code{stock.n}, \code{harvest}, \code{catch.n} and \code{index} slots. It also contains information carried over from the stock object used to fit the model, like the the name of the stock in \code{name}, any description provided in \code{desc} and the age and year range and mean F range in \code{range}. There is also a wall clock that has a breakdown of the time taken o run the model in \code{clock}.
+Fitted values are stored in the \code{stock.n}, \code{harvest}, \code{catch.n} and \code{index} slots. It also contains information carried over from the stock object used to fit the model, like the the name of the stock in \code{name}, any description provided in \code{desc} and the age and year range and mean F range in \code{range}. There is also a wall clock that has a breakdown of the time taken to run the model in \code{clock}.
 
 The full assessment fit returns an object of class \class{a4aFitSA}, the slots of this class are shown on the code below and Figure~\ref{fig:a4aFitSA}.
 
@@ -977,7 +978,7 @@ For example, all the parameters required so simulate a time-series of mean F tre
 
 The \code{sca()} method used in the previous section with the default settings, can be parametrized to control other features of the stock assessment framework. The most interesting ones are the submodels for $F$, $Q$ and $R$. 
 
-An important argument for \code{sca()} is the type of fit, which controls if a full assessment will be performed or a management procedure type of assessment. The argument is called \code{fit} and can have the values 'assessment' or 'MP', regarding a full assessment or a simpler assessment, repectively. By default \code{sca()} uses \code{fit='MP'}. 
+An important argument for \code{sca()} is the type of fit, which controls if a full assessment will be performed or a management procedure type of assessment. The argument is called \code{fit} and can have the values 'assessment' for a full assessemt or 'MP' for a simpler assessment. By default \code{sca()} uses \code{fit='MP'}. 
 
 We'll start by looking at the submodel for $F$, then $Q$ and finally $R$.
 
@@ -1011,7 +1012,7 @@ fit1 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 wireframe(data ~ age + year, data = as.data.frame(harvest(fit1)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
-A non-separable model, where we consider age and year to interact can be modeled using a smooth interaction term in the fmodel using a tensor product of cubic splines with the \code{te} method, again borrowed from \href{http://cran.r-project.org/web/packages/mgcv/index.html}{\pkg{mgcv}}. 
+A non-separable model, where we consider age and year to interact can be modeled using a smooth interaction term in the F model using a tensor product of cubic splines with the \code{te} method, again borrowed from \href{http://cran.r-project.org/web/packages/mgcv/index.html}{\pkg{mgcv}}. 
 
 <<>>=
 fmod <- ~ te(age, year, k = c(4,20))
@@ -1037,7 +1038,7 @@ wireframe(data ~ age + year, data = as.data.frame(harvest(fit4)), drape = TRUE, 
 
 The catchability submodel is set up the same way as the $F$ submodel and the tools available are the same. The only difference is that the submodel is set up as a list of formulas, where each formula relates with one abundance index.
 
-We'll start by fixing the $F$ and $R$ models and compute the fraction of the year the index relates too, which will allows us to compute catchability at age and year. 
+We'll start by fixing the $F$ and $R$ models and compute the fraction of the year the index relates to, which will allows us to compute catchability at age and year. 
 
 <<>>=
 sfrac <- mean(range(ple4.indices[[1]])[c("startf", "endf")])
@@ -1115,7 +1116,7 @@ wireframe(data ~ age + year, data = as.data.frame(index(fit3)[[1]]/stkn), drape 
 
 \subsubsection{Catchability submodel for age aggregated indices}
 
-The previous section was focused on age disaggregated indices, but age aggregated indices (biomass, DEPM, etc) may also be use d to tune the total biomass of the population. In these cases the \class{FLIndex} has to be named "bio" in the FLIndices object to be passed to the fitting method. At the moment only one "bio" index is allowed. Note that in this case the qmodel should be set without age factors. It could have a "year" component though. 
+The previous section was focused on age disaggregated indices, but age aggregated indices (biomass, DEPM, etc) may also be used to tune the total biomass of the population. In these cases the \class{FLIndex} has to be named "bio" in the \class{FLIndices} object that is passed to the fitting method. At the moment only one "bio" index is allowed. Note that in this case the qmodel should be set without age factors. It could have a "year" component though. 
 
 <<>>=
 # creating an index
@@ -1139,7 +1140,7 @@ plot(FLStocks(ple4=ple4, fit=ple4+fit))
 
 \subsubsection{Stock-recruitment submodel}
 
-The S/R submodel is a special case, in he sense that it can be set up with the same linear tools as the $F$ and $Q$ models, but it can also use some hard coded models. The example shows how to set up a simple dummy model with \code{factor()}, a smooth model with \code{s()}, a Ricker model (\code{ricker()}), a Beverton and Holt model (\code{bevholt()}), a hockey stick model (\code{hockey()}), and a geometric mean model (\code{geomean}). As mentioned before, the 'structural' models have a fixed variance, which must be set by defining the coefficient of variation. We now fix the $F$ and $Q$ submodels before fiddling around with the S/R model.
+The S/R submodel is a special case, in the sense that it can be set up with the same linear tools as the $F$ and $Q$ models, but it can also use some hard coded models. The example shows how to set up a simple dummy model with \code{factor()}, a smooth model with \code{s()}, a Ricker model (\code{ricker()}), a Beverton and Holt model (\code{bevholt()}), a hockey stick model (\code{hockey()}), and a geometric mean model (\code{geomean()}). As mentioned before, the 'structural' models have a fixed variance, which must be set by defining the coefficient of variation. We now fix the $F$ and $Q$ submodels before fiddling around with the S/R model.
 
 <<>>=
 fmod <- ~ s(age, k=4) + s(year, k = 20)
@@ -1168,7 +1169,7 @@ xyplot(data~year, groups=qname, data=flqs, type="l", main="Recruitment models", 
 
 \subsection{The a4aSCA method - advanced features}
 
-A more advanced method for stock assessment can be used through the \code{a4aSCA()} method. This method gives access to the submodels for $N1$, $\sigma^2_{ay}$ and $I_{ays}$ as well as arguments to get the ADMB files, and etc. Check the manual pages with \code{?a4aSCA} for more information. This method has 'assessment' as default fit, which means that the hessian is going to be computed and all the information about the parameters will be returned by default. Note that the default models of each submodel can be accessed with
+A more advanced method for stock assessment can be used through the \code{a4aSCA()} method. This method gives access to the submodels for $N1$, $\sigma^2_{ay}$ and $I_{ays}$ as well as arguments to get the ADMB files, etc. Check the manual pages with \code{?a4aSCA} for more information. This method has 'assessment' as the default value for the \code{fit} argument, which means that the hessian is going to be computed and all the information about the parameters will be returned by default. Note that the default models of each submodel can be accessed with
 
 <<>>=
 #fmodel <- ~ s(age, k=4) + s(year, k = 20)
@@ -1194,7 +1195,7 @@ xyplot(data~age, groups=qname, data=flqs, type="l", main="N1 models", auto.key=l
 
 \subsubsection{Variance model}
 
-The variance model allows the user to set up the shape of the observation variances $\sigma^2_{ay}$ and $I_{ays}$. This is an important subject related with fisheries data used for input to stock assessment models. It's quite common to have more precision on the most represented ages and less precision on the less frequent ages. Due to the fact that the last do not show so often on the auction markets, on the fishing operations or on survey samples.
+The variance model allows the user to set up the shape of the observation variances $\sigma^2_{ay}$ and $I_{ays}$. This is an important subject related with fisheries data used for input to stock assessment models. It's quite common to have more precision on the most represented ages and less precision on the less frequent ages. This is due to the fact that the last ages do not appear as often at the auction markets, in the fishing operations or on survey samples.
 
 By default the model assumes constant variance over time and ages (~ 1 model) but it can use other models specified by the user. As with the other submodels, R linear model capabilities are used.
 
@@ -1276,7 +1277,7 @@ fit.pred <- predict(fit)
 lapply(fit.pred, names)
 @
 
-\subsubsection{simulate}
+\subsubsection{Simulate}
 
 Simulate uses the variance-covariance matrix computed from the Hessian returned by \pkg{ADMB} and the fitted parameters, to parametrize a multivariate normal distribution. The simulations are carried out using the method \code{mvrnorm()} provided by the R package \href{http://cran.r-project.org/web/packages/MASS/}{\pkg{MASS}}.
 
@@ -1308,7 +1309,7 @@ fit <- a4aSCA(ple4, ple4.indices[1])
 
 \subsubsection{External weigthing of likelihood components}
 
-By default the likelihood components are weighted using inverse variance. However the user may change this weights by setting the variance of the input parameters, which is done by adding a variance matrix to the \code{catch.n} and \code{index.n} slots of the stock and index objects. These variances will be used to penalize the data during the likelihood computation. The values should be given as coefficient of variation in the log scale, so that variance is $\log{({CV}^2 + 1)}$.
+By default the likelihood components are weighted using inverse variance. However, the user may change the weights by setting the variance of the input parameters, This is done by adding a variance matrix to the \code{catch.n} and \code{index.n} slots of the stock and index objects. These variances will be used to penalize the data during the likelihood computation. The values should be given as coefficients of variation on the log scale, so that variance is $\log{({CV}^2 + 1)}$.
 
 <<>>=
 stk <- ple4
@@ -1345,7 +1346,7 @@ fit <- sca(ple4, ple4.indices, fmod)
 wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45), main="F-at-age fixed above age 5")
 @
 
-While in the next case we'll use the \code{breakpts()} to split the time series in 1990, although keeping the same shape in both periods, a thin plate spline with 3 knots.
+In the next case we'll use the \code{breakpts()} to split the time series at 1990, although keeping the same shape in both periods, a thin plate spline with 3 knots.
 
 <<>>=
 fmod <- ~s(age, k = 3, by = breakpts(year, 1990))
@@ -1356,7 +1357,7 @@ fit <- sca(ple4, ple4.indices, fmod)
 wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45), main="F-at-age in two periods using in both cases a thin plate spline with 3 knots")
 @
 
-More complicated models can be built with these tools. For example a model where the age effect is modelled as a smoother (the same thin plate spline) throughout years but independent from each other.
+More complicated models can be built with these tools. For example, here is a model where the age effect is modelled as a smoother (the same thin plate spline) throughout years but independent from each other.
 
 <<>>=
 fmod <- ~ factor(age) + s(year, k=10, by = breakpts(age, c(2:8)))
@@ -1367,9 +1368,9 @@ fit <- sca(ple4, ple4.indices, fmod)
 wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45), main="F-at-age as thin plate spline with 3 knots for each age")
 @
 
-\subsubsection{Propagate M uncertainty}
+\subsubsection{Propagate natural mortality uncertainty}
 
-In this section we give the example of how M uncertainty set up using the \code{m()} method and the class \class{a4aM}, is propagated through the stock assessment. We'll start by fitting the default model to the data. 
+In this section we give an example of how uncertainty in natural mortality, set up using the \code{m()} method and the class \class{a4aM} (see Section~\ref{sec:natmort}), is propagated through the stock assessment. We'll start by fitting the default model to the data. 
 
 <<>>=
 data(ple4)
@@ -1377,7 +1378,7 @@ data(ple4.indices)
 fit <- sca(ple4, ple4.indices)
 @
 
-Now, using the \initiative{a4a} methods we'll model natural mortality using a negative exponential model by age, Jensen's estimator for the level and a constant trend with time with some noise. 
+Using the \initiative{a4a} methods we'll model natural mortality using a negative exponential model by age, Jensen's estimator for the level and a constant trend with time. We include multivariate normal uncertainty using the \code{mvrnorm()} method and create 25 iterations. 
 
 <<>>=
 nits <- 25
@@ -1396,7 +1397,8 @@ stk <- propagate(ple4, nits)
 m(stk) <- flq
 @
 
-Fit the same model to the new stock information, which includes the uncertainty on M.
+We fit the same model to the new stock object which has uncertainty in the natural mortality.
+The assessment is performed for each of the 25 iterations.
 
 <<>>=
 fit1 <- sca(stk, ple4.indices)
@@ -1425,7 +1427,7 @@ plot(FLStocks(munc=ple4+fit1, m02=ple4+fit))
 
 \subsubsection{WCSAM exercise - replicating itself}
 
-The World Conference on Stock Assessment Methods (\href{http://www.ices.dk/news-and-events/symposia/WCSAM-2013}{WCSAM}) promoted a workshop where a large simulation study was used to test the performance of distinct stock assessment models. The first criteria used was that the models should be able to reproduce itself. The process involved fitting the model, simulate observation error using the same model, and refit the model to each iteration. The final results should be similar to the fitted results before adding observation error (see \href{http://icesjms.oxfordjournals.org/content/early/2014/01/18/icesjms.fst237.abstract}{Deroba, et.al, 2014} for details). The following analysis runs this analysis.
+The World Conference on Stock Assessment Methods (\href{http://www.ices.dk/news-and-events/symposia/WCSAM-2013}{WCSAM}) promoted a workshop where a large simulation study was used to test the performance of distinct stock assessment models. The first criteria used was that the models should be able to reproduce itself. The process involved fitting the model, simulating observation error using the same model, and refitting the model to each iteration. The final results should be similar to the fitted results before observation error was added (see \href{http://icesjms.oxfordjournals.org/content/early/2014/01/18/icesjms.fst237.abstract}{Deroba, et.al, 2014} for details). The following analysis runs this analysis.
 
 <<>>=
 data(ple4)
@@ -1458,9 +1460,9 @@ stock(stks2) <- computeStock(stks2)
 plot(FLStocks(orig=stk, sim=stks, fitsim=stks2), main="Replicating the stock assessment modeWCSAM style")
 @
 
-\subsubsection{Paralell computing}
+\subsubsection{Parallel computing}
 
-This is an example of how to use the parallel package to run assessments. In this example each iteration is a dataset, including surveys, and we'll run one assessment for each iteration. Afterwards the data is pulled back together in a FLStock object and plotted. Only 20 iterations are ran to avoid taking too long. Also note that we're using 4 cores. This parameter depends on the computer being used. These days almost all computers have 2 cores.
+This is an example of how to use the \pkg{parallel} R package to run assessments. In this example each iteration is a dataset, including surveys, and we'll run one assessment for each iteration. Afterwards the data is pulled back together in an \class{FLStock} object and plotted. Only 20 iterations are run to avoid taking too long. Also note that we're using 4 cores. This parameter depends on the computer being used. These days almost all computers have at least 2 cores.
 
 Finally, compare this code with the one for replicating WCSAM and note that it's exactly the same, except that we're using \code{mclapply()} from package \pkg{paralell} instead of \code{lapply()}.
 
@@ -1499,7 +1501,7 @@ plot(stks3)
 
 \subsection{Model averaging}
 
-To merge results from several fits, using distinct models or datasets, we follow the paper Colin et al. The method \code{ma()} is the wrapper to the distinct methods, although for now only the AIC averaging is implemented. 
+To merge results from several fits, using distinct models or datasets, we follow \href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Millar, et.al, 2014}. The method \code{ma()} is the wrapper to the distinct methods, although for now only the AIC averaging is implemented. 
 
 <<>>=
 data(ple4)
