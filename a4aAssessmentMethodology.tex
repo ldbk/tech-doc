@@ -57,6 +57,7 @@
 \usepackage{longtable}
 \usepackage[bottom]{footmisc}
 \usepackage{url}
+\usepackage{hyperref}
 \usepackage{natbib}
 \usepackage{authblk}
 \usepackage[T1]{fontenc}
@@ -76,6 +77,7 @@
 }
 
 % Define some handy formatting
+\newcommand{\initiative}[1]{{\texttt{#1}}}
 \newcommand{\code}[1]{{\texttt{#1}}}
 \newcommand{\pkg}[1]{{\texttt{#1}}}
 \newcommand{\class}[1]{{\textit{#1}}}
@@ -91,7 +93,7 @@
 \begin{document}
 %\SweaveOpts{concordance=TRUE}
 
-\title{Stock assessment and management advice with a4a methods \\ DRAFT}
+\title{Assessment for All initiative(a4a) \\ Stock assessment and management advice methods \\ DRAFT}
 
 \author[1]{Ernesto Jardim}
 \author[1]{Colin Millar}
@@ -107,16 +109,15 @@
 
 \subsection{Background}
 
-(This section is based on Jardim, et.al, 2014\footnote{Jardim,E., Millar,C.P., Mosqueira,I., Scott,F., Osio,G.C., Ferretti,M., Alzorriz,N., Orio,A. 2014. What if stock assessment is as simple as a linear model? The a4a initiative. ICES JMS. \url{http://icesjms.oxfordjournals.org/content/early/2014/04/03/icesjms.fsu050.abstract}
-})
+(This section is based on \href{http://icesjms.oxfordjournals.org/content/early/2014/04/03/icesjms.fsu050.abstract}{Jardim, et.al, 2014})
 
 The volume and availability of data useful for fisheries stock assessment is continually increasing. Time series of ‘traditional’ sources of information, such as surveys and landings data are not only getting longer, but also cover an increasing number of species.
 
-For example, in Europe the 2009 revision of the Data Collection Regulation (EU, 2008a) has changed the focus of fisheries sampling programmes away from providing data for individual assessment of ‘key’ stocks (i.e. those that are economically important) to documenting fishing trips, thereby shifting the perspective to a large coastal monitoring programme. The result has been that data on growth and reproduction of fish stocks are being collected for more than 300 stocks in waters where the European fleets operate.
+For example, in Europe the 2009 revision of the Data Collection Regulation (EU, 2008a) has changed the focus of fisheries sampling programmes away from providing data for individual assessments of ‘key’ stocks (i.e. those that are economically important) to documenting fishing trips, thereby shifting the perspective to a large coastal monitoring programme. The result has been that data on growth and reproduction of fish stocks are being collected for more than 300 stocks in waters where the European fleets operate.
 
-Recognizing that the context above required new methodological developments, the European Commission Joint Research Centre (JRC) started its ‘Assessment for All’ Initiative (a4a), with the aim to develop, test, and distribute methods to assess a large numbers of stocks in an operational time frame, and to build the necessary capacity/expertise on stock assessment and advice provision. 
+Recognizing that the context above required new methodological developments, the European Commission Joint Research Centre (JRC) started its ‘Assessment for All’ Initiative (\initiative{a4a}), with the aim to develop, test, and distribute methods to assess a large numbers of stocks in an operational time frame, and to build the necessary capacity/expertise on stock assessment and advice provision. 
 
-The long-term strategy of a4a is to increase the number of stock assessments by reducing the workload required to run each analysis and by bringing more scientists/analysts into fisheries management advice. The first is achieved by developing a working framework with the methods required to run all the analysis a stock assessment needs, as well as developing methods to deal with recognized bottlenecks, \emph{e.g.} model averaging to deal with model selection. Such an approach should make the model exploration and selection processes easier, as well as decreasing the burden of moving between software platforms. The second can be achieved by making the analysis more intuitive, thereby attracting more experts to join stock assessment teams.
+The long-term strategy of \initiative{a4a} is to increase the number of stock assessments by reducing the workload required to run each analysis and by bringing more scientists/analysts into fisheries management advice. The first is achieved by developing a working framework with the methods required to run all the analysis a stock assessment needs, as well as developing methods to deal with recognized bottlenecks, \emph{e.g.} model averaging to deal with model selection (\href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Millar, et.al, 2014}). Such an approach should make the model exploration and selection processes easier, as well as decreasing the burden of moving between software platforms. The second can be achieved by making the analysis more intuitive, thereby attracting more experts to join stock assessment teams.
 
 To achieve these objectives, the Initiative identified a series of tasks, which were or are being carried out, namely:
 \begin{itemize}
@@ -128,22 +129,22 @@ To achieve these objectives, the Initiative identified a series of tasks, which 
 
 \subsubsection{The moderate data stock}
 
-The moderate data stock definition was an important step in the Initiative's development. It clearly focused the initiative on stocks with some information, moving away from the data-poor stocks, but without moving into data rich methodologies. It was recognized that there's a lot of research on both extremes of the data availability spectrum, but comparatively little in the middle 'region'. From this came the idea of the 'moderate data stock'. 
+The moderate data stock definition was an important step in the Initiative's development. It clearly focused the Initiative on stocks with some information, moving away from the data-poor stocks, but without moving into data rich methodologies. It was recognized that there is a lot of research at both extremes of the data availability spectrum, but comparatively little in the middle 'region'. From this came the idea of the 'moderate data stock'. 
 
-The 'moderate data stock' constitutes the entry level of our analysis. It has at least the following datasets, which can be assembled in different ways, using distinct methods.
+The 'moderate data stock' constitutes the entry level of our analysis. It has at least the following available data, which can be assembled in different ways, using distinct methods.
  
 \begin{itemize}
 	\item in relation to exploitation:
 	\begin{itemize}
-		\item volume of catches, which may be split in landings and discards, or not;
+		\item volume of catches, which may be split into landings and discards if possible;
 		\item length frequencies of the catches, landings or discards;
 		\item nominal effort (optional, needed in case CPUE indices are to be derived);
 	\end{itemize}
 	\item in relation to biology:
 	\begin{itemize}
-		\item estimate of maturity ogive (e.g. $L_{50}$);
-		\item estimates of growth model and parameters;
-		\item length-weight relationship;
+		\item estimated maturity ogive (e.g. can be as simple as an estimate of $L_{50}$);
+		\item estimated growth model and parameters;
+		\item estimated length-weight relationship;
 	\end{itemize}
 	\item in relation to abundance:
 	\begin{itemize}
@@ -153,7 +154,7 @@ The 'moderate data stock' constitutes the entry level of our analysis. It has at
 
 \subsubsection{The stock assessment framework}
 
-The stock assessment model framework is a non-linear catch-at-age model implemented in R/FLR/ADMB that can be applied rapidly to a wide range of situations with low parametrization requirements. Later we'll come back to these characteristics and it's application (Section~\ref{sec:running_assessments}).
+The stock assessment model framework is a non-linear catch-at-age model implemented in \pkg{R}/\pkg{FLR}/\pkg{ADMB} that can be applied rapidly to a wide range of situations with low parametrization requirements. Later we'll come back to these characteristics and it's application (Section~\ref{sec:running_assessments}).
 
 \subsubsection{MSE}
 
@@ -161,28 +162,30 @@ The MSE is a sophisticated forecasting algorithm that takes into account structu
 
 \subsubsection{Training}
 
-During the last 2 years JRC organized 4 courses of introduction to R and FLR: Varese, January 2012; Varese, ???; Barza, March 2013; FAO / GFCM, Rome, November 2013.
+During the last 2 years JRC organized 4 courses of introduction to R and \pkg{FLR}: Varese, January 2012; Varese, June, 2012; Barza, March 2013; FAO / GFCM, Rome, November 2013.
 
-In 2013 a short course about a4a methods was organized in Lisbon. The first full course on FLR and a4a methods was organized in CEFAS, March 2014 and another one is planned for August 2014.
+In 2013 a short course about \initiative{a4a} methods was organized in Lisbon. The first full course on \pkg{FLR} and \initiative{a4a} methods was organized in CEFAS, March 2014 and another one is planned for August 2014.
 
 These courses are open to all participants and don't have an attendance fee.
 
-\subsection{The a4a approach to stock assessment and management advice}
+\subsection{The \initiative{a4a} approach to stock assessment and management advice}
 
-The approach presented here is split in 4 steps: (i) converting length data to age data using a growth model, (ii) modelling natural mortality, (iii) assessing the stock, and (iv) MSE\footnote{Under development, to be released with version 2.0, scheduled for the fourth quarter of 2014}.
+The approach presented here is split into 4 steps: (i) converting length data to age data using a growth model, (ii) modelling natural mortality, (iii) assessing the stock, and (iv) MSE\footnote{Under development, to be released with version 2.0, scheduled for the fourth quarter of 2014}.
 
 These steps may be followed in sequence or independently, depending on the user's preferences. All that is needed is to use the objects provided by the previous step and provide the objects required by the next, so that data flows between steps smoothly. One can make the analogy with building with Lego, where for each layer the builder may use the pieces provided by a particular boxset, or make use of pieces from other boxsets. Figure \ref{fig:inout} shows the process, including the class of the objects that carry the data (in black).
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{./inout}
-\caption{In/out process of the a4a approach. The boxes in black represent the classes of the objects that carry the information for each step and out of each step.}
+\caption{In/out process of the \initiative{a4a} approach. The boxes in black represent the classes of the objects that carry the information for each step and out of each step.}
 \label{fig:inout}
 \end{figure}
 
-Analysis related to projections and biological reference points are dealt with by the FLR packages \pkg{FLash} and \pkg{FLBRP}. As such the Initiative does not provide specific methods for these analysis.
+Analysis related to projections and biological reference points are dealt with by the \pkg{FLR} packages \pkg{FLash} and \pkg{FLBRP}. As such the Initiative does not provide specific methods for these analyses.
 
-In Steps 1 and 2 there is no fitting of growth models or natural mortality models. The rationale is to provide tools that allow the uncertainty associated with these processes to be carried on into the stock assessment, e.g. through parameter uncertainty. This approach allows the users to pick up the required information from other sources of information such as papers, PhDs, Fishbase, other stocks, etc. Bearing in mind that the stock under analysis may not have specific information on the growth or natural mortality processes, but generic information about life history invariants can be used. For example, Nokome Bentley is developing an R package that uses Bayesian networks to estimate empirical distributions for these parameters from Fishbase.
+In Steps 1 and 2 there is no fitting of growth models or natural mortality models. The rationale is to provide tools that allow the uncertainty associated with these processes to be carried on into the stock assessment, e.g. through parameter uncertainty. This approach allows the users to pick up the required information from other sources of information such as papers, PhDs, Fishbase, other stocks, etc. If the stock under analysis does not have specific information on the growth or natural mortality processes, generic information about life history invariants may be used such as the generic priors suggested by \href{http://icesjms.oxfordjournals.org/content/early/2014/03/04/icesjms.fsu023.abstract}{Bentley, (2014)}.
+
+Note that an environment like the one distributed by \initiative{a4a} promotes the exploration of different models for each process, giving the analyst a lot of flexibility. It also opens the possibility to efficiently include distinct models in the analysis. For example, a stock assessment using two growth, or several models for natural mortality could be performed. Our suggestion to streamline the assessment process is to combine the final outcomes using model averaging (\href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Miller, et. al, 2014}). Other solutions may be implemented, like scenario analysis, etc. What is important is to keep the data flowing smoothly and the models clear. R (\href{http://www.R-project.org/}{R Core Team, 2014}) and \pkg{FLR} (\href{http://icesjms.oxfordjournals.org/content/64/4/640.abstract}{Kell, et.al, 200}) provide powerful platforms for this approach.
 
 \section{Loading libraries, data and defining some useful functions}
 
@@ -190,7 +193,7 @@ In Steps 1 and 2 there is no fitting of growth models or natural mortality model
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{library}\hlstd{(FLa4a)}
 \hlkwd{library}\hlstd{(XML)}
@@ -198,13 +201,14 @@ In Steps 1 and 2 there is no fitting of growth models or natural mortality model
 \hlkwd{library}\hlstd{(diagram)}
 \hlkwd{data}\hlstd{(ple4)}
 \hlkwd{data}\hlstd{(ple4.indices)}
+\hlkwd{data}\hlstd{(rfLen)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# functions for transforming the data}
 
@@ -253,16 +257,16 @@ In Steps 1 and 2 there is no fitting of growth models or natural mortality model
 \end{knitrout}
 
 
-\section{Reading files and building FLR objects}
+\section{Reading files and building \pkg{FLR} objects}
 
-For this document we'll use the plaice in ICES area IV dataset, provided by FLR, and a length-based simulated dataset based on red fish, using Gadget (http://www.hafro.is/gadget), provided by Daniel Howell (Institute of Marine Research, Norway).
+For this document we'll use the plaice in ICES area IV dataset, provided by \pkg{FLR}, and a length-based simulated dataset based on red fish, using \href{http://www.hafro.is/gadget}{\pkg{Gadget}}, provided by Daniel Howell (Institute of Marine Research, Norway).
 
-In this section we read in the Gadget data files, and transform them into FLR objects.
+In this section we read in the \pkg{Gadget} data files, and transform them into \pkg{FLR} objects.
 
 First we read in the files as data frames and recode some variables.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# catch}
 \hlstd{cth.orig} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"data/catch.len"}\hlstd{,} \hlkwc{skip} \hlstd{=} \hlnum{5}\hlstd{)}
@@ -292,10 +296,10 @@ First we read in the files as data frames and recode some variables.
 \end{knitrout}
 
 
-Then we reshape the data frames into six dimensional arrays using cast from package 'reshape2'.
+Then we reshape the data frames into six dimensional arrays using \code{cast()} from package \pkg{reshape2}.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# catch}
 \hlstd{cth.n} \hlkwb{<-} \hlkwd{acast}\hlstd{(V5} \hlopt{~} \hlstd{V1} \hlopt{~} \hlnum{1} \hlopt{~} \hlstd{V2} \hlopt{~} \hlnum{1} \hlopt{~} \hlnum{1}\hlstd{,} \hlkwc{value.var} \hlstd{=} \hlstr{"V6"}\hlstd{,} \hlkwc{data} \hlstd{= cth.orig)}
@@ -324,7 +328,7 @@ Then we reshape the data frames into six dimensional arrays using cast from pack
 We take the arrays and make \class{FLQuant} objects from them.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# catch}
 \hlstd{dnms} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(cth.n)}
@@ -371,7 +375,7 @@ We take the arrays and make \class{FLQuant} objects from them.
 Some sanity checks to check that the resulting objects have matching dimensions.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# catch}
 \hlkwd{cim}\hlstd{(cth.orig, cth.n, cth.wt, hrv)}
@@ -419,10 +423,10 @@ Some sanity checks to check that the resulting objects have matching dimensions.
 %# length-weight relationship is a bit odd ...
 %xyplot(data~len|year, groups=season, data=stk.wt, type="l")
 
-Finally, we make FLR objects from the data.
+Finally, we make \pkg{FLR} objects from the data.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# stock}
 \hlstd{rfLen.stk} \hlkwb{<-} \hlkwd{FLStockLen}\hlstd{(}\hlkwc{stock.n} \hlstd{= stk.n,} \hlkwc{stock.wt} \hlstd{= stk.wt,} \hlkwc{stock} \hlstd{=} \hlkwd{quantSums}\hlstd{(stk.wt} \hlopt{*}
@@ -449,18 +453,18 @@ Finally, we make FLR objects from the data.
 
 
 \pagebreak
-\section{Converting length data to age}
+\section{Converting from length to age based data}
 
-The stock assessment framework is based on age dynamics. Therefore, to use length information it must be processed before it can be used in an assessment. The rationale is that the processing should give the analyst the flexibility to use a range of sources of information, \emph{e.g.} literature or online databases, to grab information about the species growth and the uncertainty about the model parameters.
+The \initiative{a4a} stock assessment framework is based on age dynamics. Therefore, to use length information it must be processed before it can be used in an assessment. The rationale is that the processing should give the analyst the flexibility to use a range of sources of information, \emph{e.g.} literature or online databases, to grab information about the species growth model and the uncertainty about the model parameters.
 
-Within the a4a framework this is handled using the \class{a4aGr} class. In this section we introduce the \class{a4aGr} class and look at the variety of ways that parameter uncertainty can be included.
+Within the \initiative{a4a} framework this is handled using the \class{a4aGr} class. In this section we introduce the \class{a4aGr} class and look at the variety of ways that parameter uncertainty can be included.
 
 \subsection{a4aGr - The growth class}
 
 The conversion of length data to age is performed through the use of a growth model. The implementation is done through the \class{a4aGr} class.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{showClass}\hlstd{(}\hlstr{"a4aGr"}\hlstd{)}
 \end{alltt}
@@ -481,13 +485,13 @@ The conversion of length data to age is performed through the use of a growth mo
 \end{knitrout}
 
 
-A simple construction of \class{a4aGr} objects requires the model and parameters to be provided.
+To construct an \class{a4aGr} object, the growth model and parameters must be provided.
 Check the help file for more information.
 
-Here we show an example using the von Bertalanffy growth model. To create the \class{a4aGr} object it's necessary to pass the model equation ($length \sim time$), the inverse model equation ($time \sim length$) and the parameters. Any growth model can be used as long as it's possible to write the equation as an R formula.
+Here we show an example using the von Bertalanffy growth model. To create the \class{a4aGr} object it's necessary to pass the model equation ($length \sim time$), the inverse model equation ($time \sim length$) and the parameters. Any growth model can be used as long as it's possible to write the model (and the inverse) as an R formula.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{vbObj} \hlkwb{<-} \hlkwd{a4aGr}\hlstd{(}\hlkwc{grMod} \hlstd{=} \hlopt{~}\hlstd{linf} \hlopt{*} \hlstd{(}\hlnum{1} \hlopt{-} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{k} \hlopt{*} \hlstd{(t} \hlopt{-} \hlstd{t0))),} \hlkwc{grInvMod} \hlstd{=} \hlopt{~}\hlstd{t0} \hlopt{-} \hlnum{1}\hlopt{/}\hlstd{k} \hlopt{*}
     \hlkwd{log}\hlstd{(}\hlnum{1} \hlopt{-} \hlstd{len}\hlopt{/}\hlstd{linf),} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{linf} \hlstd{=} \hlnum{58.5}\hlstd{,} \hlkwc{k} \hlstd{=} \hlnum{0.086}\hlstd{,} \hlkwc{t0} \hlstd{=} \hlnum{0.001}\hlstd{,} \hlkwc{units} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"cm"}\hlstd{,}
@@ -514,10 +518,10 @@ Here we show an example using the von Bertalanffy growth model. To create the \c
 \end{knitrout}
 
 
-The predict method allows the transformation between age and lengths.
+The predict method allows the transformation between age and lengths using the growth model.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{predict}\hlstd{(vbObj,} \hlkwc{len} \hlstd{=} \hlnum{5}\hlopt{:}\hlnum{10} \hlopt{+} \hlnum{0.5}\hlstd{)}
 \end{alltt}
@@ -556,13 +560,13 @@ This is done by making use of the parameter variance-covariance matrix (the \cod
 Here we set the variance-covariance matrix by scaling a correlation matrix, using a cv of 0.2.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Make an empty cor matrix}
 \hlstd{cm} \hlkwb{<-} \hlkwd{diag}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{1}\hlstd{,} \hlnum{1}\hlstd{))}
 \hlcom{# k and linf are negatively correlated while t0 is independent}
 \hlstd{cm[}\hlnum{1}\hlstd{,} \hlnum{2}\hlstd{]} \hlkwb{<-} \hlstd{cm[}\hlnum{2}\hlstd{,} \hlnum{1}\hlstd{]} \hlkwb{<-} \hlopt{-}\hlnum{0.5}
-\hlcom{# scale cor to var using CV=0.2 and some made up values}
+\hlcom{# scale cor to var using CV=0.2}
 \hlstd{cv} \hlkwb{<-} \hlnum{0.2}
 \hlstd{p} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlkwc{linf} \hlstd{=} \hlnum{60}\hlstd{,} \hlkwc{k} \hlstd{=} \hlnum{0.09}\hlstd{,} \hlkwc{t0} \hlstd{=} \hlopt{-}\hlnum{0.01}\hlstd{)}
 \hlstd{vc} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlnum{1}\hlstd{,} \hlkwc{ncol} \hlstd{=} \hlnum{3}\hlstd{,} \hlkwc{nrow} \hlstd{=} \hlnum{3}\hlstd{)}
@@ -575,15 +579,20 @@ Here we set the variance-covariance matrix by scaling a correlation matrix, usin
 \hlstd{mm} \hlkwb{<-} \hlstd{t} \hlopt{*} \hlstd{k} \hlopt{*} \hlstd{l}
 \hlkwd{diag}\hlstd{(mm)} \hlkwb{<-} \hlkwd{diag}\hlstd{(mm)}\hlopt{^}\hlnum{2}
 \hlstd{mm} \hlkwb{<-} \hlstd{mm} \hlopt{*} \hlstd{cm}
-\hlcom{# check that we have the correlation foreseen}
+\hlcom{# check that we have the intended correlation}
 \hlkwd{all.equal}\hlstd{(cm,} \hlkwd{cov2cor}\hlstd{(mm))}
 \end{alltt}
 \begin{verbatim}
 ## [1] TRUE
 \end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+Create the a4aGr object as before but now we also include the vcov argument for the variance-covariance matrix.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlcom{# Create the a4aGr object as before but now we also include the vcov}
-\hlcom{# argument for the variance-covariance matrix}
 \hlstd{vbObj} \hlkwb{<-} \hlkwd{a4aGr}\hlstd{(}\hlkwc{grMod} \hlstd{=} \hlopt{~}\hlstd{linf} \hlopt{*} \hlstd{(}\hlnum{1} \hlopt{-} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{k} \hlopt{*} \hlstd{(t} \hlopt{-} \hlstd{t0))),} \hlkwc{grInvMod} \hlstd{=} \hlopt{~}\hlstd{t0} \hlopt{-} \hlnum{1}\hlopt{/}\hlstd{k} \hlopt{*}
     \hlkwd{log}\hlstd{(}\hlnum{1} \hlopt{-} \hlstd{len}\hlopt{/}\hlstd{linf),} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{linf} \hlstd{= p[}\hlstr{"linf"}\hlstd{],} \hlkwc{k} \hlstd{= p[}\hlstr{"k"}\hlstd{],} \hlkwc{t0} \hlstd{= p[}\hlstr{"t0"}\hlstd{],}
     \hlkwc{units} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"cm"}\hlstd{,} \hlstr{"ano-1"}\hlstd{,} \hlstr{"ano"}\hlstd{)),} \hlkwc{vcov} \hlstd{= mm)}
@@ -597,7 +606,7 @@ First we show a simple example where we assume that the parameters are represent
 % If the parameters or the covariance matrix have iterations then the medians accross iterations are computed before simulating. Check help for \code{mvrnorm} for more information.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Note that the object we have just created has a single iteration of each}
 \hlcom{# parameter}
@@ -617,9 +626,8 @@ First we show a simple example where we assume that the parameters are represent
 ## [1] 3 1
 \end{verbatim}
 \begin{alltt}
-\hlcom{# We simulate from the a4aGr object by calling mvrnorm().  Here we create}
-\hlcom{# 10000 iterations.  This uses the variance-covariance matrix we created}
-\hlcom{# earlier}
+\hlcom{# We simulate 10000 iterations from the a4aGr object by calling mvrnorm()}
+\hlcom{# using the the variance-covariance matrix we created earlier.}
 \hlstd{vbNorm} \hlkwb{<-} \hlkwd{mvrnorm}\hlstd{(}\hlnum{10000}\hlstd{, vbObj)}
 \hlcom{# Now we have 10000 iterations of each parameter, randomly sampled from the}
 \hlcom{# multivariate normal distribution}
@@ -630,8 +638,8 @@ First we show a simple example where we assume that the parameters are represent
 ## iters:  10000 
 ## 
 ## params
-##                linf                   k                  t0 
-## 59.946340(12.11590)  0.089772( 0.01809) -0.010003( 0.00199) 
+##                 linf                    k                   t0 
+## 60.1478424(12.31989)  0.0899264( 0.01835) -0.0099888( 0.00194) 
 ## units:  cm ano-1 ano
 \end{verbatim}
 \begin{alltt}
@@ -644,10 +652,10 @@ First we show a simple example where we assume that the parameters are represent
 \end{knitrout}
 
 
-We can now convert from length to ages data based on the 10000 parameter iterations. This gives us 10000 sets of ages data. For example, here we convert a single length vector: 
+We can now convert from length to ages data based on the 10000 parameter iterations. This gives us 10000 sets of age data. For example, here we convert a single length vector using each of the 10000 parameter iterations: 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{ages} \hlkwb{<-} \hlkwd{predict}\hlstd{(vbNorm,} \hlkwc{len} \hlstd{=} \hlnum{5}\hlopt{:}\hlnum{10} \hlopt{+} \hlnum{0.5}\hlstd{)}
 \hlkwd{dim}\hlstd{(ages)}
@@ -661,111 +669,92 @@ We can now convert from length to ages data based on the 10000 parameter iterati
 \end{alltt}
 \begin{verbatim}
 ##    iter
-##          1     2     3      4      5     6     7     8     9    10
-##   1 0.8943 0.989 1.002 0.8527 0.8238 1.288 1.345 1.460 1.739 1.280
-##   2 1.0692 1.182 1.196 1.0176 0.9808 1.535 1.605 1.751 2.076 1.538
-##   3 1.2476 1.378 1.392 1.1853 1.1397 1.785 1.869 2.051 2.419 1.805
-##   4 1.4295 1.578 1.592 1.3556 1.3007 2.038 2.138 2.359 2.769 2.081
-##   5 1.6151 1.782 1.794 1.5289 1.4639 2.296 2.411 2.676 3.126 2.367
-##   6 1.8046 1.990 2.000 1.7050 1.6293 2.557 2.689 3.004 3.489 2.663
+##          1     2     3      4      5     6     7     8     9     10
+##   1 0.8621 1.140 1.021 0.7170 0.8964 1.110 1.109 1.402 1.195 0.9832
+##   2 1.0278 1.363 1.217 0.8550 1.0693 1.325 1.324 1.683 1.430 1.1735
+##   3 1.1961 1.590 1.416 0.9948 1.2449 1.544 1.544 1.972 1.670 1.3671
+##   4 1.3668 1.821 1.619 1.1365 1.4234 1.767 1.767 2.270 1.917 1.5643
+##   5 1.5403 2.058 1.825 1.2802 1.6047 1.994 1.995 2.577 2.169 1.7650
+##   6 1.7165 2.299 2.034 1.4259 1.7891 2.226 2.227 2.894 2.427 1.9694
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
 
 The marginal distributions can be seen in Figure~\ref{fig:plot_norm_params}.
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{par}\hlstd{(}\hlkwc{mfrow} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,} \hlnum{1}\hlstd{))}
 \hlkwd{hist}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{params}\hlstd{(vbNorm)[}\hlstr{"linf"}\hlstd{, ]),} \hlkwc{main} \hlstd{=} \hlstr{"linf"}\hlstd{,} \hlkwc{xlab} \hlstd{=} \hlstr{""}\hlstd{)}
 \hlkwd{hist}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{params}\hlstd{(vbNorm)[}\hlstr{"k"}\hlstd{, ]),} \hlkwc{main} \hlstd{=} \hlstr{"k"}\hlstd{,} \hlkwc{prob} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{xlab} \hlstd{=} \hlstr{""}\hlstd{)}
 \hlkwd{hist}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{params}\hlstd{(vbNorm)[}\hlstr{"t0"}\hlstd{, ]),} \hlkwc{main} \hlstd{=} \hlstr{"t0"}\hlstd{,} \hlkwc{xlab} \hlstd{=} \hlstr{""}\hlstd{)}
 \end{alltt}
-\end{kframe}
-\end{knitrout}
+\end{kframe}\begin{figure}[H]
 
 
-\begin{figure}[h]
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/example_norm_parameter_distributions} 
+{\centering \includegraphics[width=\maxwidth]{figure/plot_norm_params} 
 
 }
 
+\caption[The marginal distributions of each of the parameters from using a multivariate normal distribution]{The marginal distributions of each of the parameters from using a multivariate normal distribution.\label{fig:plot_norm_params}}
+\end{figure}
 
 
 \end{knitrout}
 
-\caption{The marginal distributions of each of the parameters from using a multivariate normal distribution.}
-\label{fig:plot_norm_params}
-\end{figure}
 
 The shape of the correlation can be seen in Figure~\ref{fig:plot_norm_scatter}.
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlcom{# Plotting scatter plot of growth parameters}
 \hlkwd{splom}\hlstd{(}\hlkwd{data.frame}\hlstd{(}\hlkwd{t}\hlstd{(}\hlkwd{params}\hlstd{(vbNorm)}\hlopt{@}\hlkwc{.Data}\hlstd{)),} \hlkwc{pch} \hlstd{=} \hlstr{"."}\hlstd{)}
 \end{alltt}
-\end{kframe}
-\end{knitrout}
+\end{kframe}\begin{figure}[H]
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlcom{# Generating and plotting growth curves}
-\hlkwd{boxplot}\hlstd{(}\hlkwd{t}\hlstd{(}\hlkwd{predict}\hlstd{(vbNorm,} \hlkwc{t} \hlstd{=} \hlnum{0}\hlopt{:}\hlnum{50} \hlopt{+} \hlnum{0.5}\hlstd{)))}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-
-
-\begin{figure}[h]
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/example_norm_parameter_scatter} 
+{\centering \includegraphics[width=\maxwidth]{figure/plot_norm_scatter} 
 
 }
 
+\caption[Scatter plot of the 10000 samples parameter from the multivariate normal distribution]{Scatter plot of the 10000 samples parameter from the multivariate normal distribution.\label{fig:plot_norm_scatter}}
+\end{figure}
 
 
 \end{knitrout}
 
-\caption{Scatter plot of the 10000 samples parameter from the multivariate normal distribution.}
-\label{fig:plot_norm_scatter}
-\end{figure}
 
 Growth curves for the 1000 iterations can be seen in Figure~\ref{fig:plot_mv_growth}.
 
-\begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{boxplot}\hlstd{(}\hlkwd{t}\hlstd{(}\hlkwd{predict}\hlstd{(vbNorm,} \hlkwc{t} \hlstd{=} \hlnum{0}\hlopt{:}\hlnum{50} \hlopt{+} \hlnum{0.5}\hlstd{)))}
+\end{alltt}
+\end{kframe}\begin{figure}[H]
 
-{\centering \includegraphics[width=\maxwidth]{figure/example_mv_growth_curve_plot} 
+
+{\centering \includegraphics[width=\maxwidth]{figure/plot_mv_growth} 
 
 }
 
+\caption[Growth curves using parameters simulated from a multivariate normal distribution]{Growth curves using parameters simulated from a multivariate normal distribution.\label{fig:plot_mv_growth}}
+\end{figure}
 
 
 \end{knitrout}
 
-\caption{Growth curves using parameters simulated from a multivariate normal distribution.}
-\label{fig:plot_mv_growth}
-\end{figure}
 
 \subsection{Adding parameter uncertainty with a multivariate triangle distribution}
 \label{sec:growth_triangle_cop}
 
-One alternative to using normal distributions is to use a triangle distribution (\url{http://en.wikipedia.org/wiki/Triangle_distribution}). These distributions are parametrized using the minimum, maximum and median values. This can be very attractive if the analyst needs to scrape information from the web or literature and perform some kind of meta-analysis.
+One alternative to using a normal distribution is to use a \href{http://en.wikipedia.org/wiki/Triangle\_distribution}{triangle distribution}. We use the package \href{http://cran.r-project.org/web/packages/triangle/index.html}{\pkg{triangle}}, where this distribution is parametrized using the minimum, maximum and median values. This can be very attractive if the analyst needs to scrape information from the web or literature and perform some kind of meta-analysis.
 
 Here we show an example of setting a triangle distribution with values taken from Fishbase.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# The web address for the growth parameters for redfish (Sebastes}
 \hlcom{# norvegicus)}
@@ -789,81 +778,66 @@ Here we show an example of setting a triangle distribution with values taken fro
 \end{knitrout}
 
 
-The marginals will reflect the uncertainty on the parameter values that were scraped from Fishbase but, as we don't really believe the parameters are multivariate normal, here we adopted a distribution based on a \emph{t} copula with triangle marginals.
+The marginals will reflect the uncertainty on the parameter values that were scraped from \href{http://fishbase.org}{Fishbase} but, as we don't really believe the parameters are multivariate normal, here we adopted a distribution based on a \emph{t} copula with triangle marginals.
 The marginal distributions can be seen in Figure~\ref{fig:plot_tri_params} and the shape of the correlation can be seen in Figure~\ref{fig:plot_tri_scatter}.
 
-
-
-
-
-
-
-\begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
 
-{\centering \includegraphics[width=\maxwidth]{figure/example_tri_parameter_distributions} 
+
+{\centering \includegraphics[width=\maxwidth]{figure/plot_tri_params} 
 
 }
 
+\caption[The marginal distributions of each of the parameters from using a multivariate triangle distribution]{The marginal distributions of each of the parameters from using a multivariate triangle distribution.\label{fig:plot_tri_params}}
+\end{figure}
 
 
 \end{knitrout}
 
-\caption{The marginal distributions of each of the parameters from using a multivariate triangle distribution.}
-\label{fig:plot_tri_params}
-\end{figure}
 
-
-\begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
 
-{\centering \includegraphics[width=\maxwidth]{figure/example_tri_parameter_scatter} 
+
+{\centering \includegraphics[width=\maxwidth]{figure/plot_tri_scatter} 
 
 }
 
+\caption[Scatter plot of the 10000 samples parameter from the multivariate triangle distribution]{Scatter plot of the 10000 samples parameter from the multivariate triangle distribution.\label{fig:plot_tri_scatter}}
+\end{figure}
 
 
 \end{knitrout}
 
-\caption{Scatter plot of the 10000 samples parameter from the multivariate triangle distribution.}
-\label{fig:plot_tri_scatter}
-\end{figure}
 
-We can still use \code{predict()} to get see the growth model uncertainty (Figure~\ref{fig:plot_tri_growth}).
+We can still use \code{predict()} to see the growth model uncertainty (Figure~\ref{fig:plot_tri_growth}).
 
-
-
-
-\begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
 
-{\centering \includegraphics[width=\maxwidth]{figure/example_tri_parameter_growth} 
+
+{\centering \includegraphics[width=\maxwidth]{figure/plot_tri_growth} 
 
 }
 
+\caption[Growth curves using parameters simulated from a multivariate triangle distribution]{Growth curves using parameters simulated from a multivariate triangle distribution.\label{fig:plot_tri_growth}}
+\end{figure}
 
 
 \end{knitrout}
 
-\caption{Growth curves using parameters simulated from a multivariate triangle distribution.}
-\label{fig:plot_tri_growth}
-\end{figure}
 
-Remember that the above examples use a variance-covariance matrix that we essentially made up.
-An alternative would be to scrape the entire growth parameters dataset from FishBase and compute the shape of the variance-covariance matrix yourself.
+Remember that the above examples use a variance-covariance matrix that we essentially made up. An alternative would be to scrape the entire growth parameters dataset from Fishbase and compute the shape of the variance-covariance matrix yourself.
 
-\subsection{Adding parameter uncertainty with other copulas}
+\subsection{Adding parameter uncertainty with copulas}
 
-A more general approach to adding parameter uncertainty is to make use of whatever copula and marginal distribution you want.
-This is possible with the \code{mvrcop()} function. The example below keeps the same parameters and changes only the copula type and family but a lot more can be done. Check the package \emph{copula} for more. 
+A more general approach to adding parameter uncertainty is to make use of statistical copulas\footnote{\url{http://en.wikipedia.org/wiki/Copula\_\%28probability\_theory\%29}} and marginal distributions of choice. This is possible with the \code{mvrcop()} function borrowed from the package \href{http://cran.r-project.org/web/packages/copula/}{\pkg{copula}}. The example below keeps the same parameters and changes only the copula type and family but a lot more can be done. Check the package \pkg{copula} for more information. 
 
 % Needs more explanation
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{vbCop} \hlkwb{<-} \hlkwd{mvrcop}\hlstd{(}\hlnum{10000}\hlstd{, vbObj,} \hlkwc{copula} \hlstd{=} \hlstr{"archmCopula"}\hlstd{,} \hlkwc{family} \hlstd{=} \hlstr{"clayton"}\hlstd{,} \hlkwc{param} \hlstd{=} \hlnum{2}\hlstd{,}
     \hlkwc{margins} \hlstd{=} \hlstr{"triangle"}\hlstd{,} \hlkwc{paramMargins} \hlstd{= triPars)}
@@ -874,56 +848,48 @@ This is possible with the \code{mvrcop()} function. The example below keeps the 
 
 The shape of the correlation changes (Figure~\ref{fig:plot_cop_tri_scatter}) as well as the resulting growth curves (Figure~\ref{fig:plot_cop_tri_growth}). 
 
-
-
-
-
-
-
-\begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
 
-{\centering \includegraphics[width=\maxwidth]{figure/example_cop_tri_scatter} 
+
+{\centering \includegraphics[width=\maxwidth]{figure/plot_cop_tri_scatter} 
 
 }
 
+\caption[Scatter plot of the 10000 samples parameter from the using an archmCopula copula with triangle margins]{Scatter plot of the 10000 samples parameter from the using an archmCopula copula with triangle margins.\label{fig:plot_cop_tri_scatter}}
+\end{figure}
 
 
 \end{knitrout}
 
-\caption{Scatter plot of the 10000 samples parameter from the using an archmCopula copula with triangle margins.}
-\label{fig:plot_cop_tri_scatter}
-\end{figure}
 
-\begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
 
-{\centering \includegraphics[width=\maxwidth]{figure/example_cop_tri_growth} 
+
+{\centering \includegraphics[width=\maxwidth]{figure/plot_cop_tri_growth} 
 
 }
 
+\caption[Growth curves from the using an archmCopula copula with triangle margins]{Growth curves from the using an archmCopula copula with triangle margins.\label{fig:plot_cop_tri_growth}}
+\end{figure}
 
 
 \end{knitrout}
 
-\caption{Growth curves from the using an archmCopula copula with triangle margins.}
-\label{fig:plot_cop_tri_growth}
-\end{figure}
 
 \subsection{The \code{l2a()} method}
 
-After introducing uncertainty in the growth model through the parameters it's time to transform the length-based dataset into an age-based dataset. The method that deals with this process is \code{l2a()}. The implementation of this method for the \class{FLQuant} class is the main workhorse. There's two other implementations, for the \class{FLStock} and \class{FLIndex} classes, which are mainly wrappers that call the \class{FLQuant} method several times.
+After introducing uncertainty in the growth model through the parameters it's time to transform the length-based dataset into an age-based dataset. The method that deals with this process is \code{l2a()}. The implementation of this method for the \class{FLQuant} class is the main workhorse. There are two other implementations, for the \class{FLStock} and \class{FLIndex} classes, which are mainly wrappers that call the \class{FLQuant} method several times.
 
 When converting from length-based data to age-based data you need to be aware of how the aggregation of length classes is performed. For example, individuals in length classes 1-2, 2-3, and 3-4 cm may all be considered as being of age 1 (obviously depending on the growth model). How should the values in those length classes be combined?
 
-If the values are abundances then the values should be summed. Summing other types of values such as weights does not make sense. Instead these values are averaged over the length classes (weighted by the abundance for weights). Fishing mortality is not computed to avoid making wrong assumptions about the meaning of F at length. This is controlled using the \code{stat} argument which can be either \code{mean} or \code{sum} (the default).
+If the values are abundances then the values should be summed. Summing other types of values, such as mean weight, does not make sense. Instead these values are averaged over the length classes (possibly weighted by the abundance). This is controlled using the \code{stat} argument which can be either \code{mean} or \code{sum} (the default). Fishing mortality is not computed to avoid making wrong assumptions about the meaning of F at length.
 
-We demonstrate the method by converting a catch-at-length \class{FLQuant} to a catch-at-age \class{FLQuant}. First we make an \class{a4aGr} object with a multivariate triangle distribution. We use 10 iterations as an example. And call \code{l2a} by passing in the length-based \class{FLQuant} and the \class{a4aGr} object.
+We demonstrate the method by converting a catch-at-length \class{FLQuant} to a catch-at-age \class{FLQuant}. First we make an \class{a4aGr} object with a multivariate triangle distribution (using the parameters we set above). We use 10 iterations as an example. And call \code{l2a()} by passing in the length-based \class{FLQuant} and the \class{a4aGr} object.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{vbTriSmall} \hlkwb{<-} \hlkwd{mvrtriangle}\hlstd{(}\hlnum{10}\hlstd{, vbObj,} \hlkwc{paramMargins} \hlstd{= triPars)}
 \hlstd{cth.n} \hlkwb{<-} \hlkwd{l2a}\hlstd{(}\hlkwd{catch.n}\hlstd{(rfLen.stk), vbTriSmall)}
@@ -933,18 +899,18 @@ We demonstrate the method by converting a catch-at-length \class{FLQuant} to a c
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{dim}\hlstd{(cth.n)}
 \end{alltt}
 \begin{verbatim}
-## [1] 65 26  1  4  1 10
+## [1] 95 26  1  4  1 10
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
 
-In the previous example, the \class{FLQuant} object that was sliced (\code{catch.n(rfLen.stk)}) had only one iteration. This iteration was sliced by each of the iterations in the growth model. It is possible for the \class{FLQuant} object to have the same number of iterations as the growth model, in which case each iteration of the \class{FLQuant} and the growth model are used together. It is also possible for the growth model to have only one iteration while the \class{FLQuant} object has many iterations. The same growth model is then used for each of the \class{FLQuant} iterations. As with all FLR objects, the general rule is \emph{one or n} iterations.
+In the previous example, the \class{FLQuant} object that was sliced (\code{catch.n(rfLen.stk)}) had only one iteration. This iteration was sliced by each of the iterations in the growth model. It is possible for the \class{FLQuant} object to have the same number of iterations as the growth model, in which case each iteration of the \class{FLQuant} and the growth model are used together. It is also possible for the growth model to have only one iteration while the \class{FLQuant} object has many iterations. The same growth model is then used for each of the \class{FLQuant} iterations. As with all \pkg{FLR} objects, the general rule is \emph{one or n} iterations.
 
 
 As well as converting one \class{FLQuant} at a time, we can convert entire \class{FLStock} and \class{FLIndex} objects. In these cases the individual \class{FLQuant} slots of those classes are converted from length-based to age-based. As mentioned above, the aggregation method depends on the type of values the slots contain. The abundance slots (\code{*.n}, such as \code{stock.n}) are summed. The \code{*.wt}, \code{m}, \code{mat}, \code{harvest.spwn} and \code{m.spwn} slots of an \class{FLStock} object are averaged. The \code{index}, \code{catch.wt}, \code{index.var}, \code{sel.pattern} and \code{index.q} slots of an \class{FLIndex} object are averaged\footnote{Still working on l2a for index. Not all of these slots can be averaged}.
@@ -952,7 +918,7 @@ As well as converting one \class{FLQuant} at a time, we can convert entire \clas
 The method for \class{FLStock} classes takes an additional argument for the plusgroup.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{aStk} \hlkwb{<-} \hlkwd{l2a}\hlstd{(rfLen.stk, vbTriSmall,} \hlkwc{plusgroup} \hlstd{=} \hlnum{14}\hlstd{)}
 \end{alltt}
@@ -966,21 +932,22 @@ The method for \class{FLStock} classes takes an additional argument for the plus
 \end{knitrout}
 
 
-When converting with \code{l2a()} all lengths above Linf are converted to the maximum age, as there is no information in the growth model on how to deal with individuals larger than Linf. 
+When converting with \code{l2a()} all lengths above Linf are converted to the maximum age, as there is no information in the growth model about how to deal with individuals larger than Linf. 
 
 \pagebreak
 \section{Natural mortality}
+\label{sec:natmort}
 
-Natural mortality is dealt with as an external parameter to the stock assessment model. The rationale is similar to that of growth: one should be able to grab information from a range of sources and feed it into the assessment.
+In the \initiative{a4a} natural mortality is dealt with as an external parameter to the stock assessment model. The rationale to modelling natural mortality is similar to that of growth: one should be able to grab information from a range of sources and feed it into the assessment.
 
-The mechanism used by a4a is to build an interface that makes it transparent, flexible and hopefully easy to explore different options. In relation to natural mortality it means that the analyst should be able to use distinct models like Gislasson's, Charnov's, Pauly's, etc in a coherent framework making it possible to compare the outcomes of the assessment. 
+The mechanism used by \initiative{a4a} is to build an interface that makes it transparent, flexible and hopefully easy to explore different options. In relation to natural mortality it means that the analyst should be able to use distinct models like Gislasson's, Charnov's, Pauly's, etc in a coherent framework making it possible to compare the outcomes of the assessment. 
 
-Within the a4a framework, the general method for inserting natural mortality in the stock assessment is to:
+Within the \initiative{a4a} framework, the general method for inserting natural mortality in the stock assessment is to:
 
 \begin{itemize}
-    \item Create an object of class \class{a4aM} which holds the model and parameters to be used to generate the natural mortality.
+    \item Create an object of class \class{a4aM} which holds the natural mortality model and parameters.
     \item Add uncertainty to the parameters in the \class{a4aM} object.
-    \item Use the \code{m()} method on \class{a4aM} object to create an age or length based \class{FLQuant} object of the required dimensions.
+    \item Apply the \code{m()} method to the \class{a4aM} object to create an age or length based \class{FLQuant} object of the required dimensions.
 \end{itemize}
 
 The resulting \class{FLQuant} object can then be directly inserted into an \class {FLStock} object to be used for the assessment.   
@@ -989,10 +956,10 @@ In this section we go through each of the steps in detail using a variety of dif
 
 \subsection{\code{a4aM} - The M class}
 
-Natural mortality is implemented in a class named \class{a4aM}. This class is made up of three models of the class \class{FLModelSim}. Each model represents one effect: an age or length effect, a scaling (level) effect and a time trend, named \code{shape}, \code{level} and \code{trend}, respectively. The impact of the models is multiplicative, i.e. the overal natural mortality is given by \class{shape} x  \class{level} x \class{trend}. Check the help files for more information.
+Natural mortality is implemented in a class named \class{a4aM}. This class is made up of three objects of the class \class{FLModelSim}. Each object is a model that represents one effect: an age or length effect, a scaling (level) effect and a time trend, named \code{shape}, \code{level} and \code{trend}, respectively. The impact of the models is multiplicative, i.e. the overal natural mortality is given by \class{shape} x  \class{level} x \class{trend}. Check the help files for more information.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{showClass}\hlstd{(}\hlstr{"a4aM"}\hlstd{)}
 \end{alltt}
@@ -1010,10 +977,12 @@ Natural mortality is implemented in a class named \class{a4aM}. This class is ma
 \end{knitrout}
 
 
-The \class{a4aM} constructor requires that the models and parameters are provided. The default method will build each of these models as a constant value of 1. For example the usual "0.2" guessestimate could be set up by setting the \code{level} model to have a single parameter with a fixed value, while the other two models, \class{shape} and \class{trend}, have a default value of 1 (effectively, they have no effect).
+The \class{a4aM} constructor requires that the models and parameters are provided. The default method will build each of these models as a constant value of 1.
+
+As a simple example, the usual "0.2" guessestimate could be set up by setting the \code{level} model to have a single parameter with a fixed value, while the other two models, \class{shape} and \class{trend}, have a default value of 1 (meaning that they have no effect).
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{mod02} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{a,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{a} \hlstd{=} \hlnum{0.2}\hlstd{))}
 \hlstd{m1} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{level} \hlstd{= mod02)}
@@ -1029,10 +998,10 @@ The \class{a4aM} constructor requires that the models and parameters are provide
 \end{knitrout}
 
 
-More interesting natural mortality shapes can be set up using biological knowledge. The following example uses an exponential decay over ages (implying that resulting \class{FLQuant} generated by the \code{m()} method will be age beased). We also use Jensen's second estimator (Kenshington, 2013) as a scaling \code{level} model. This is based on the von Bertalanffy $K$ parameter, $M=1.5K$. 
+More interesting natural mortality shapes can be set up using biological knowledge. The following example uses an exponential decay over ages (implying that the resulting \class{FLQuant} generated by the \code{m()} method will be age based). We also use Jensen's second estimator (\href{}{Kenshington, 2013}) as a scaling \code{level} model, which is based on the von Bertalanffy $K$ parameter, $M=1.5K$. 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{shape2} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{age} \hlopt{-} \hlnum{0.5}\hlstd{))}
 \hlstd{level2} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlnum{1.5} \hlopt{*} \hlstd{k,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{k} \hlstd{=} \hlnum{0.4}\hlstd{))}
@@ -1051,16 +1020,12 @@ More interesting natural mortality shapes can be set up using biological knowled
 
 Note that the \code{shape} model has \code{age} as a parameter of the model but is not set using the \code{params} argument.
 
-The \code{shape} model does not have to be age-based. For example, here we set up a \code{shape} model using Gislaon's second estimator (Kenshington, 2013):
-%$M_l=K(\frac{L_\inf}{l})^{1.5}$.
-$M_l=K(\frac{L_inf}{l})^1.5$
-We use the default \code{level} and \class{trend} models.
+The \code{shape} model does not have to be age-based. For example, here we set up a \code{shape} model using Gislason's second estimator (\href{}{Kenshington, 2013}):
+$M_l=K(\frac{L_{\inf}}{l})^{1.5}$. We use the default \code{level} and \class{trend} models.
 % Current m() method is not ideal for length based methods as you cannot specify length range and half-widths to make compatible with FLStockLen
 
-Check a length-base shape model.
-
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{shape_len} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{K} \hlopt{*} \hlstd{(linf}\hlopt{/}\hlstd{len)}\hlopt{^}\hlnum{1.5}\hlstd{,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{linf} \hlstd{=} \hlnum{60}\hlstd{,}
     \hlkwc{K} \hlstd{=} \hlnum{0.4}\hlstd{))}
@@ -1070,12 +1035,12 @@ Check a length-base shape model.
 \end{knitrout}
 
 
-As an alternative, an external factor may impact the natural mortality. This can be added through the \code{trend} model. Suppose M depends on the NAO through some mechanism that results in having lower M when NAO is negative and higher when it's positive. The impact is represented by the NAO value on the quarter before spawning, which occurs in the second quarter. 
+Another option is to model how an external factor may impact the natural mortality. This can be added through the \code{trend} model. Suppose natural mortality can be modelled with a dependency on the NAO index, due to some mechanism that results in having lower mortality when NAO is negative and higher when it's positive. In this example, the impact is represented by the NAO value on the quarter before spawning, which occurs in the second quarter. 
 
-We use this to make a complicated natural mortality model with an age based shape model, a level model based on $K$ and a trend model driven by NAO, where M increases 50\% if NAO is positive on the first quarter.
+We use this to make a complicated natural mortality model with an age based shape model, a level model based on $K$ and a trend model driven by NAO, where mortality increases by 50\% if NAO is positive on the first quarter.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Get NAO}
 \hlstd{nao.orig} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"http://www.cdc.noaa.gov/data/correlation/nao.data"}\hlstd{,}
@@ -1088,8 +1053,8 @@ We use this to make a complicated natural mortality model with an age based shap
 \hlstd{nao} \hlkwb{<-} \hlkwd{seasonMeans}\hlstd{(nao.flq[, , ,} \hlnum{1}\hlopt{:}\hlnum{3}\hlstd{])}
 \hlcom{# Turn into Boolean}
 \hlstd{nao} \hlkwb{<-} \hlstd{(nao} \hlopt{>} \hlnum{0}\hlstd{)}
-\hlstd{trend3} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlnum{1} \hlopt{+} \hlstd{b} \hlopt{*} \hlstd{nao,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{b} \hlstd{=} \hlnum{0.5}\hlstd{))}
 \hlcom{# Constructor}
+\hlstd{trend3} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlnum{1} \hlopt{+} \hlstd{b} \hlopt{*} \hlstd{nao,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{b} \hlstd{=} \hlnum{0.5}\hlstd{))}
 \hlstd{shape3} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{age} \hlopt{-} \hlnum{0.5}\hlstd{))}
 \hlstd{level3} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlnum{1.5} \hlopt{*} \hlstd{k,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{k} \hlstd{=} \hlnum{0.4}\hlstd{))}
 \hlstd{m3} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= shape3,} \hlkwc{level} \hlstd{= level3,} \hlkwc{trend} \hlstd{= trend3)}
@@ -1107,16 +1072,21 @@ We use this to make a complicated natural mortality model with an age based shap
 
 \subsection{Adding multivariate normal parameter uncertainty}
 
-Uncertainty on natural mortality is added through uncertainty on the parameters. In the case of the \class{a4aM} class it makes use of the \class{FLModelSim} \code{mvr()} methods. A wrapper for \code{mvrnorm} was implemented, but all the other options must be carried out in each sub-model at the time.
+Uncertainty on natural mortality is added through uncertainty on the parameters.
+
+In this section we show how to add multivariate normal uncertainty. We make use of the class \class{FLModelSim} method \code{mvrnorm()}, which is a wrapper for the method \code{mvrnorm()} distributed by the package \pkg{MASS}.
+
+We create an \class{a4aM} object with an exponential shape, a \code{level} model based on $k$ and temperature (Jensen's third estimator), and a \code{trend} model driven by the NAO (as above). We include a variance-covariance matrix for the \code{level} and \code{trend} models. We create a 100 iterations using the \code{mvrnorm()} method.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{shape4} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{age} \hlopt{-} \hlnum{0.5}\hlstd{))}
 \hlstd{level4} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{k}\hlopt{^}\hlnum{0.66} \hlopt{*} \hlstd{t}\hlopt{^}\hlnum{0.57}\hlstd{,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{k} \hlstd{=} \hlnum{0.4}\hlstd{,} \hlkwc{t} \hlstd{=} \hlnum{10}\hlstd{),}
     \hlkwc{vcov} \hlstd{=} \hlkwd{array}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{0.002}\hlstd{,} \hlnum{0.01}\hlstd{,} \hlnum{0.01}\hlstd{,} \hlnum{1}\hlstd{),} \hlkwc{dim} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,} \hlnum{2}\hlstd{)))}
 \hlstd{trend4} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlnum{1} \hlopt{+} \hlstd{b} \hlopt{*} \hlstd{nao,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{b} \hlstd{=} \hlnum{0.5}\hlstd{),} \hlkwc{vcov} \hlstd{=} \hlkwd{matrix}\hlstd{(}\hlnum{0.02}\hlstd{))}
 \hlstd{m4} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= shape4,} \hlkwc{level} \hlstd{= level4,} \hlkwc{trend} \hlstd{= trend4)}
+\hlcom{# Call mvrnorm()}
 \hlstd{m4} \hlkwb{<-} \hlkwd{mvrnorm}\hlstd{(}\hlnum{100}\hlstd{, m4)}
 \hlstd{m4}
 \end{alltt}
@@ -1141,7 +1111,7 @@ Uncertainty on natural mortality is added through uncertainty on the parameters.
 ## 
 ## params
 ##               k               t 
-## 0.40837(0.0359) 9.87833(1.0043) 
+## 0.40318(0.0508) 9.94357(1.0344) 
 ## units:  NA 
 ## 
 ## Slot "vcov":
@@ -1153,7 +1123,7 @@ Uncertainty on natural mortality is added through uncertainty on the parameters.
 ## [1] "norm"
 \end{verbatim}
 \begin{alltt}
-\hlcom{# Note the variance in the parameters The trend model also has uncertainty}
+\hlcom{# Note the variance in the parameters. The trend model also has uncertainty}
 \hlkwd{params}\hlstd{(}\hlkwd{trend}\hlstd{(m4))}
 \end{alltt}
 \begin{verbatim}
@@ -1162,7 +1132,7 @@ Uncertainty on natural mortality is added through uncertainty on the parameters.
 ## 
 ## params
 ##              b 
-## 0.50625(0.159) 
+## 0.50893(0.144) 
 ## units:  NA
 \end{verbatim}
 \begin{alltt}
@@ -1180,12 +1150,12 @@ Uncertainty on natural mortality is added through uncertainty on the parameters.
 \end{knitrout}
 
 
-In this particular case, the \code{shape} model will not be randomized because it doesn't have a variance covariance matrix. Also note that because there is only one parameter in the \code{trend} model, the randomization will use a univariate normal distribution.
+In this particular case, the \code{shape} model will not be randomized because it doesn't have a variance-covariance matrix. Also note that because there is only one parameter in the \code{trend} model, the randomization will use a univariate normal distribution.
 
-The same model could be achieved using \code{mnrnorm()} on each model component:
+The same model could be achieved by using \code{mnrnorm()} on each model component:
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{m4} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= shape4,} \hlkwc{level} \hlstd{=} \hlkwd{mvrnorm}\hlstd{(}\hlnum{100}\hlstd{, level4),} \hlkwc{trend} \hlstd{=} \hlkwd{mvrnorm}\hlstd{(}\hlnum{100}\hlstd{,}
     \hlstd{trend4))}
@@ -1198,14 +1168,14 @@ The same model could be achieved using \code{mnrnorm()} on each model component:
 
 \subsection{Adding parameter uncertainty with copulas}
 
-We can also use copulas add parameter uncertainty to the natural mortality model, similar to the way we use them for the growth model \ref{sec:growth_triangle_cop}. As stated above these processes make use of the methods implemented for the \class{FLModelSim} class.
+We can also use copulas to add parameter uncertainty to the natural mortality model, similar to the way we use them for the growth model in Section \ref{sec:growth_triangle_cop}. As stated above these processes make use of the methods implemented for the \class{FLModelSim} class.
 
 % EXPAND...
 
-In the following example we'll use Gislason's second estimator (REF), $M_l=K(\frac{L_inf}{l})^1.5$ and a triangle copula to model parameter uncertainty in natural mortality.
+In the following example we'll use again Gislason's second estimator, $M_l=K(\frac{L_{\inf}}{l})^{1.5}$ and a triangle copula to model parameter uncertainty. The method \code{mvrtriangle()} is used to create 1000 iterations.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{linf} \hlkwb{<-} \hlnum{60}
 \hlstd{k} \hlkwb{<-} \hlnum{0.4}
@@ -1227,8 +1197,8 @@ In the following example we'll use Gislason's second estimator (REF), $M_l=K(\fr
 \hlcom{# create object}
 \hlstd{mgis2} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{k} \hlopt{*} \hlstd{(linf}\hlopt{/}\hlstd{len)}\hlopt{^}\hlnum{1.5}\hlstd{,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{linf} \hlstd{= linf,}
     \hlkwc{k} \hlstd{= k),} \hlkwc{vcov} \hlstd{= mm)}
-\hlcom{# set the lower, upper and (optionally) centre of the parameters Without the}
-\hlcom{# centre, the triangle is symmetrical}
+\hlcom{# set the lower, upper and (optionally) centre of the parameters (without}
+\hlcom{# the centre, the triangle is symmetrical)}
 \hlstd{pars} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlkwd{list}\hlstd{(}\hlkwc{a} \hlstd{=} \hlnum{55}\hlstd{,} \hlkwc{b} \hlstd{=} \hlnum{65}\hlstd{),} \hlkwd{list}\hlstd{(}\hlkwc{a} \hlstd{=} \hlnum{0.3}\hlstd{,} \hlkwc{b} \hlstd{=} \hlnum{0.6}\hlstd{,} \hlkwc{c} \hlstd{=} \hlnum{0.35}\hlstd{))}
 \hlstd{mgis2} \hlkwb{<-} \hlkwd{mvrtriangle}\hlstd{(}\hlnum{1000}\hlstd{, mgis2,} \hlkwc{paramMargins} \hlstd{= pars)}
 \hlstd{mgis2}
@@ -1244,7 +1214,7 @@ In the following example we'll use Gislason's second estimator (REF), $M_l=K(\fr
 ## 
 ## params
 ##             linf                k 
-## 60.02687(2.0070)  0.40618(0.0741) 
+## 60.04559(2.1664)  0.40707(0.0706) 
 ## units:  NA 
 ## 
 ## Slot "vcov":
@@ -1262,61 +1232,39 @@ In the following example we'll use Gislason's second estimator (REF), $M_l=K(\fr
 The resulting parameter estimates and marginal distributions can be seen in Figure~\ref{fig:plot_tri_gis_m} and \ref{fig:plot_tri_gis_m_hist}
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{splom}\hlstd{(}\hlkwd{t}\hlstd{(}\hlkwd{params}\hlstd{(mgis2)}\hlopt{@}\hlkwc{.Data}\hlstd{))}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{par}\hlstd{(}\hlkwc{mfrow} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,} \hlnum{1}\hlstd{))}
-\hlkwd{hist}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{params}\hlstd{(mgis2)[}\hlstr{"linf"}\hlstd{, ]),} \hlkwc{main} \hlstd{=} \hlstr{"Linf"}\hlstd{,} \hlkwc{xlab} \hlstd{=} \hlstr{""}\hlstd{)}
-\hlkwd{hist}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{params}\hlstd{(mgis2)[}\hlstr{"k"}\hlstd{, ]),} \hlkwc{main} \hlstd{=} \hlstr{"K"}\hlstd{,} \hlkwc{xlab} \hlstd{=} \hlstr{""}\hlstd{)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-
-
-\begin{figure}[h]
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/example_tri_gis_m_scatter} 
+{\centering \includegraphics[width=\maxwidth]{figure/plot_tri_gis_m} 
 
 }
 
+\caption[Parameter estimates for Gislason's second natural mortality model from using a triangle distribution]{Parameter estimates for Gislason's second natural mortality model from using a triangle distribution.\label{fig:plot_tri_gis_m}}
+\end{figure}
 
 
 \end{knitrout}
 
-\caption{Parameter estimates for Gislason's second natural mortality model from using a triangle distribution.}
-\label{fig:plot_tri_gis_m}
-\end{figure}
 
-\begin{figure}[h]
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
 
-{\centering \includegraphics[width=\maxwidth]{figure/example_tri_gis_m_hist} 
+
+{\centering \includegraphics[width=\maxwidth]{figure/plot_tri_gis_m_hist} 
 
 }
 
+\caption[Marginal distributions of the parameters for Gislason's second natural mortality model using a triangle distribution]{Marginal distributions of the parameters for Gislason's second natural mortality model using a triangle distribution.\label{fig:plot_tri_gis_m_hist}}
+\end{figure}
 
 
 \end{knitrout}
 
-\caption{Marginal distributions of the parameters for Gislason's second natural mortality model from using a triangle distribution.}
-\label{fig:plot_tri_gis_m_hist}
-\end{figure}
 
-We now have a new model that can be used for the \code{shape} model. Use the constructor or the set method to add the new model. Note that we have a quite complex method now for \emph{M}. A length based \code{shape} model from Gislason's work, Jensen's third based temperature \code{level} and a time \code{trend} depending on NAO. All of the component models have uncertainty in their parameters.
+We now have a new model that can be used for the \code{shape} model. You can use the constructor or the set method to add the new model. Note that we have a quite complex method now for M. A length based \code{shape} model from Gislason's work, Jensen's third model based on temperature \code{level} and a time \code{trend} depending on NAO. All of the component models have uncertainty in their parameters.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{m5} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= mgis2,} \hlkwc{level} \hlstd{= level4,} \hlkwc{trend} \hlstd{= trend4)}
 \hlcom{# or}
@@ -1329,20 +1277,21 @@ We now have a new model that can be used for the \code{shape} model. Use the con
 
 \subsection{The "m" method}
 
-Now that we have set up the natural mortality model and added parameter uncertainty, we are ready to generate the \class{FLQuant} of natural mortality. For that we need the \code{m()} method.
+Now that we have set up the natural mortality \class{a4aM} model and added parameter uncertainty to each component, we are ready to generate the \class{FLQuant} of natural mortality. For that we need the \code{m()} method.
 
-The \code{m} method is the workhorse method for computing natural mortality. The method returns an \class{FLQuant} that can be inserted in an \class{FLStock} for usage by the assessment method. Note that if the models use \emph{age} and/or \emph{year} as terms, the method expects these to be included in the call. If they're not, the method will use the range slot to work out the ages and/or years that should be predicted.
+The \code{m()} method is the workhorse method for computing natural mortality. The method returns an \class{FLQuant} that can be inserted in an \class{FLStock} for usage by the assessment method.
 
+%The method uses the \code{range} slot to work out the dimensions of the \class{FLQuant} object. 
 % Future developments will also allow for easy insertion into FLStockLen objects.
 
-The size of the \class{FLQuant} object is determined by the \code{min}, \code{max}, \code{minyear} and \code{maxyear} elements of the \code{range} slot of the \class{a4aM} object. By default the values of these elements are set to 0. Giving an \class{FLQuant} with length 1 in the quant and year dimension. The \code{range} slot can be set by hand, or by using the \code{rngquant()} and \code{rngyear()} methods.
+The size of the \class{FLQuant} object is determined by the \code{min}, \code{max}, \code{minyear} and \code{maxyear} elements of the \code{range} slot of the \class{a4aM} object. By default the values of these elements are set to 0. Giving an \class{FLQuant} with length 1 in the \code{quant} and \code{year} dimension. The \code{range} slot can be set by hand, or by using the \code{rngquant()} and \code{rngyear()} methods.
 
 The name of the first dimension of the output \class{FLQuant} (e.g. 'age' or 'len') is determined by the parameters of the \code{shape} model. If it is not clear what the name should be then the name is set to 'quant'.
 
-Using the m method to make an FLQuant of constant natural mortality:
+Here we demonstrate \code{m()} using the simple \class{a4aM} object we created above that has constant natural mortality:
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Start with the simplest model}
 \hlstd{m1}
@@ -1440,14 +1389,12 @@ Using the m method to make an FLQuant of constant natural mortality:
 \end{knitrout}
 
 
-The next example has an age based shape. As the shape model has 'age' as a variable which is not included in the \class{FLPar} slot it is used as the name of the first dimension. Note that in this case \emph{mbar} becames relevant. It's the range of quants (in this case, ages) that is used to compute the mean level. This mean level will match the value given by the \code{level} model.
+The next example has an age-based shape. As the \code{shape} model has 'age' as a variable which is not included in the \class{FLPar} slot it is used as the name of the first dimension of the resulting \class{FLQuant}. Note that in this case the \code{mbar} values in the range become relevant. \code{mbar} the range of quants (in this case, ages) that is used to compute the mean level. This mean level will match the value given by the \code{level} model. The \code{mbar} range can be changed with the \code{rngmbar()} method.
 
-The \emph{mbar} range can be changed with the \code{rngmbar()} method.
-
-Using the m method to make an FLQuant with age varying natural mortality:
+We illustrate this by making an \class{FLQuant} with age varying natural mortality:
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Remind ourselves of the model}
 \hlstd{m2}
@@ -1459,7 +1406,7 @@ Using the m method to make an FLQuant with age varying natural mortality:
 ##   trend: ~1
 \end{verbatim}
 \begin{alltt}
-\hlcom{# Simple with no ages or years - note that the first dimension is 'age'}
+\hlcom{# Simple with no ages or years - note that the first dimension will be 'age'}
 \hlkwd{m}\hlstd{(m2)}
 \end{alltt}
 \begin{verbatim}
@@ -1597,12 +1544,10 @@ Using the m method to make an FLQuant with age varying natural mortality:
 \end{knitrout}
 
 
-The next example uses a time trend for the \code{trend} model. We use the \code{m3} model we made earlier. The \code{trend} model for this model has a covariate, 'nao'. This needs to be passed in to the \code{m()} method. The year range of the 'nao' covariate should match that of the \code{range} slot.
-
-Using the m method to make an FLQuant with a time trend:
+The next example uses a time trend for the \code{trend} model. We use the \code{m3} model we made earlier. The \code{trend} model for this model has a covariate, 'nao'. This needs to be passed to the \code{m()} method. The year range of the 'nao' covariate should match that of the \code{range} slot.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Simple, pass in a single nao value (only one year)}
 \hlkwd{m}\hlstd{(m3,} \hlkwc{nao} \hlstd{=} \hlnum{1}\hlstd{)}
@@ -1665,12 +1610,10 @@ Using the m method to make an FLQuant with a time trend:
 \end{knitrout}
 
 
-The final example show how \code{m()} can be used to make an \class{FLQuant} with uncertainty (see Figure~\ref{fig:uncertain_m}). We use the \code{m4} from earlier with uncertainty on the level and trend parameters.
-
-Using the m method to make an FLQuant with uncertainty:
+The final example show how \code{m()} can be used to make an \class{FLQuant} with uncertainty (see Figure~\ref{fig:uncertain_m}). We use the \code{m4} object from earlier with uncertainty on the \code{level} and \code{trend} parameters.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Simple - no time trend but with iterations}
 \hlkwd{m}\hlstd{(m4,} \hlkwc{nao} \hlstd{=} \hlnum{1}\hlstd{)}
@@ -1683,7 +1626,7 @@ Using the m method to make an FLQuant with uncertainty:
 ## 
 ##    year
 ## age 0            
-##   0 3.0061(0.422)
+##   0 3.0638(0.365)
 ## 
 ## units:  NA
 \end{verbatim}
@@ -1707,14 +1650,14 @@ Using the m method to make an FLQuant with uncertainty:
 ## 
 ##    year
 ## age 0                  
-##   0 2.0270459(0.150528)
-##   1 0.7457085(0.055376)
-##   2 0.2743308(0.020372)
-##   3 0.1009207(0.007494)
-##   4 0.0371266(0.002757)
-##   5 0.0136581(0.001014)
-##   6 0.0050245(0.000373)
-##   7 0.0018484(0.000137)
+##   0 2.0453304(0.173655)
+##   1 0.7524350(0.063884)
+##   2 0.2768054(0.023502)
+##   3 0.1018310(0.008646)
+##   4 0.0374615(0.003181)
+##   5 0.0137813(0.001170)
+##   6 0.0050699(0.000430)
+##   7 0.0018651(0.000158)
 ## 
 ## units:  NA
 \end{verbatim}
@@ -1738,24 +1681,24 @@ Using the m method to make an FLQuant with uncertainty:
 ## 
 ##    year
 ## age 2000                2001                2002               
-##   0 3.0060923(0.422256) 2.0270459(0.150528) 3.0060923(0.422256)
-##   1 1.1058796(0.155339) 0.7457085(0.055376) 1.1058796(0.155339)
-##   2 0.4068304(0.057146) 0.2743308(0.020372) 0.4068304(0.057146)
-##   3 0.1496645(0.021023) 0.1009207(0.007494) 0.1496645(0.021023)
-##   4 0.0550585(0.007734) 0.0371266(0.002757) 0.0550585(0.007734)
-##   5 0.0202549(0.002845) 0.0136581(0.001014) 0.0202549(0.002845)
-##   6 0.0074514(0.001047) 0.0050245(0.000373) 0.0074514(0.001047)
-##   7 0.0027412(0.000385) 0.0018484(0.000137) 0.0027412(0.000385)
+##   0 3.0638185(0.364916) 2.0453304(0.173655) 3.0638185(0.364916)
+##   1 1.1271158(0.134245) 0.7524350(0.063884) 1.1271158(0.134245)
+##   2 0.4146427(0.049386) 0.2768054(0.023502) 0.4146427(0.049386)
+##   3 0.1525385(0.018168) 0.1018310(0.008646) 0.1525385(0.018168)
+##   4 0.0561158(0.006684) 0.0374615(0.003181) 0.0561158(0.006684)
+##   5 0.0206438(0.002459) 0.0137813(0.001170) 0.0206438(0.002459)
+##   6 0.0075944(0.000905) 0.0050699(0.000430) 0.0075944(0.000905)
+##   7 0.0027938(0.000333) 0.0018651(0.000158) 0.0027938(0.000333)
 ##    year
 ## age 2003               
-##   0 2.0270459(0.150528)
-##   1 0.7457085(0.055376)
-##   2 0.2743308(0.020372)
-##   3 0.1009207(0.007494)
-##   4 0.0371266(0.002757)
-##   5 0.0136581(0.001014)
-##   6 0.0050245(0.000373)
-##   7 0.0018484(0.000137)
+##   0 2.0453304(0.173655)
+##   1 0.7524350(0.063884)
+##   2 0.2768054(0.023502)
+##   3 0.1018310(0.008646)
+##   4 0.0374615(0.003181)
+##   5 0.0137813(0.001170)
+##   6 0.0050699(0.000430)
+##   7 0.0018651(0.000158)
 ## 
 ## units:  NA
 \end{verbatim}
@@ -1771,63 +1714,53 @@ Using the m method to make an FLQuant with uncertainty:
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{bwplot}\hlstd{(data} \hlopt{~} \hlkwd{factor}\hlstd{(age)} \hlopt{|} \hlstd{year,} \hlkwc{data} \hlstd{=} \hlkwd{m}\hlstd{(m4,} \hlkwc{nao} \hlstd{=} \hlkwd{as.numeric}\hlstd{(nao[,} \hlkwd{as.character}\hlstd{(}\hlnum{2000}\hlopt{:}\hlnum{2003}\hlstd{)])))}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
 
 
-\begin{figure}[h]
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/plot_uncertain_m} 
+{\centering \includegraphics[width=\maxwidth]{figure/uncertain_m} 
 
 }
 
+\caption[Natural mortality with age and year trend]{Natural mortality with age and year trend.\label{fig:uncertain_m}}
+\end{figure}
 
 
 \end{knitrout}
 
-\caption{Natural mortality with age and year trend.}
-\label{fig:uncertain_m}
-\end{figure}
 
 \pagebreak
 \section{Running assessments}
+\label{sec:running_assessments}
 
+In the \initiative{a4a} assessment model, the model structure is defined by submodels, which are the different parts of a statistical catch at age model that require structural assumptions.
 
-In the \code{a4a} assessment model, the model structure is defined by submodels. These are models for the different parts of a statistical catch at age model that requires structural assumptions.
+There are 5 submodels in operation: a model for F-at-age, a model for the initial age structure, a model for recruitment, a (list) of model(s) for abundance indices catchability-at-age, and a list of models for the observation variance of catch-at-age and abundance indices. In practice, we fix the variance models and the initial age structure models, but in theory these can be changed.
 
-There are effectively 5 submodels in operation: the model for F-at-age, a model for the initial age structure, a model for recruitment, a (list) of model(s) for abundance indices catchability-at-age, and a list of models for the observation variance of catch-at-age and abundance indices. In practice, we fix the variance models and the initial age structure models, but in theory these can be changed.
+The submodels form use linear models. This opens the possibility of using the linear modelling tools available in R: see for example gam formulas, or factorial design formulas using \code{lm()}. In R's linear modelling language, a constant model is coded as $\sim 1$, while a slope over age would simply be $\sim age$. For example, we can write a traditional year/age separable F model like $\sim factor(age) + factor(year)$.
 
-The submodels form is given using linear models, which opens the possibility of using the linear modelling tools available in R: see for example gam formulas, or factorial design formulas using lm. In R's linear modelling language, a constant model is coded as $\sim 1$, while a slope over age would simply be $\sim age$. For example we can write a traditional year/age separable F model like $\sim factor(age) + factor(year)$.
-
-There are two basic types of assessments available from using \code{a4a}, the management procedure fit and the full assessment fit. The management procedure fit does not compute estimates of covariances and is therefore quicker to execute, while the full assessment fit returns parameter estimates and their covariances at the expense of longer fitting time.
+There are two basic types of assessments available in \initiative{a4a}: the management procedure fit and the full assessment fit. The management procedure fit does not compute estimates of covariances and is therefore quicker to execute, while the full assessment fit returns parameter estimates and their covariances at the expense of longer fitting time.
 
 \subsection{Stock assessment model details}
 
-The statistical catch at age model is based on the well known Baranov catch equation 
+The statistical catch at age model is based on the well known Baranov catch equation: 
 
 \begin{equation*}
-e^{\E{\log C}} = \frac{\color{red}F}{{\color{red}F}+M}\left(1 - e^{-{\color{red}F}-M}\right) {\color{red}R}e^{-\sum {\color{red}F} + M}
+e^{\E{\log C}} = \frac{\mathbf{F}}{\mathbf{F}+M}\left(1 - e^{-\mathbf{F}-M}\right) \mathbf{R}e^{-\sum \mathbf{F} + M}
 \end{equation*}
 
 and the survival equation
 
 \begin{equation*}
-e^{\E{\log I}} = {\color{red}Q} {\color{red}R}e^{-\sum {\color{red}F} + M}
+e^{\E{\log I}} = \mathbf{Q} \mathbf{R}e^{-\sum \mathbf{F} + M}
 \end{equation*}
 
 where 
 
 \begin{equation*}
-\Var{\log C_{ay}} = {\color{red}\sigma^2_{ay}} \qquad \Var{\log I_{ays}} = {\color{red}\tau^2_{ays}}
+\Var{\log C_{ay}} = \mathbf{\sigma^2_{ay}} \qquad \Var{\log I_{ays}} = \mathbf{\tau^2_{ays}}
 \end{equation*}
 
-The quantities $log F$, $log Q$, $log R$, $log observation variances$ and $log initial age structure$ (in red in the equations above), need to be given form, which is done using linear models. Recruitment is a special case. It's modelled as a fixed variance random effect, using the hard coded models Ricker, Beverton Holt, smooth hockeystick or geometric mean, which can use linear models for their parameters $\log{a}$ or $log b$, where relevant. In alternative it can use a linear model like the other submodels 
+The quantities $\log{F}$, $\log{Q}$, $\log{R}$, $\log{observation\,variances}$ and $\log{ initial\,age\,structure}$ (in red in the equations above), need to be given a form, which is done using linear models. Recruitment is a special case. It is modelled as a fixed variance random effect, using the hard coded models Ricker, Beverton Holt, smooth hockeystick or geometric mean, which can use linear models for their parameters $\log{a}$ or $\log{b}$, where relevant. As an alternative the $\log{R}$ submodel can use a linear model like the other submodels 
 
 The 'language' of linear models has been developing within the statistical community for many years, and constitutes an elegant way of defining models without going through the complexity of mathematical representations. This approach makes it also easier to communicate among scientists 
   \begin{itemize}
@@ -1839,10 +1772,10 @@ The 'language' of linear models has been developing within the statistical commu
 
 \subsection{Quick and dirty}
 
-The default settings of the stock assessment model work reasonably well. It's an area of research that will improve with time.
+Here we show a simple example of using the assessment model using plaice in the North Sea. The default settings of the stock assessment model work reasonably well. It's an area of research that will improve with time. Note that because the survey index for plaice has missing values we get a warning saying that we assume these values are missing at random, and not because the observations were zero.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{data}\hlstd{(ple4)}
 \hlkwd{data}\hlstd{(ple4.indices)}
@@ -1854,10 +1787,10 @@ The default settings of the stock assessment model work reasonably well. It's an
 \end{knitrout}
 
 
-Note that because the survey index for plaice has missing values we get a warning saying that we assume these values are missing at random, and not because the observations were zero.
+The \code{residuals()} method will compute standardized residuals which can be plotted using a set of packed methods.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{res} \hlkwb{<-} \hlkwd{residuals}\hlstd{(fit, ple4, ple4.indices)}
 \end{alltt}
@@ -1865,87 +1798,151 @@ Note that because the survey index for plaice has missing values we get a warnin
 \end{knitrout}
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+Figure~\ref{fig:res} shows a scatterplot of residuals by age and survey, with a smoother to guide (or mis-guide ...) your visual analysis.
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-4} 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{plot}\hlstd{(res,} \hlkwc{main} \hlstd{=} \hlstr{"Residuals"}\hlstd{)}
+\end{alltt}
+\end{kframe}\begin{figure}[H]
+
+
+{\centering \includegraphics[width=\maxwidth]{figure/res} 
 
 }
 
+\caption[Standardized residuals]{Standardized residuals\label{fig:res}}
+\end{figure}
 
 
 \end{knitrout}
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+The common bubble plot by year and age for each survey are shown in Figure~\ref{fig:bub}. 
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-5} 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{bubbles}\hlstd{(res)}
+\end{alltt}
+\end{kframe}\begin{figure}[H]
+
+
+{\centering \includegraphics[width=\maxwidth]{figure/bub} 
 
 }
 
+\caption[Bubbles plot of standardized residuals]{Bubbles plot of standardized residuals.\label{fig:bub}}
+\end{figure}
 
 
 \end{knitrout}
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+Finally, Figure~\ref{fig:qq} shows a quantile-quantile plot to assess how well do the residuals match the normal distribution.
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-6} 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{qqmath}\hlstd{(res)}
+\end{alltt}
+\end{kframe}\begin{figure}[H]
+
+
+{\centering \includegraphics[width=\maxwidth]{figure/qq} 
 
 }
 
+\caption[Quantile-quantile plot of standardized residuals]{Quantile-quantile plot of standardized residuals.\label{fig:qq}}
+\end{figure}
 
 
 \end{knitrout}
 
 
-We can inspect the summaries from this fit my adding it to the origional stock object, for example to see the fitted fbar we can do
+To inspect the summaries (Fbar, SSB, catch and recruitment) of the fit the user may add the fit to the original stock object, using the method \code{+} and plot the result (Figure~\ref{fig:summ}).
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{stk} \hlkwb{<-} \hlstd{ple4} \hlopt{+} \hlstd{fit}
+\hlkwd{plot}\hlstd{(stk)}
+\end{alltt}
+\end{kframe}\begin{figure}[H]
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-7} 
+
+{\centering \includegraphics[width=\maxwidth]{figure/summ} 
 
 }
 
+\caption[Stock summary]{Stock summary\label{fig:summ}}
+\end{figure}
 
 
 \end{knitrout}
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+In more detail, one can plot a 3D representation of fishing mortality (Figure~\ref{fig:F}),
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-8} 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{wireframe}\hlstd{(data} \hlopt{~} \hlstd{age} \hlopt{+} \hlstd{year,} \hlkwc{data} \hlstd{=} \hlkwd{as.data.frame}\hlstd{(}\hlkwd{harvest}\hlstd{(stk)),} \hlkwc{drape} \hlstd{=} \hlnum{TRUE}\hlstd{,}
+    \hlkwc{screen} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{x} \hlstd{=} \hlopt{-}\hlnum{90}\hlstd{,} \hlkwc{y} \hlstd{=} \hlopt{-}\hlnum{45}\hlstd{))}
+\end{alltt}
+\end{kframe}\begin{figure}[H]
+
+
+{\centering \includegraphics[width=\maxwidth]{figure/F} 
 
 }
 
+\caption[Fishing mortality]{Fishing mortality\label{fig:F}}
+\end{figure}
 
 
 \end{knitrout}
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+population abundance (Figure~\ref{fig:N}), 
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-9} 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{wireframe}\hlstd{(data} \hlopt{~} \hlstd{age} \hlopt{+} \hlstd{year,} \hlkwc{data} \hlstd{=} \hlkwd{as.data.frame}\hlstd{(}\hlkwd{stock.n}\hlstd{(stk)),} \hlkwc{drape} \hlstd{=} \hlnum{TRUE}\hlstd{,}
+    \hlkwc{screen} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{x} \hlstd{=} \hlopt{-}\hlnum{90}\hlstd{,} \hlkwc{y} \hlstd{=} \hlopt{-}\hlnum{45}\hlstd{))}
+\end{alltt}
+\end{kframe}\begin{figure}[H]
+
+
+{\centering \includegraphics[width=\maxwidth]{figure/N} 
 
 }
 
+\caption[Population abundance]{Population abundance\label{fig:N}}
+\end{figure}
 
 
 \end{knitrout}
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+or catch-at-age (Figure~\ref{fig:C}).
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-10} 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{wireframe}\hlstd{(data} \hlopt{~} \hlstd{age} \hlopt{+} \hlstd{year,} \hlkwc{data} \hlstd{=} \hlkwd{as.data.frame}\hlstd{(}\hlkwd{catch.n}\hlstd{(stk)),} \hlkwc{drape} \hlstd{=} \hlnum{TRUE}\hlstd{)}
+\end{alltt}
+\end{kframe}\begin{figure}[H]
+
+
+{\centering \includegraphics[width=\maxwidth]{figure/C} 
 
 }
 
+\caption[Catches]{Catches\label{fig:C}}
+\end{figure}
 
 
 \end{knitrout}
@@ -1953,10 +1950,14 @@ We can inspect the summaries from this fit my adding it to the origional stock o
 
 \subsection{Data structures}
 
-The basic model output is contained in the \texttt{a4aFit} class. This object contains only the fitted values.
+As mentioned above, the output of the stock assessment method may be simpler, with or without all the information about the parameters of the model like the variance-covariance matrix. In the first case the class of the output object is \class{a4aFitSA} while in the second case is \class{a4aFit}.
+
+This section will describe the data structures of these classes and the classes that compose them.
+
+Starting with the basic model output class, \class{a4aFit}, the slots of this class are shown on the code below and Figure~\ref{fig:a4aFit}.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{showClass}\hlstd{(}\hlstr{"a4aFit"}\hlstd{)}
 \end{alltt}
@@ -1980,23 +1981,26 @@ The basic model output is contained in the \texttt{a4aFit} class. This object co
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-12} 
+
+{\centering \includegraphics[width=\maxwidth]{figure/a4aFit} 
 
 }
 
+\caption[The a4aFit class]{The a4aFit class\label{fig:a4aFit}}
+\end{figure}
 
 
 \end{knitrout}
 
 
-Fitted values are stored in the \texttt{stock.n}, \texttt{harvest}, \texttt{catch.n} and \texttt{index} slots.  It also contains information carried over from the stock object used to fit the model: the name of the stock in \texttt{name}, any description provided in \texttt{desc} and the age and year range and mean F range in \texttt{range}.  There is also a wall clock that has a breakdown of the time taken o run the model.
+Fitted values are stored in the \code{stock.n}, \code{harvest}, \code{catch.n} and \code{index} slots. It also contains information carried over from the stock object used to fit the model, like the the name of the stock in \code{name}, any description provided in \code{desc} and the age and year range and mean F range in \code{range}. There is also a wall clock that has a breakdown of the time taken to run the model in \code{clock}.
 
-The full assessment fit returns an object of \texttt{a4aFitSA} class:
+The full assessment fit returns an object of class \class{a4aFitSA}, the slots of this class are shown on the code below and Figure~\ref{fig:a4aFitSA}.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{showClass}\hlstd{(}\hlstr{"a4aFitSA"}\hlstd{)}
 \end{alltt}
@@ -2020,21 +2024,24 @@ The full assessment fit returns an object of \texttt{a4aFitSA} class:
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-14} 
+
+{\centering \includegraphics[width=\maxwidth]{figure/a4aFitSA} 
 
 }
 
+\caption[The a4aFitSA class]{The a4aFitSA class\label{fig:a4aFitSA}}
+\end{figure}
 
 
 \end{knitrout}
 
 
-The additional slots in the assessment output is the \texttt{fitSumm} and \texttt{pars} slots which are containers for model summaries and the model parameters.  The \texttt{pars} slot is a class of type \texttt{SCAPars} which is itself composed of sub-classes, designed to contain the information necessary to simulate from the model.
+The additional slots in the assessment output are the \code{fitSumm} and \code{pars} slots, which are containers for model summaries and the model parameters. The \code{pars} slot is a class of type \class{SCAPars} (Figure~\ref{fig:SCAPars}) which is itself composed of sub-classes, designed to contain the information necessary to simulate from the model.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{showClass}\hlstd{(}\hlstr{"SCAPars"}\hlstd{)}
 \end{alltt}
@@ -2083,72 +2090,141 @@ The additional slots in the assessment output is the \texttt{fitSumm} and \textt
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-16} 
+
+{\centering \includegraphics[width=\maxwidth]{figure/SCAPars} 
 
 }
 
+\caption[The SCAPars class]{The SCAPars class\label{fig:SCAPars}}
+\end{figure}
+
+
+\end{knitrout}
+
+
+The \class{SCAPars} is built using objects of class \class{a4aStkParams} (Figure~\ref{fig:a4aStkParams}) and \class{submodel} (Figure~\ref{fig:submod}). These classes have the following slots.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
+
+
+{\centering \includegraphics[width=\maxwidth]{figure/a4aStkParams} 
+
+}
+
+\caption[The a4aStkParams class]{The a4aStkParams class\label{fig:a4aStkParams}}
+\end{figure}
 
 
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-17} 
+
+{\centering \includegraphics[width=\maxwidth]{figure/submod} 
 
 }
 
+\caption[The submodel class]{The submodel class\label{fig:submod}}
+\end{figure}
 
 
 \end{knitrout}
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-18} 
-
-}
-
-
-
-\end{knitrout}
-
-
-for example, all the parameters required so simulate a time-series of mean F trends is contained in the \texttt{stkmodel} slot, which is a class of type \texttt{a4aStkParams}.  This class contains the relevant submodels (see later), their parameters \texttt{params} and the joint covariance matrix \texttt{vcov} for all stock related parameters.
+For example, all the parameters required so simulate a time-series of mean F trends is contained in the \code{stkmodel} slot, which is a class of type \class{a4aStkParams}. This class contains the relevant submodels (see later), their parameters \code{params} and the joint covariance matrix \code{vcov} for all stock related parameters.
 
 \subsection{The sca method - statistical catch-at-age}
 
-We will now take a look at some examples for F models and the forms that we can get.  Lets start with a separable model in which we model selectivity at age as an (unpenalised) thin plate spline.  We will use the North Sea Plaice data again, and since this has 10 ages we will use a simple rule of thumb that the spline should have fewer than $\frac{10}{2} = 5$ degrees of freedom, and so we opt for 4 degrees of freedom.  We will also do the same for year and model the change in F through time as a smoother with 20 degrees of freedom.
+The \code{sca()} method used in the previous section with the default settings, can be parametrized to control other features of the stock assessment framework. The most interesting ones are the submodels for $F$, $Q$ and $R$. 
 
-Lets now investigate some variations in the selectivity shape with time, but only a little... we can do this by adding a smooth interaction term in the fmodel
+An important argument for \code{sca()} is the type of fit, which controls if a full assessment will be performed or a management procedure type of assessment. The argument is called \code{fit} and can have the values 'assessment' for a full assessemt or 'MP' for a simpler assessment. By default \code{sca()} uses \code{fit='MP'}. 
 
-A further move is to free up the Fs to vary more over time
+We'll start by looking at the submodel for $F$, then $Q$ and finally $R$.
 
-In the last examples the Fs are linked across age and time.  What if we want to free up a specific age class because in the residuals we see a consistent pattern.  This can happen, for example, if the spatial distribution of juvenilles is disconnected to the distribution of adults.  The fishery focuses on the adult fish, and therefore the the F on young fish is a function of the distribution of the juveniles and could deserve a seperate model.  This can be achieved by
-
-Please note that each of these model \emph{structures} lets say, have not been tuned to the data.  The degrees of freedom of each model can be better tuned to the data by using model selection procedures such as AIC or BIC.
+Please note that each of these model \emph{forms} have not been tuned to the data. The degrees of freedom of each model can be better tuned to the data by using model selection procedures such as AIC or BIC, etc.
 
 \subsubsection{Fishing mortality submodel}
 
+We will now take a look at some examples for F models and the forms that we can get. We'll fix the $Q$ and $R$ submodels. 
+
+Lets start with a separable model in which age and year effects are modelled as dummy variables, using the \code{factor} coding provided by R (Figure~\ref{fig:sep1}). 
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{factor}\hlstd{(age))}
-\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{factor}\hlstd{(age)} \hlopt{+} \hlkwd{factor}\hlstd{(year)}
-\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(}\hlkwc{stock} \hlstd{= ple4,} \hlkwc{indices} \hlstd{= ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{fmodel} \hlstd{= fmodel,} \hlkwc{qmodel} \hlstd{= qmodel)}
+\hlstd{qmod} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{factor}\hlstd{(age))}
+\hlstd{fmod} \hlkwb{<-} \hlopt{~}\hlkwd{factor}\hlstd{(age)} \hlopt{+} \hlkwd{factor}\hlstd{(year)}
+\hlstd{srmod} \hlkwb{<-} \hlopt{~}\hlkwd{factor}\hlstd{(year)}
+\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(}\hlkwc{stock} \hlstd{= ple4,} \hlkwc{indices} \hlstd{= ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{fmodel} \hlstd{= fmod,} \hlkwc{qmodel} \hlstd{= qmod,}
+    \hlkwc{srmodel} \hlstd{= srmod)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-20} 
+
+{\centering \includegraphics[width=\maxwidth]{figure/sep1} 
+
+}
+
+\caption[Fishing mortality separable model]{Fishing mortality separable model\label{fig:sep1}}
+\end{figure}
+
+
+\end{knitrout}
+
+
+Next we may make things a bit more interesting by using an (unpenalised) thin plate spline, where we'll borrow the method \code{s()} provided by package \href{http://cran.r-project.org/web/packages/mgcv/}{\pkg{mgcv}}. We're using the North Sea Plaice data again, and since it has 10 ages we will use a simple rule of thumb that the spline should have fewer than $\frac{10}{2} = 5$ degrees of freedom, and so we opt for 4 degrees of freedom. We will also do the same for year and model the change in F through time as a smoother with 20 degrees of freedom. Note that this is still a separable model, it's a smoothed version of the previous model (Figure~\ref{fig:sep2}).
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fmod} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{)}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmod, qmod, srmod)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
+
+
+{\centering \includegraphics[width=\maxwidth]{figure/sep2} 
+
+}
+
+\caption[Fishing mortality smoothed separable model]{Fishing mortality smoothed separable model\label{fig:sep2}}
+\end{figure}
+
+
+\end{knitrout}
+
+
+A non-separable model, where we consider age and year to interact can be modeled using a smooth interaction term in the F model using a tensor product of cubic splines with the \code{te} method, again borrowed from \href{http://cran.r-project.org/web/packages/mgcv/index.html}{\pkg{mgcv}}. 
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fmod} \hlkwb{<-} \hlopt{~}\hlkwd{te}\hlstd{(age, year,} \hlkwc{k} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,} \hlnum{20}\hlstd{))}
+\hlstd{fit3} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmod, qmod, srmod)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
+
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-10} 
 
 }
 
@@ -2157,90 +2233,29 @@ Please note that each of these model \emph{structures} lets say, have not been t
 \end{knitrout}
 
 
+In the last examples the Fs are linked across age and time.  What if we want to free up a specific age class because in the residuals we see a consistent pattern.  This can happen, for example, if the spatial distribution of juveniles is disconnected to the distribution of adults.  The fishery focuses on the adult fish, and therefore the the F on young fish is a function of the distribution of the juveniles and could deserve a specific model. This can be achieved by adding a component for the year effect on age 1 (Figure~\ref{fig:age1}).
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{)}
-\hlstd{fit1} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-22} 
-
-}
-
-
-
-\end{knitrout}
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{)} \hlopt{+} \hlkwd{te}\hlstd{(age, year,} \hlkwc{k} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,} \hlnum{3}\hlstd{))}
-\hlstd{fit2} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-24} 
-
-}
-
-
-
-\end{knitrout}
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{te}\hlstd{(age, year,} \hlkwc{k} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,} \hlnum{20}\hlstd{))}
-\hlstd{fit3} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel)}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
-
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-26} 
-
-}
-
-
-
-\end{knitrout}
-
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{te}\hlstd{(age, year,} \hlkwc{k} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,} \hlnum{20}\hlstd{))} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{5}\hlstd{,} \hlkwc{by} \hlstd{=} \hlkwd{as.numeric}\hlstd{(age} \hlopt{==}
+\hlstd{fmod} \hlkwb{<-} \hlopt{~}\hlkwd{te}\hlstd{(age, year,} \hlkwc{k} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{4}\hlstd{,} \hlnum{20}\hlstd{))} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{5}\hlstd{,} \hlkwc{by} \hlstd{=} \hlkwd{as.numeric}\hlstd{(age} \hlopt{==}
     \hlnum{1}\hlstd{))}
-\hlstd{fit4} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel)}
+\hlstd{fit4} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmod, qmod, srmod)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{figure}[H]
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-28} 
+
+{\centering \includegraphics[width=\maxwidth]{figure/age1} 
 
 }
 
+\caption[Fishing mortality age-year interaction model with extra age 1 smoother]{Fishing mortality age-year interaction model with extra age 1 smoother.\label{fig:age1}}
+\end{figure}
 
 
 \end{knitrout}
@@ -2248,21 +2263,30 @@ Please note that each of these model \emph{structures} lets say, have not been t
 
 \subsubsection{Catchability submodel}
 
+The catchability submodel is set up the same way as the $F$ submodel and the tools available are the same. The only difference is that the submodel is set up as a list of formulas, where each formula relates with one abundance index.
+
+We'll start by fixing the $F$ and $R$ models and compute the fraction of the year the index relates to, which will allows us to compute catchability at age and year. 
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{sfrac} \hlkwb{<-} \hlkwd{mean}\hlstd{(}\hlkwd{range}\hlstd{(ple4.indices[[}\hlnum{1}\hlstd{]])[}\hlkwd{c}\hlstd{(}\hlstr{"startf"}\hlstd{,} \hlstr{"endf"}\hlstd{)])}
-\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{factor}\hlstd{(age)} \hlopt{+} \hlkwd{factor}\hlstd{(year)}
+\hlstd{fmod} \hlkwb{<-} \hlopt{~}\hlkwd{factor}\hlstd{(age)} \hlopt{+} \hlkwd{factor}\hlstd{(year)}
+\hlstd{srmod} \hlkwb{<-} \hlopt{~}\hlkwd{factor}\hlstd{(year)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
+A first model is simply a dummy effect on age, which means that a coefficient will be estimated for each age. Note that this kind of model considers that levels of the factor are independent.
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{factor}\hlstd{(age))}
-\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel)}
+\hlstd{qmod} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{factor}\hlstd{(age))}
+\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmod, qmod, srmod)}
+
+\hlcom{# compute N for the fraction of the year the survey is carried out}
 \hlstd{Z} \hlkwb{<-} \hlstd{(}\hlkwd{m}\hlstd{(ple4)} \hlopt{+} \hlkwd{harvest}\hlstd{(fit))} \hlopt{*} \hlstd{sfrac}
 \hlstd{lst} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(fit}\hlopt{@}\hlkwc{index}\hlstd{[[}\hlnum{1}\hlstd{]])}
 \hlstd{lst}\hlopt{$}\hlstd{x} \hlkwb{<-} \hlkwd{stock.n}\hlstd{(fit)} \hlopt{*} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{Z)}
@@ -2273,9 +2297,9 @@ Please note that each of these model \emph{structures} lets say, have not been t
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-31} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-14} 
 
 }
 
@@ -2284,11 +2308,15 @@ Please note that each of these model \emph{structures} lets say, have not been t
 \end{knitrout}
 
 
+If one considers catchability at a specific age to be dependent on catchability on the other ages, similar to a selectivity modelling approach, one option is to use a smoother at age, and let the data 'speak' regarding the shape.
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{))}
-\hlstd{fit1} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel)}
+\hlstd{qmod} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{))}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmod, qmod, srmod)}
+
+\hlcom{# compute N for the fraction of the year the survey is carried out}
 \hlstd{Z} \hlkwb{<-} \hlstd{(}\hlkwd{m}\hlstd{(ple4)} \hlopt{+} \hlkwd{harvest}\hlstd{(fit1))} \hlopt{*} \hlstd{sfrac}
 \hlstd{lst} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(fit1}\hlopt{@}\hlkwc{index}\hlstd{[[}\hlnum{1}\hlstd{]])}
 \hlstd{lst}\hlopt{$}\hlstd{x} \hlkwb{<-} \hlkwd{stock.n}\hlstd{(fit1)} \hlopt{*} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{Z)}
@@ -2299,9 +2327,9 @@ Please note that each of these model \emph{structures} lets say, have not been t
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-33} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-16} 
 
 }
 
@@ -2310,11 +2338,15 @@ Please note that each of these model \emph{structures} lets say, have not been t
 \end{knitrout}
 
 
+As in the case of $F$, one may consider catchability to be a process that evolves with age and year, including an interaction between the two effects. Such model can be modelled using the tensor product of cubic splines, the same way we did for the $F$ model.
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{te}\hlstd{(age, year,} \hlkwc{k} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,} \hlnum{40}\hlstd{)))}
-\hlstd{fit2} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel)}
+\hlstd{qmod} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{te}\hlstd{(age, year,} \hlkwc{k} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{3}\hlstd{,} \hlnum{40}\hlstd{)))}
+\hlstd{fit2} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmod, qmod, srmod)}
+
+\hlcom{# compute N for the fraction of the year the survey is carried out}
 \hlstd{Z} \hlkwb{<-} \hlstd{(}\hlkwd{m}\hlstd{(ple4)} \hlopt{+} \hlkwd{harvest}\hlstd{(fit2))} \hlopt{*} \hlstd{sfrac}
 \hlstd{lst} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(fit2}\hlopt{@}\hlkwc{index}\hlstd{[[}\hlnum{1}\hlstd{]])}
 \hlstd{lst}\hlopt{$}\hlstd{x} \hlkwb{<-} \hlkwd{stock.n}\hlstd{(fit2)} \hlopt{*} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{Z)}
@@ -2325,9 +2357,9 @@ Please note that each of these model \emph{structures} lets say, have not been t
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-35} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-18} 
 
 }
 
@@ -2336,11 +2368,15 @@ Please note that each of these model \emph{structures} lets say, have not been t
 \end{knitrout}
 
 
+Finally, one may want to investigate a trend in catchability with time, very common in indices built from CPUE data. In the example given here we'll use a linear trend in time, set up by a simple linear model.
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlstd{year)}
-\hlstd{fit3} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel)}
+\hlstd{qmod} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlstd{year)}
+\hlstd{fit3} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmod, qmod, srmod)}
+
+\hlcom{# compute N for the fraction of the year the survey is carried out}
 \hlstd{Z} \hlkwb{<-} \hlstd{(}\hlkwd{m}\hlstd{(ple4)} \hlopt{+} \hlkwd{harvest}\hlstd{(fit3))} \hlopt{*} \hlstd{sfrac}
 \hlstd{lst} \hlkwb{<-} \hlkwd{dimnames}\hlstd{(fit3}\hlopt{@}\hlkwc{index}\hlstd{[[}\hlnum{1}\hlstd{]])}
 \hlstd{lst}\hlopt{$}\hlstd{x} \hlkwb{<-} \hlkwd{stock.n}\hlstd{(fit3)} \hlopt{*} \hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{Z)}
@@ -2351,9 +2387,9 @@ Please note that each of these model \emph{structures} lets say, have not been t
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-37} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-20} 
 
 }
 
@@ -2364,18 +2400,20 @@ Please note that each of these model \emph{structures} lets say, have not been t
 
 \subsubsection{Catchability submodel for age aggregated indices}
 
-Age aggregated indices (biomass, DEPM, etc) have to be passed in the FLIndices object with the name "bio". At the moment only one "bio" index is allowed. Note that in this case the qmodel should be set without age factors. It could have a "year" component though. 
+The previous section was focused on age disaggregated indices, but age aggregated indices (biomass, DEPM, etc) may also be used to tune the total biomass of the population. In these cases the \class{FLIndex} has to be named "bio" in the \class{FLIndices} object that is passed to the fitting method. At the moment only one "bio" index is allowed. Note that in this case the qmodel should be set without age factors. It could have a "year" component though. 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# creating an index}
 \hlstd{bioidx} \hlkwb{<-} \hlkwd{FLIndex}\hlstd{(}\hlkwd{FLQuant}\hlstd{(}\hlnum{NA}\hlstd{,} \hlkwc{dimnames} \hlstd{=} \hlkwd{list}\hlstd{(}\hlkwc{age} \hlstd{=} \hlstr{"all"}\hlstd{,} \hlkwc{year} \hlstd{=} \hlkwd{range}\hlstd{(ple4)[}\hlstr{"minyear"}\hlstd{]}\hlopt{:}\hlkwd{range}\hlstd{(ple4)[}\hlstr{"maxyear"}\hlstd{])))}
 \hlkwd{index}\hlstd{(bioidx)} \hlkwb{<-} \hlkwd{stock}\hlstd{(ple4)} \hlopt{*} \hlnum{0.001}
 \hlkwd{index}\hlstd{(bioidx)} \hlkwb{<-} \hlkwd{index}\hlstd{(bioidx)} \hlopt{*} \hlkwd{exp}\hlstd{(}\hlkwd{rnorm}\hlstd{(}\hlkwd{index}\hlstd{(bioidx),} \hlkwc{sd} \hlstd{=} \hlnum{0.1}\hlstd{))}
 \hlkwd{range}\hlstd{(bioidx)[}\hlkwd{c}\hlstd{(}\hlstr{"startf"}\hlstd{,} \hlstr{"endf"}\hlstd{)]} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{0}\hlstd{)}
+
 \hlcom{# fitting the model}
 \hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4,} \hlkwd{FLIndices}\hlstd{(}\hlkwc{bio} \hlstd{= bioidx),} \hlkwc{qmodel} \hlstd{=} \hlkwd{list}\hlstd{(}\hlopt{~}\hlnum{1}\hlstd{))}
+
 \hlcom{# how is it fiting catchability ? not too well ...}
 \hlkwd{index}\hlstd{(fit)[[}\hlnum{1}\hlstd{]]}\hlopt{/}\hlstd{(}\hlkwd{quantSums}\hlstd{(}\hlkwd{stock.n}\hlstd{(fit)} \hlopt{*} \hlkwd{stock.wt}\hlstd{(ple4)))}
 \end{alltt}
@@ -2385,31 +2423,31 @@ Age aggregated indices (biomass, DEPM, etc) have to be passed in the FLIndices o
 ## 
 ##      year
 ## age   1957       1958       1959       1960       1961       1962      
-##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
+##   all 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05
 ##      year
 ## age   1963       1964       1965       1966       1967       1968      
-##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
+##   all 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05
 ##      year
 ## age   1969       1970       1971       1972       1973       1974      
-##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
+##   all 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05
 ##      year
 ## age   1975       1976       1977       1978       1979       1980      
-##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
+##   all 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05
 ##      year
 ## age   1981       1982       1983       1984       1985       1986      
-##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
+##   all 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05
 ##      year
 ## age   1987       1988       1989       1990       1991       1992      
-##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
+##   all 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05
 ##      year
 ## age   1993       1994       1995       1996       1997       1998      
-##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
+##   all 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05
 ##      year
 ## age   1999       2000       2001       2002       2003       2004      
-##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
+##   all 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05
 ##      year
 ## age   2005       2006       2007       2008      
-##   all 4.8037e-05 4.8037e-05 4.8037e-05 4.8037e-05
+##   all 4.2973e-05 4.2973e-05 4.2973e-05 4.2973e-05
 ## 
 ## units:  kg
 \end{verbatim}
@@ -2417,15 +2455,29 @@ Age aggregated indices (biomass, DEPM, etc) have to be passed in the FLIndices o
 \end{knitrout}
 
 
-Residuals are not so good ... one shouldn't expect much from a model with only one biomass index anyway. 
-
-
-The results are not so bad because most information is coming from the catch at age information.
+Residuals are not so good but one single biomass index is not very informative (Figure~\ref{fig:resbio}). Note that the results are not so bad because most information is coming from the catch at age information.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{plot}\hlstd{(}\hlkwd{residuals}\hlstd{(fit, ple4,} \hlkwd{FLIndices}\hlstd{(}\hlkwc{bio} \hlstd{= bioidx)))}
+\end{alltt}
+\end{kframe}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-39} 
+{\centering \includegraphics[width=\maxwidth]{figure/resbio} 
+
+}
+
+
+
+\end{knitrout}
+
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
+
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-22} 
 
 }
 
@@ -2436,31 +2488,33 @@ The results are not so bad because most information is coming from the catch at 
 
 \subsubsection{Stock-recruitment submodel}
 
+The S/R submodel is a special case, in the sense that it can be set up with the same linear tools as the $F$ and $Q$ models, but it can also use some hard coded models. The example shows how to set up a simple dummy model with \code{factor()}, a smooth model with \code{s()}, a Ricker model (\code{ricker()}), a Beverton and Holt model (\code{bevholt()}), a hockey stick model (\code{hockey()}), and a geometric mean model (\code{geomean()}). As mentioned before, the 'structural' models have a fixed variance, which must be set by defining the coefficient of variation. We now fix the $F$ and $Q$ submodels before fiddling around with the S/R model.
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{)}
-\hlstd{qmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{))}
+\hlstd{fmod} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{)}
+\hlstd{qmod} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{))}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{srmodel} \hlkwb{<-} \hlopt{~}\hlkwd{factor}\hlstd{(year)}
-\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{fmodel} \hlstd{= fmodel,} \hlkwc{qmodel} \hlstd{= qmodel,} \hlkwc{srmodel} \hlstd{= srmodel)}
-\hlstd{srmodel} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{)}
-\hlstd{fit1} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel, srmodel)}
-\hlstd{srmodel} \hlkwb{<-} \hlopt{~}\hlkwd{ricker}\hlstd{(}\hlkwc{CV} \hlstd{=} \hlnum{0.05}\hlstd{)}
-\hlstd{fit2} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel, srmodel)}
-\hlstd{srmodel} \hlkwb{<-} \hlopt{~}\hlkwd{bevholt}\hlstd{(}\hlkwc{CV} \hlstd{=} \hlnum{0.05}\hlstd{)}
-\hlstd{fit3} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel, srmodel)}
-\hlstd{srmodel} \hlkwb{<-} \hlopt{~}\hlkwd{hockey}\hlstd{(}\hlkwc{CV} \hlstd{=} \hlnum{0.05}\hlstd{)}
-\hlstd{fit4} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel, srmodel)}
-\hlstd{srmodel} \hlkwb{<-} \hlopt{~}\hlkwd{geomean}\hlstd{(}\hlkwc{CV} \hlstd{=} \hlnum{0.05}\hlstd{)}
-\hlstd{fit5} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmodel, qmodel, srmodel)}
+\hlstd{srmod} \hlkwb{<-} \hlopt{~}\hlkwd{factor}\hlstd{(year)}
+\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmod, qmod, srmod)}
+\hlstd{srmod} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{)}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmod, qmod, srmod)}
+\hlstd{srmod} \hlkwb{<-} \hlopt{~}\hlkwd{ricker}\hlstd{(}\hlkwc{CV} \hlstd{=} \hlnum{0.05}\hlstd{)}
+\hlstd{fit2} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmod, qmod, srmod)}
+\hlstd{srmod} \hlkwb{<-} \hlopt{~}\hlkwd{bevholt}\hlstd{(}\hlkwc{CV} \hlstd{=} \hlnum{0.05}\hlstd{)}
+\hlstd{fit3} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmod, qmod, srmod)}
+\hlstd{srmod} \hlkwb{<-} \hlopt{~}\hlkwd{hockey}\hlstd{(}\hlkwc{CV} \hlstd{=} \hlnum{0.05}\hlstd{)}
+\hlstd{fit4} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmod, qmod, srmod)}
+\hlstd{srmod} \hlkwb{<-} \hlopt{~}\hlkwd{geomean}\hlstd{(}\hlkwc{CV} \hlstd{=} \hlnum{0.05}\hlstd{)}
+\hlstd{fit5} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{], fmod, qmod, srmod)}
 \hlstd{flqs} \hlkwb{<-} \hlkwd{FLQuants}\hlstd{(}\hlkwc{fac} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit)[}\hlnum{1}\hlstd{],} \hlkwc{smo} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit1)[}\hlnum{1}\hlstd{],} \hlkwc{ric} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit2)[}\hlnum{1}\hlstd{],}
     \hlkwc{bh} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit3)[}\hlnum{1}\hlstd{],} \hlkwc{hs} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit4)[}\hlnum{1}\hlstd{],} \hlkwc{gm} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit5)[}\hlnum{1}\hlstd{])}
 \end{alltt}
@@ -2469,9 +2523,9 @@ The results are not so bad because most information is coming from the catch at 
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-42} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-25} 
 
 }
 
@@ -2482,10 +2536,10 @@ The results are not so bad because most information is coming from the catch at 
 
 \subsection{The a4aSCA method - advanced features}
 
-The default fit is "assessment", which means that the hessian is going to e computed by default.
+A more advanced method for stock assessment can be used through the \code{a4aSCA()} method. This method gives access to the submodels for $N1$, $\sigma^2_{ay}$ and $I_{ays}$ as well as arguments to get the ADMB files, etc. Check the manual pages with \code{?a4aSCA} for more information. This method has 'assessment' as the default value for the \code{fit} argument, which means that the hessian is going to be computed and all the information about the parameters will be returned by default. Note that the default models of each submodel can be accessed with
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# fmodel <- ~ s(age, k=4) + s(year, k = 20) qmodel <- list( ~ s(age, k=4) +}
 \hlcom{# year) srmodel <- ~s(year, k=20)}
@@ -2508,11 +2562,13 @@ The default fit is "assessment", which means that the hessian is going to e comp
 
 \subsubsection{N1 model}
 
+The submodel for the stock number at age in the first year of the time series is set up with the usual linear tools, but bare in mind that the year effect does not make sense here.
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{n1model} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)}
-\hlstd{fit1} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{n1model} \hlstd{= n1model)}
+\hlstd{n1mod} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{n1model} \hlstd{= n1mod)}
 \hlstd{flqs} \hlkwb{<-} \hlkwd{FLQuants}\hlstd{(}\hlkwc{smo} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit1)[,} \hlnum{1}\hlstd{],} \hlkwc{fac} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit)[,} \hlnum{1}\hlstd{])}
 \end{alltt}
 \end{kframe}
@@ -2520,9 +2576,9 @@ The default fit is "assessment", which means that the hessian is going to e comp
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-45} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-28} 
 
 }
 
@@ -2533,17 +2589,17 @@ The default fit is "assessment", which means that the hessian is going to e comp
 
 \subsubsection{Variance model}
 
-One important subject related with fisheries data used for input to stock assessment models is the shape of the variance of the data. It's quite common to have more precision on the most represented ages and less precision on the less frequent ages. Due to the fact that the last do not show so often on the auction markets, on the fishing operations or on survey samples.
+The variance model allows the user to set up the shape of the observation variances $\sigma^2_{ay}$ and $I_{ays}$. This is an important subject related with fisheries data used for input to stock assessment models. It's quite common to have more precision on the most represented ages and less precision on the less frequent ages. This is due to the fact that the last ages do not appear as often at the auction markets, in the fishing operations or on survey samples.
 
-By default the model assumes constant variance over time and ages (~ 1 model) but it can use other models specified by the user. This feature requires a call to the a4aInternal method, which gives more options than the a4a method, which in fact is a wrapper.
+By default the model assumes constant variance over time and ages (~ 1 model) but it can use other models specified by the user. As with the other submodels, R linear model capabilities are used.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{vmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlnum{1}\hlstd{,} \hlopt{~}\hlnum{1}\hlstd{)}
-\hlstd{fit1} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{vmodel} \hlstd{= vmodel)}
-\hlstd{vmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{),} \hlopt{~}\hlnum{1}\hlstd{)}
-\hlstd{fit2} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{vmodel} \hlstd{= vmodel)}
+\hlstd{vmod} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlnum{1}\hlstd{,} \hlopt{~}\hlnum{1}\hlstd{)}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{vmodel} \hlstd{= vmod)}
+\hlstd{vmod} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{),} \hlopt{~}\hlnum{1}\hlstd{)}
+\hlstd{fit2} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{vmodel} \hlstd{= vmod)}
 \hlstd{flqs} \hlkwb{<-} \hlkwd{FLQuants}\hlstd{(}\hlkwc{cts} \hlstd{=} \hlkwd{catch.n}\hlstd{(fit1),} \hlkwc{smo} \hlstd{=} \hlkwd{catch.n}\hlstd{(fit2))}
 \end{alltt}
 \end{kframe}
@@ -2551,9 +2607,9 @@ By default the model assumes constant variance over time and ages (~ 1 model) bu
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-47} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-30} 
 
 }
 
@@ -2564,8 +2620,10 @@ By default the model assumes constant variance over time and ages (~ 1 model) bu
 
 \subsubsection{Working with covariates}
 
+In linear model one can use covariates to explain part of the variance observed on the data that the 'core' model does not explain. The same can be done in the \initiative{a4a} framework. The example below uses the North Atlantic Oscillation (NAO) index to model recruitment. 
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{nao} \hlkwb{<-} \hlkwd{read.table}\hlstd{(}\hlstr{"http://www.cdc.noaa.gov/data/correlation/nao.data"}\hlstd{,} \hlkwc{skip} \hlstd{=} \hlnum{1}\hlstd{,}
     \hlkwc{nrow} \hlstd{=} \hlnum{62}\hlstd{,} \hlkwc{na.strings} \hlstd{=} \hlstr{"-99.90"}\hlstd{)}
@@ -2579,11 +2637,13 @@ By default the model assumes constant variance over time and ages (~ 1 model) bu
 \end{knitrout}
 
 
+First by simply assuming that the index drives recruitment.
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{srmodel} \hlkwb{<-} \hlopt{~}\hlstd{nao}
-\hlstd{fit2} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{qmodel} \hlstd{=} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)),} \hlkwc{srmodel} \hlstd{= srmodel)}
+\hlstd{srmod} \hlkwb{<-} \hlopt{~}\hlstd{nao}
+\hlstd{fit2} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{qmodel} \hlstd{=} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)),} \hlkwc{srmodel} \hlstd{= srmod)}
 \hlstd{flqs} \hlkwb{<-} \hlkwd{FLQuants}\hlstd{(}\hlkwc{fac} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit)[}\hlnum{1}\hlstd{],} \hlkwc{cvar} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit2)[}\hlnum{1}\hlstd{])}
 \end{alltt}
 \end{kframe}
@@ -2591,9 +2651,9 @@ By default the model assumes constant variance over time and ages (~ 1 model) bu
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-50} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-33} 
 
 }
 
@@ -2602,11 +2662,13 @@ By default the model assumes constant variance over time and ages (~ 1 model) bu
 \end{knitrout}
 
 
+In a second model we're using the NAO index not to model recruitment directly but to model one of the parameters of the S/R function. 
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{srmodel} \hlkwb{<-} \hlopt{~}\hlkwd{ricker}\hlstd{(}\hlkwc{a} \hlstd{=} \hlopt{~}\hlstd{nao,} \hlkwc{CV} \hlstd{=} \hlnum{0.1}\hlstd{)}
-\hlstd{fit3} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{qmodel} \hlstd{=} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)),} \hlkwc{srmodel} \hlstd{= srmodel)}
+\hlstd{srmod} \hlkwb{<-} \hlopt{~}\hlkwd{ricker}\hlstd{(}\hlkwc{a} \hlstd{=} \hlopt{~}\hlstd{nao,} \hlkwc{CV} \hlstd{=} \hlnum{0.1}\hlstd{)}
+\hlstd{fit3} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{qmodel} \hlstd{=} \hlkwd{list}\hlstd{(}\hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)),} \hlkwc{srmodel} \hlstd{= srmod)}
 \hlstd{flqs} \hlkwb{<-} \hlkwd{FLQuants}\hlstd{(}\hlkwc{fac} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit)[}\hlnum{1}\hlstd{],} \hlkwc{cvar} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit3)[}\hlnum{1}\hlstd{])}
 \end{alltt}
 \end{kframe}
@@ -2614,9 +2676,9 @@ By default the model assumes constant variance over time and ages (~ 1 model) bu
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-52} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-35} 
 
 }
 
@@ -2625,17 +2687,19 @@ By default the model assumes constant variance over time and ages (~ 1 model) bu
 \end{knitrout}
 
 
-\subsubsection{Assessing ADMB files}
+Note that covariates can be added to any submodel using the linear model capabilities of R.
 
-To inspect the ADMB files the user must specify the working dir and all files will be left there.
+\subsubsection{Assessing \pkg{ADMB} files}
+
+The framework gives access to the files produced to run the \pkg{ADMB} fitting routine through the argument \code{wkdir}. When set up all the \pkg{ADMB} files will be left in the directory. Note that the \pkg{ADMB} tpl file is distributed with the \pkg{FLa4a}. One can get it from your \pkg{R} library, under the folder \code{myRlib/FLa4a/admb/}.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{fit1} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(stk, idx,} \hlkwc{wkdir} \hlstd{=} \hlstr{"mytest"}\hlstd{)}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices,} \hlkwc{wkdir} \hlstd{=} \hlstr{"mytest"}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
-## Model and results are stored in working directory [mytest-2]
+## Model and results are stored in working directory [mytest]
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -2643,8 +2707,10 @@ To inspect the ADMB files the user must specify the working dir and all files wi
 
 \subsection{Predict and simulate}
 
+Predicting and simulating are important methods for statistical models. \pkg{R} uses the methods \code{predict()} and \code{simulate()}, which were implemented in \pkg{FLa4a} in the same fashion. 
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# fmodel <- ~ s(age, k=4) + s(year, k = 20) qmodel <- list( ~ s(age, k=4) +}
 \hlcom{# year) srmodel <- ~s(year, k=20)}
@@ -2656,8 +2722,10 @@ To inspect the ADMB files the user must specify the working dir and all files wi
 
 \subsubsection{Predict}
 
+Predict simply computes the quantities of interest using the estimated coefficients.
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{fit.pred} \hlkwb{<-} \hlkwd{predict}\hlstd{(fit)}
 \hlkwd{lapply}\hlstd{(fit.pred, names)}
@@ -2676,10 +2744,12 @@ To inspect the ADMB files the user must specify the working dir and all files wi
 \end{knitrout}
 
 
-\subsubsection{simulate}
+\subsubsection{Simulate}
+
+Simulate uses the variance-covariance matrix computed from the Hessian returned by \pkg{ADMB} and the fitted parameters, to parametrize a multivariate normal distribution. The simulations are carried out using the method \code{mvrnorm()} provided by the R package \href{http://cran.r-project.org/web/packages/MASS/}{\pkg{MASS}}.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{fits} \hlkwb{<-} \hlkwd{simulate}\hlstd{(fit,} \hlnum{100}\hlstd{)}
 \hlstd{flqs} \hlkwb{<-} \hlkwd{FLQuants}\hlstd{(}\hlkwc{sim} \hlstd{=} \hlkwd{iterMedians}\hlstd{(}\hlkwd{stock.n}\hlstd{(fits)),} \hlkwc{det} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit))}
@@ -2689,9 +2759,9 @@ To inspect the ADMB files the user must specify the working dir and all files wi
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-57} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-40} 
 
 }
 
@@ -2701,9 +2771,9 @@ To inspect the ADMB files the user must specify the working dir and all files wi
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-58} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-41} 
 
 }
 
@@ -2714,25 +2784,25 @@ To inspect the ADMB files the user must specify the working dir and all files wi
 
 \subsection{Geeky stuff}
 
+A lot more can be done with the \initiative{a4a} framework. The next sections will describe methods that are more technical. What we'd categorize as 'matters for geeks', in the sense that these methods usually will require the users to 'dive' into \pkg{R} a bit more. 
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# fmodel <- ~ s(age, k=4) + s(year, k = 20) qmodel <- list( ~ s(age, k=4) +}
-\hlcom{# year) srmodel <- ~s(year, k=20)}
-\hlstd{vmodel} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlopt{~}\hlnum{1}\hlstd{,} \hlopt{~}\hlnum{1}\hlstd{)}
-\hlstd{fit} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{],} \hlkwc{vmodel} \hlstd{= vmodel)}
+\hlcom{# year) srmodel <- ~s(year, k=20) vmodel <- list(~1, ~1)}
+\hlstd{fit} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{])}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
-
 \subsubsection{External weigthing of likelihood components}
 
-By default the likelihood components are weighted using inverse variance of the parameters estimates. However the user may change this weights by setting the variance of the input parameters, which is done by adding a variance matrix to the catch.n and index.n slots of the stock and index objects. 
+By default the likelihood components are weighted using inverse variance. However, the user may change the weights by setting the variance of the input parameters. This is done by adding a variance matrix to the \code{catch.n} and \code{index.n} slots of the stock and index objects. These variances will be used to penalize the data during the likelihood computation. The values should be given as coefficients of variation on the log scale, so that variance is $\log{({CV}^2 + 1)}$.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{stk} \hlkwb{<-} \hlstd{ple4}
 \hlstd{idx} \hlkwb{<-} \hlstd{ple4.indices[}\hlnum{1}\hlstd{]}
@@ -2745,7 +2815,7 @@ By default the likelihood components are weighted using inverse variance of the 
 \hlstd{varslt[]} \hlkwb{<-} \hlnum{0.1}
 \hlkwd{index.var}\hlstd{(idx[[}\hlnum{1}\hlstd{]])} \hlkwb{<-} \hlstd{varslt}
 \hlcom{# run}
-\hlstd{fit1} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(stk, idx,} \hlkwc{vmodel} \hlstd{= vmodel)}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(stk, idx)}
 \hlstd{flqs} \hlkwb{<-} \hlkwd{FLQuants}\hlstd{(}\hlkwc{nowgt} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit),} \hlkwc{extwgt} \hlstd{=} \hlkwd{stock.n}\hlstd{(fit1))}
 \end{alltt}
 \end{kframe}
@@ -2753,9 +2823,9 @@ By default the likelihood components are weighted using inverse variance of the 
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-61} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-44} 
 
 }
 
@@ -2766,21 +2836,24 @@ By default the likelihood components are weighted using inverse variance of the 
 
 \subsubsection{More models}
 
+There's a set of methods that allow the user to have more flexibility on applying the models referred before. For example to break the time series in two periods, using the method \code{breakpts()}, or fixing some parts of the selection pattern by setting F to be the same for a group of ages, using \code{replace()}.
+
+The example below replaces all ages above 5 by age 5, which means that a single coefficient is going to be estimated for age 5-10.
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlcom{# constant fishing mortality for ages older than 5}
-\hlstd{fmodel} \hlkwb{=} \hlopt{~}\hlkwd{s}\hlstd{(}\hlkwd{replace}\hlstd{(age, age} \hlopt{>} \hlnum{5}\hlstd{,} \hlnum{5}\hlstd{),} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{)}
-\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices,} \hlkwc{fmodel} \hlstd{= fmodel)}
+\hlstd{fmod} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(}\hlkwd{replace}\hlstd{(age, age} \hlopt{>} \hlnum{5}\hlstd{,} \hlnum{5}\hlstd{),} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{20}\hlstd{)}
+\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices, fmod)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-63} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-46} 
 
 }
 
@@ -2789,21 +2862,22 @@ By default the likelihood components are weighted using inverse variance of the 
 \end{knitrout}
 
 
+In the next case we'll use the \code{breakpts()} to split the time series at 1990, although keeping the same shape in both periods, a thin plate spline with 3 knots.
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlcom{# the same model for two periods}
-\hlstd{fmodel} \hlkwb{=} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{3}\hlstd{,} \hlkwc{by} \hlstd{=} \hlkwd{breakpts}\hlstd{(year,} \hlnum{1990}\hlstd{))}
-\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices,} \hlkwc{fmodel} \hlstd{= fmodel)}
+\hlstd{fmod} \hlkwb{<-} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{3}\hlstd{,} \hlkwc{by} \hlstd{=} \hlkwd{breakpts}\hlstd{(year,} \hlnum{1990}\hlstd{))}
+\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices, fmod)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-65} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-48} 
 
 }
 
@@ -2812,21 +2886,22 @@ By default the likelihood components are weighted using inverse variance of the 
 \end{knitrout}
 
 
+More complicated models can be built with these tools. For example, here is a model where the age effect is modelled as a smoother (the same thin plate spline) throughout years but independent from each other.
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlcom{# smoother for each age}
-\hlstd{fmodel} \hlkwb{<-} \hlopt{~}\hlkwd{factor}\hlstd{(age)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{10}\hlstd{,} \hlkwc{by} \hlstd{=} \hlkwd{breakpts}\hlstd{(age,} \hlkwd{c}\hlstd{(}\hlnum{2}\hlopt{:}\hlnum{8}\hlstd{)))}
-\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices,} \hlkwc{fmodel} \hlstd{= fmodel)}
+\hlstd{fmod} \hlkwb{<-} \hlopt{~}\hlkwd{factor}\hlstd{(age)} \hlopt{+} \hlkwd{s}\hlstd{(year,} \hlkwc{k} \hlstd{=} \hlnum{10}\hlstd{,} \hlkwc{by} \hlstd{=} \hlkwd{breakpts}\hlstd{(age,} \hlkwd{c}\hlstd{(}\hlnum{2}\hlopt{:}\hlnum{8}\hlstd{)))}
+\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices, fmod)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-67} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-50} 
 
 }
 
@@ -2835,29 +2910,34 @@ By default the likelihood components are weighted using inverse variance of the 
 \end{knitrout}
 
 
-\subsubsection{Propagate M uncertainty}
+\subsubsection{Propagate natural mortality uncertainty}
 
+In this section we give an example of how uncertainty in natural mortality, set up using the \code{m()} method and the class \class{a4aM} (see Section~\ref{sec:natmort}), is propagated through the stock assessment. We'll start by fitting the default model to the data. 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
+\hlkwd{data}\hlstd{(ple4)}
+\hlkwd{data}\hlstd{(ple4.indices)}
 \hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
+Using the \initiative{a4a} methods we'll model natural mortality using a negative exponential model by age, Jensen's estimator for the level and a constant trend with time. We include multivariate normal uncertainty using the \code{mvrnorm()} method and create 25 iterations. 
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{nits} \hlkwb{<-} \hlnum{25}
 
-\hlstd{shape2} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{age} \hlopt{-} \hlnum{0.5}\hlstd{))}
-\hlstd{level4} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{k}\hlopt{^}\hlnum{0.66} \hlopt{*} \hlstd{t}\hlopt{^}\hlnum{0.57}\hlstd{,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{k} \hlstd{=} \hlnum{0.4}\hlstd{,} \hlkwc{t} \hlstd{=} \hlnum{10}\hlstd{),}
+\hlstd{shape} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlkwd{exp}\hlstd{(}\hlopt{-}\hlstd{age} \hlopt{-} \hlnum{0.5}\hlstd{))}
+\hlstd{level} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{k}\hlopt{^}\hlnum{0.66} \hlopt{*} \hlstd{t}\hlopt{^}\hlnum{0.57}\hlstd{,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{k} \hlstd{=} \hlnum{0.4}\hlstd{,} \hlkwc{t} \hlstd{=} \hlnum{10}\hlstd{),}
     \hlkwc{vcov} \hlstd{=} \hlkwd{matrix}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{0.002}\hlstd{,} \hlnum{0.01}\hlstd{,} \hlnum{0.01}\hlstd{,} \hlnum{1}\hlstd{),} \hlkwc{ncol} \hlstd{=} \hlnum{2}\hlstd{))}
+\hlstd{trend} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{b,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{b} \hlstd{=} \hlnum{0.5}\hlstd{),} \hlkwc{vcov} \hlstd{=} \hlkwd{matrix}\hlstd{(}\hlnum{0.02}\hlstd{))}
 
-\hlstd{trend4} \hlkwb{<-} \hlkwd{FLModelSim}\hlstd{(}\hlkwc{model} \hlstd{=} \hlopt{~}\hlstd{b,} \hlkwc{params} \hlstd{=} \hlkwd{FLPar}\hlstd{(}\hlkwc{b} \hlstd{=} \hlnum{0.5}\hlstd{),} \hlkwc{vcov} \hlstd{=} \hlkwd{matrix}\hlstd{(}\hlnum{0.02}\hlstd{))}
-\hlstd{m4} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= shape2,} \hlkwc{level} \hlstd{= level4,} \hlkwc{trend} \hlstd{= trend4)}
+\hlstd{m4} \hlkwb{<-} \hlkwd{a4aM}\hlstd{(}\hlkwc{shape} \hlstd{= shape,} \hlkwc{level} \hlstd{= level,} \hlkwc{trend} \hlstd{= trend)}
 \hlstd{m4} \hlkwb{<-} \hlkwd{mvrnorm}\hlstd{(nits, m4)}
 \hlkwd{range}\hlstd{(m4)[]} \hlkwb{<-} \hlkwd{range}\hlstd{(ple4)[]}
 \hlkwd{range}\hlstd{(m4)[}\hlkwd{c}\hlstd{(}\hlstr{"minmbar"}\hlstd{,} \hlstr{"maxmbar"}\hlstd{)]} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{1}\hlstd{)}
@@ -2865,19 +2945,29 @@ By default the likelihood components are weighted using inverse variance of the 
 \hlkwd{quant}\hlstd{(flq)} \hlkwb{<-} \hlstr{"age"}
 \hlstd{stk} \hlkwb{<-} \hlkwd{propagate}\hlstd{(ple4, nits)}
 \hlkwd{m}\hlstd{(stk)} \hlkwb{<-} \hlstd{flq}
-
-\hlstd{fit1} \hlkwb{<-} \hlkwd{sca}\hlstd{(stk, ple4.indices)}
 \end{alltt}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: cannot open the connection}}\end{kframe}
+\end{kframe}
 \end{knitrout}
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+We fit the same model to the new stock object which has uncertainty in the natural mortality.
+The assessment is performed for each of the 25 iterations.
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-70} 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{fit1} \hlkwb{<-} \hlkwd{sca}\hlstd{(stk, ple4.indices)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+
+And compare the two results. It's quite easy to run these kind of tests and a large part of our effort is to create the tools to do so. 
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
+
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-54} 
 
 }
 
@@ -2903,18 +2993,19 @@ By default the likelihood components are weighted using inverse variance of the 
 
 \subsubsection{WCSAM exercise - replicating itself}
 
+The World Conference on Stock Assessment Methods (\href{http://www.ices.dk/news-and-events/symposia/WCSAM-2013}{WCSAM}) promoted a workshop where a large simulation study was used to test the performance of distinct stock assessment models. The first criteria used was that the models should be able to reproduce itself. The process involved fitting the model, simulating observation error using the same model, and refitting the model to each iteration. The final results should be similar to the fitted results before observation error was added (see \href{http://icesjms.oxfordjournals.org/content/early/2014/01/18/icesjms.fst237.abstract}{Deroba, et.al, 2014} for details). The following analysis runs this analysis.
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{fit} \hlkwb{<-} \hlkwd{sca}\hlstd{(ple4, ple4.indices,} \hlkwc{fit} \hlstd{=} \hlstr{"assessment"}\hlstd{)}
 \hlstd{nits} \hlkwb{<-} \hlnum{25}
+\hlstd{fit} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{])}
 \hlstd{stk} \hlkwb{<-} \hlstd{ple4} \hlopt{+} \hlstd{fit}
+\hlkwd{set.seed}\hlstd{(}\hlnum{1234}\hlstd{)}
 \hlstd{fits} \hlkwb{<-} \hlkwd{simulate}\hlstd{(fit, nits)}
 \hlstd{stks} \hlkwb{<-} \hlstd{ple4} \hlopt{+} \hlstd{fits}
 \hlstd{idxs} \hlkwb{<-} \hlstd{ple4.indices[}\hlnum{1}\hlstd{]}
 \hlkwd{index}\hlstd{(idxs[[}\hlnum{1}\hlstd{]])} \hlkwb{<-} \hlkwd{index}\hlstd{(fits)[[}\hlnum{1}\hlstd{]]}
-\hlkwd{library}\hlstd{(parallel)}
-\hlkwd{options}\hlstd{(}\hlkwc{mc.cores} \hlstd{=} \hlnum{4}\hlstd{)}
 \hlstd{lst} \hlkwb{<-} \hlkwd{lapply}\hlstd{(}\hlkwd{split}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{nits,} \hlnum{1}\hlopt{:}\hlstd{nits),} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{) \{}
     \hlstd{out} \hlkwb{<-} \hlkwd{try}\hlstd{(}\hlkwd{sca}\hlstd{(}\hlkwd{iter}\hlstd{(stks, x),} \hlkwd{FLIndices}\hlstd{(}\hlkwd{iter}\hlstd{(idxs[[}\hlnum{1}\hlstd{]], x))))}
     \hlkwa{if} \hlstd{(}\hlkwd{is}\hlstd{(out,} \hlstr{"try-error"}\hlstd{))}
@@ -2935,9 +3026,9 @@ By default the likelihood components are weighted using inverse variance of the 
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-72} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-56} 
 
 }
 
@@ -2946,18 +3037,21 @@ By default the likelihood components are weighted using inverse variance of the 
 \end{knitrout}
 
 
-\subsubsection{Paralell computing}
+\subsubsection{Parallel computing}
 
-This is an example of how to use the parallel package to run assessments. In this example each iteration is a dataset, including surveys, and we'll run one assessment for each iteration. Afterwards the data is pulled back together in a FLStock object and plotted. Only 20 iterations are ran to avoid taking too long. Also note that we're using 4 cores. This parameter depends on the computer being used. These days almost all computers have 2 cores.
+This is an example of how to use the \pkg{parallel} R package to run assessments. In this example each iteration is a dataset, including surveys, and we'll run one assessment for each iteration. Afterwards the data is pulled back together in an \class{FLStock} object and plotted. Only 20 iterations are run to avoid taking too long. Also note that we're using 4 cores. This parameter depends on the computer being used. These days almost all computers have at least 2 cores.
 
-Finnally, compare this code with the one for replicating WCSAM and note that it's exacly the same, except that we're using mclapply, which is in parallel, instead of lapply. 
+Finally, compare this code with the one for replicating WCSAM and note that it's exactly the same, except that we're using \code{mclapply()} from package \pkg{paralell} instead of \code{lapply()}.
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{nits} \hlkwb{<-} \hlnum{20}
+\hlkwd{data}\hlstd{(ple4)}
+\hlkwd{data}\hlstd{(ple4.indices)}
+\hlstd{nits} \hlkwb{<-} \hlnum{25}
 \hlstd{fit} \hlkwb{<-} \hlkwd{a4aSCA}\hlstd{(ple4, ple4.indices[}\hlnum{1}\hlstd{])}
 \hlstd{stk} \hlkwb{<-} \hlstd{ple4} \hlopt{+} \hlstd{fit}
+\hlkwd{set.seed}\hlstd{(}\hlnum{1234}\hlstd{)}
 \hlstd{fits} \hlkwb{<-} \hlkwd{simulate}\hlstd{(fit, nits)}
 \hlstd{stks} \hlkwb{<-} \hlstd{ple4} \hlopt{+} \hlstd{fits}
 \hlstd{idxs} \hlkwb{<-} \hlstd{ple4.indices[}\hlnum{1}\hlstd{]}
@@ -2976,10 +3070,6 @@ Finnally, compare this code with the one for replicating WCSAM and note that it'
     \hlkwd{iter}\hlstd{(}\hlkwd{stock.n}\hlstd{(stks2), i)} \hlkwb{<-} \hlkwd{stock.n}\hlstd{(lst[[i]])}
     \hlkwd{iter}\hlstd{(}\hlkwd{harvest}\hlstd{(stks2), i)} \hlkwb{<-} \hlkwd{harvest}\hlstd{(lst[[i]])}
 \hlstd{\}}
-\end{alltt}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: unable to find an inherited method for function 'catch.n' for signature '"{}NULL"{}'}}\begin{alltt}
 \hlkwd{catch}\hlstd{(stks2)} \hlkwb{<-} \hlkwd{computeCatch}\hlstd{(stks2)}
 \hlkwd{stock}\hlstd{(stks2)} \hlkwb{<-} \hlkwd{computeStock}\hlstd{(stks2)}
 \hlstd{stks3} \hlkwb{<-} \hlkwd{FLStocks}\hlstd{(}\hlkwc{orig} \hlstd{= stk,} \hlkwc{sim} \hlstd{= stks,} \hlkwc{fitsim} \hlstd{= stks2)}
@@ -2989,9 +3079,9 @@ Finnally, compare this code with the one for replicating WCSAM and note that it'
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-74} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-58} 
 
 }
 
@@ -3002,10 +3092,10 @@ Finnally, compare this code with the one for replicating WCSAM and note that it'
 
 \subsection{Model averaging}
 
-We follow the paper Colin et al. Only the AIC averaging is implemented for now.
+To merge results from several fits, using distinct models or datasets, we follow \href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Millar, et.al, 2014}. The method \code{ma()} is the wrapper to the distinct methods, although for now only the AIC averaging is implemented. 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{data}\hlstd{(ple4)}
 \hlkwd{data}\hlstd{(ple4.indices)}
@@ -3015,17 +3105,15 @@ We follow the paper Colin et al. Only the AIC averaging is implemented for now.
     \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{)} \hlopt{+} \hlstd{year,} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{4}\hlstd{),} \hlopt{~}\hlkwd{s}\hlstd{(age,} \hlkwc{k} \hlstd{=} \hlnum{3}\hlstd{)),} \hlkwc{fit} \hlstd{=} \hlstr{"assessment"}\hlstd{)}
 \hlstd{stock.sim} \hlkwb{<-} \hlkwd{ma}\hlstd{(}\hlkwd{a4aFitSAs}\hlstd{(}\hlkwd{list}\hlstd{(}\hlkwc{f1} \hlstd{= f1,} \hlkwc{f2} \hlstd{= f2)), ple4, AIC,} \hlkwc{nsim} \hlstd{=} \hlnum{100}\hlstd{)}
 \hlstd{stks} \hlkwb{<-} \hlkwd{FLStocks}\hlstd{(}\hlkwc{f1} \hlstd{= ple4} \hlopt{+} \hlstd{f1,} \hlkwc{f2} \hlstd{= ple4} \hlopt{+} \hlstd{f2,} \hlkwc{ma} \hlstd{= stock.sim)}
-\hlstd{flqs} \hlkwb{<-} \hlkwd{lapply}\hlstd{(stks, ssb)}
-\hlstd{flqs} \hlkwb{<-} \hlkwd{lapply}\hlstd{(flqs, iterMedians)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-76} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-60} 
 
 }
 
@@ -3035,9 +3123,9 @@ We follow the paper Colin et al. Only the AIC averaging is implemented for now.
 
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\definecolor{shadecolor}{rgb}{0.949, 0.949, 0.949}\color{fgcolor}
 
-{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-77} 
+{\centering \includegraphics[width=\maxwidth]{figure/unnamed-chunk-61} 
 
 }
 
