@@ -45,11 +45,14 @@
 
 \title{Assessment for All initiative(a4a) \\ Stock assessment and management advice methods \\ DRAFT}
 
-\author[1]{Ernesto Jardim}
-\author[1]{Colin Millar}
-\author[1]{Finlay Scott}
-\affil[1]{European Commission, Joint Research Centre, IPSC / Maritime Affairs Unit, 21027 Ispra (VA), Italy}
-\affil[*]{Corresponding author \href{mailto:ernesto.jardim@jrc.ec.europa.eu}{ernesto.jardim@jrc.ec.europa.eu}}
+%\author[1]{Ernesto Jardim}
+%\author[2]{Colin Millar}
+%\author[1]{Finlay Scott}
+%\author[1]{Iago Mosqueira}
+%\author[1]{Chato Osio}
+%\affil[1]{European Commission, Joint Research Centre, IPSC / Maritime Affairs Unit, 21027 Ispra (VA), Italy}
+%\affil[2]{Marine Scotland Freshwater Laboratory, Faskally, Pitlochry, Perthshire PH16 5LB, UK}
+%\affil[*]{Corresponding author \href{mailto:ernesto.jardim@jrc.ec.europa.eu}{ernesto.jardim@jrc.ec.europa.eu}}
 
 \maketitle
 \tableofcontents
@@ -137,7 +140,7 @@ In Steps 1 and 2 there is no fitting of growth models or natural mortality model
 
 Note that an environment like the one distributed by \initiative{a4a} promotes the exploration of different models for each process, giving the analyst a lot of flexibility. It also opens the possibility to efficiently include distinct models in the analysis. For example, a stock assessment using two growth, or several models for natural mortality could be performed. Our suggestion to streamline the assessment process is to combine the final outcomes using model averaging (\href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Miller, et. al, 2014}). Other solutions may be implemented, like scenario analysis, etc. What is important is to keep the data flowing smoothly and the models clear. R (\href{http://www.R-project.org/}{R Core Team, 2014}) and \pkg{FLR} (\href{http://icesjms.oxfordjournals.org/content/64/4/640.abstract}{Kell, et.al, 200}) provide powerful platforms for this approach.
 
-\section{Loading libraries, data and defining some useful functions}
+\subsection{Loading libraries, data and defining some useful functions}
 
 <<knitr_opts, echo=FALSE, message=FALSE, warning=FALSE>>=
 css = eclipse_theme(43)
@@ -1185,7 +1188,7 @@ submodels(fit)
 
 \subsubsection{N1 model}
 
-The submodel for the stock number at age in the first year of the time series is set up with the usual linear tools, but bare in mind that the year effect does not make sense here.
+The submodel for the stock number at age in the first year of the time series is set up with the usual linear tools (Figure~\ref{fig:ny1}), but bare in mind that the year effect does not make sense here.
 
 <<>>=
 n1mod <- ~s(age, k=4)
@@ -1193,15 +1196,15 @@ fit1 <- a4aSCA(ple4, ple4.indices[1], n1model=n1mod)
 flqs <- FLQuants(smo=stock.n(fit1)[,1], fac=stock.n(fit)[,1])
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-xyplot(data~age, groups=qname, data=flqs, type="l", main="N1 models", auto.key=list(points=FALSE, lines=TRUE, columns=2))
+<<ny1, echo=FALSE, fig.cap="Nay=1 models">>=
+xyplot(data~age, groups=qname, data=flqs, type="l", auto.key=list(points=FALSE, lines=TRUE, columns=2))
 @
 
 \subsubsection{Variance model}
 
 The variance model allows the user to set up the shape of the observation variances $\sigma^2_{ay}$ and $I_{ays}$. This is an important subject related with fisheries data used for input to stock assessment models. It's quite common to have more precision on the most represented ages and less precision on the less frequent ages. This is due to the fact that the last ages do not appear as often at the auction markets, in the fishing operations or on survey samples.
 
-By default the model assumes constant variance over time and ages (~ 1 model) but it can use other models specified by the user. As with the other submodels, R linear model capabilities are used.
+By default the model assumes constant variance over time and ages (~ 1 model) but it can use other models specified by the user. As with the other submodels, R linear model capabilities are used (Figure~\ref{fig:varmod}).
 
 <<>>=
 vmod <- list(~1, ~1)
@@ -1211,8 +1214,8 @@ fit2 <- a4aSCA(ple4, ple4.indices[1], vmodel=vmod)
 flqs <- FLQuants(cts=catch.n(fit1), smo=catch.n(fit2))
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-xyplot(data~year|age, groups=qname, data=flqs, type="l", main="Variance models", scales=list(y=list(relation="free")), auto.key=list(points=FALSE, lines=TRUE, columns=2))
+<<varmod, echo=FALSE, fig.cap="Population estimates using two different variance models">>=
+xyplot(data~year|age, groups=qname, data=flqs, type="l", scales=list(y=list(relation="free")), auto.key=list(points=FALSE, lines=TRUE, columns=2))
 @
 
 \subsubsection{Working with covariates}
@@ -1227,27 +1230,27 @@ nao <- seasonMeans(trim(nao, year=dimnames(stock.n(ple4))$year))
 nao <- as.numeric(nao)
 @
 
-First by simply assuming that the index drives recruitment.
+First by simply assuming that the index drives recruitment (Figure~\ref{fig:naor}).
 
 <<>>=
 srmod <- ~ nao
-fit2 <- a4aSCA(ple4, ple4.indices[1], qmodel=list(~s(age, k=4)), srmodel=srmod) 
+fit2 <- sca(ple4, ple4.indices[1], qmodel=list(~s(age, k=4)), srmodel=srmod) 
 flqs <- FLQuants(fac=stock.n(fit)[1], cvar=stock.n(fit2)[1])
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-xyplot(data~year, groups=qname, data=flqs, type="l", main="Recruitment model with covariates")
+<<naor, echo=FALSE, fig.cap="Recruitment model with covariates">>=
+xyplot(data~year, groups=qname, data=flqs, type="l")
 @
 
-In a second model we're using the NAO index not to model recruitment directly but to model one of the parameters of the S/R function. 
+In a second model we're using the NAO index not to model recruitment directly but to model one of the parameters of the S/R function (Figure~\ref{naor2}). 
 
 <<>>=
 srmod <- ~ ricker(a=~nao, CV=0.1)
-fit3 <- a4aSCA(ple4, ple4.indices[1], qmodel=list(~s(age, k=4)), srmodel=srmod) 
+fit3 <- sca(ple4, ple4.indices[1], qmodel=list(~s(age, k=4)), srmodel=srmod) 
 flqs <- FLQuants(fac=stock.n(fit)[1], cvar=stock.n(fit3)[1])
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
+<<naor2, echo=FALSE, fig.cap="Recruitment model with covariates">>=
 xyplot(data~year, groups=qname, data=flqs, type="l", main="Recruitment model with covariates")
 @
 
@@ -1266,10 +1269,7 @@ fit1 <- a4aSCA(ple4, ple4.indices, wkdir="mytest")
 Predicting and simulating are important methods for statistical models. \pkg{R} uses the methods \code{predict()} and \code{simulate()}, which were implemented in \pkg{FLa4a} in the same fashion. 
 
 <<>>=
-#fmodel <- ~ s(age, k=4) + s(year, k = 20)
-#qmodel <- list( ~ s(age, k=4) + year)
-#srmodel <- ~s(year, k=20)
-fit <- a4aSCA(ple4, ple4.indices[1]) 
+fit <- sca(ple4, ple4.indices[1], fit="assessment") 
 @
 
 \subsubsection{Predict}
@@ -1283,18 +1283,18 @@ lapply(fit.pred, names)
 
 \subsubsection{Simulate}
 
-Simulate uses the variance-covariance matrix computed from the Hessian returned by \pkg{ADMB} and the fitted parameters, to parametrize a multivariate normal distribution. The simulations are carried out using the method \code{mvrnorm()} provided by the R package \href{http://cran.r-project.org/web/packages/MASS/}{\pkg{MASS}}.
+Simulate uses the variance-covariance matrix computed from the Hessian returned by \pkg{ADMB} and the fitted parameters, to parametrize a multivariate normal distribution. The simulations are carried out using the method \code{mvrnorm()} provided by the R package \href{http://cran.r-project.org/web/packages/MASS/}{\pkg{MASS}}. Figure~\ref{fig:sim} shows a comparison between the estimated values and the medians of the simulation, while Figure~\ref{fig:sim2} presents the stock summary of the simulated and fitted data.
 
 <<>>=
 fits <- simulate(fit, 100)
 flqs <- FLQuants(sim=iterMedians(stock.n(fits)), det=stock.n(fit))
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-xyplot(data~year|age, groups=qname, data=flqs, type="l", main="Median simulations VS fit", scales=list(y=list(relation="free")))
+<<sim, echo=FALSE, fig.cap="Median simulations VS fit">>=
+xyplot(data~year|age, groups=qname, data=flqs, type="l", scales=list(y=list(relation="free")))
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
+<<sim2, echo=FALSE, fig.cap="Stock summary of the simulated and fitted data">>=
 stks <- ple4 + fits
 plot(stks)
 @
@@ -1304,16 +1304,12 @@ plot(stks)
 A lot more can be done with the \initiative{a4a} framework. The next sections will describe methods that are more technical. What we'd categorize as 'matters for geeks', in the sense that these methods usually will require the users to 'dive' into \pkg{R} a bit more. 
 
 <<>>=
-#fmodel <- ~ s(age, k=4) + s(year, k = 20)
-#qmodel <- list( ~ s(age, k=4) + year)
-#srmodel <- ~s(year, k=20)
-#vmodel <- list(~1, ~1)
-fit <- a4aSCA(ple4, ple4.indices[1]) 
+fit <- sca(ple4, ple4.indices[1], fit="assessment") 
 @
 
 \subsubsection{External weigthing of likelihood components}
 
-By default the likelihood components are weighted using inverse variance. However, the user may change the weights by setting the variance of the input parameters. This is done by adding a variance matrix to the \code{catch.n} and \code{index.n} slots of the stock and index objects. These variances will be used to penalize the data during the likelihood computation. The values should be given as coefficients of variation on the log scale, so that variance is $\log{({CV}^2 + 1)}$.
+By default the likelihood components are weighted using inverse variance. However, the user may change the weights by setting the variance of the input parameters. This is done by adding a variance matrix to the \code{catch.n} and \code{index.n} slots of the stock and index objects. These variances will be used to penalize the data during the likelihood computation. The values should be given as coefficients of variation on the log scale, so that variance is $\log{({CV}^2 + 1)}$. Figure~\ref{fig:likwgt} shows the results of two fits with distinct likelihood weightings.
 
 <<>>=
 stk <- ple4
@@ -1331,45 +1327,45 @@ fit1 <- a4aSCA(stk, idx)
 flqs <- FLQuants(nowgt=stock.n(fit), extwgt=stock.n(fit1))
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-xyplot(data~year|age, groups=qname, data=flqs, type="l", main="Likelihood weighting", scales=list(y=list(relation="free")), auto.key=list(points=FALSE, lines=TRUE, columns=2))
+<<likwgt, echo=FALSE, fig.cap="Stock summary of distinct likelihood weightings">>=
+xyplot(data~year|age, groups=qname, data=flqs, type="l", scales=list(y=list(relation="free")), auto.key=list(points=FALSE, lines=TRUE, columns=2))
 @
 
 \subsubsection{More models}
 
 There's a set of methods that allow the user to have more flexibility on applying the models referred before. For example to break the time series in two periods, using the method \code{breakpts()}, or fixing some parts of the selection pattern by setting F to be the same for a group of ages, using \code{replace()}.
 
-The example below replaces all ages above 5 by age 5, which means that a single coefficient is going to be estimated for age 5-10.
+The example below (Figure~\ref{fig:rep}) replaces all ages above 5 by age 5, which means that a single coefficient is going to be estimated for age 5-10.
 
 <<>>=
 fmod <- ~ s(replace(age, age>5, 5), k=4) + s(year, k=20)
 fit <- sca(ple4, ple4.indices, fmod)
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45), main="F-at-age fixed above age 5")
+<<rep, echo=FALSE, fig.cap="F-at-age fixed above age 5">>=
+wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
-In the next case we'll use the \code{breakpts()} to split the time series at 1990, although keeping the same shape in both periods, a thin plate spline with 3 knots.
+In the next case we'll use the \code{breakpts()} to split the time series at 1990, although keeping the same shape in both periods, a thin plate spline with 3 knots (Figure~\ref{fig:brk}).
 
 <<>>=
 fmod <- ~s(age, k = 3, by = breakpts(year, 1990))
 fit <- sca(ple4, ple4.indices, fmod)
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45), main="F-at-age in two periods using in both cases a thin plate spline with 3 knots")
+<<brk, echo=FALSE, fig.cap="F-at-age in two periods using in both cases a thin plate spline with 3 knots">>=
+wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
-More complicated models can be built with these tools. For example, here is a model where the age effect is modelled as a smoother (the same thin plate spline) throughout years but independent from each other.
+More complicated models can be built with these tools. For example, Figure~\ref{fig:ageind} shows a model where the age effect is modelled as a smoother (the same thin plate spline) throughout years but independent from each other.
 
 <<>>=
 fmod <- ~ factor(age) + s(year, k=10, by = breakpts(age, c(2:8)))
 fit <- sca(ple4, ple4.indices, fmod)
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45), main="F-at-age as thin plate spline with 3 knots for each age")
+<<ageind, echo=FALSE, fig.cap="F-at-age as thin plate spline with 3 knots for each age">>=
+wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
 \subsubsection{Propagate natural mortality uncertainty}
@@ -1408,10 +1404,10 @@ The assessment is performed for each of the 25 iterations.
 fit1 <- sca(stk, ple4.indices)
 @
 
-And compare the two results. It's quite easy to run these kind of tests and a large part of our effort is to create the tools to do so. 
+And compare the two results (Figure~\ref{fig:mprop}). It's quite easy to run these kind of tests and a large part of our effort is to create the tools to do so. 
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-plot(FLStocks(munc=ple4+fit1, m02=ple4+fit))
+<<mprop, echo=FALSE, fig.cap="Stock summary for two M models">>=
+plot(FLStocks(munc=propagate(ple4, 25)+fit1, m02=ple4+fit))
 @
 
 %\subsubsection{Likelihood profiling - ToDo}
@@ -1431,7 +1427,7 @@ plot(FLStocks(munc=ple4+fit1, m02=ple4+fit))
 
 \subsubsection{WCSAM exercise - replicating itself}
 
-The World Conference on Stock Assessment Methods (\href{http://www.ices.dk/news-and-events/symposia/WCSAM-2013}{WCSAM}) promoted a workshop where a large simulation study was used to test the performance of distinct stock assessment models. The first criteria used was that the models should be able to reproduce itself. The process involved fitting the model, simulating observation error using the same model, and refitting the model to each iteration. The final results should be similar to the fitted results before observation error was added (see \href{http://icesjms.oxfordjournals.org/content/early/2014/01/18/icesjms.fst237.abstract}{Deroba, et.al, 2014} for details). The following analysis runs this analysis.
+The World Conference on Stock Assessment Methods (\href{http://www.ices.dk/news-and-events/symposia/WCSAM-2013}{WCSAM}) promoted a workshop where a large simulation study was used to test the performance of distinct stock assessment models. The first criteria used was that the models should be able to reproduce itself. The process involved fitting the model, simulating observation error using the same model, and refitting the model to each iteration. The final results should be similar to the fitted results before observation error was added (see \href{http://icesjms.oxfordjournals.org/content/early/2014/01/18/icesjms.fst237.abstract}{Deroba, et.al, 2014} for details). The following analysis runs this analysis and Figure~\ref{fig:wcsam} presents the results.
 
 <<>>=
 nits <- 25
@@ -1457,13 +1453,13 @@ catch(stks2) <- computeCatch(stks2)
 stock(stks2) <- computeStock(stks2) 
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-plot(FLStocks(orig=stk, sim=stks, fitsim=stks2), main="Replicating the stock assessment modeWCSAM style")
+<<wcsam, echo=FALSE, fig.cap="Replicating the stock assessment model (WCSAM approach)">>=
+plot(FLStocks(orig=stk, sim=stks, fitsim=stks2))
 @
 
 \subsubsection{Parallel computing}
 
-This is an example of how to use the \pkg{parallel} R package to run assessments. In this example each iteration is a dataset, including surveys, and we'll run one assessment for each iteration. Afterwards the data is pulled back together in an \class{FLStock} object and plotted. Only 20 iterations are run to avoid taking too long. Also note that we're using 4 cores. This parameter depends on the computer being used. These days almost all computers have at least 2 cores.
+This is an example of how to use the \pkg{parallel} R package to run assessments. In this example each iteration is a dataset, including surveys, and we'll run one assessment for each iteration. Afterwards the data is pulled back together in an \class{FLStock} object and plotted (Figure~\ref{fig:wcsampar}). Only 20 iterations are run to avoid taking too long. Also note that we're using 4 cores. This parameter depends on the computer being used. These days almost all computers have at least 2 cores.
 
 Finally, compare this code with the one for replicating WCSAM and note that it's exactly the same, except that we're using \code{mclapply()} from package \pkg{paralell} instead of \code{lapply()}.
 
@@ -1497,13 +1493,13 @@ stks3 <- FLStocks(orig=stk, sim=stks, fitsim=stks2)
 
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
+<<wcsampar, echo=FALSE, fig.cap="Replicating the stock assessment model (WCSAM approach) using parallel computing">>=
 plot(stks3)
 @
 
 \subsection{Model averaging}
 
-To merge results from several fits, using distinct models or datasets, we follow \href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Millar, et.al, 2014}. The method \code{ma()} is the wrapper to the distinct methods, although for now only the AIC averaging is implemented. 
+To merge results from several fits, using distinct models or datasets, we follow \href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Millar, et.al, 2014}. The method \code{ma()} is the wrapper to the distinct methods, although for now only the AIC averaging is implemented. Figures~\ref{fig:ssbmodav}~and~\ref{fig:modav} show the results. 
 
 <<>>=
 data(ple4)
@@ -1514,14 +1510,14 @@ stock.sim <- ma(a4aFitSAs(list(f1=f1, f2=f2)), ple4, AIC, nsim = 100)
 stks <- FLStocks(f1=ple4+f1, f2=ple4+f2, ma=stock.sim)
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
+<<ssbmodav, echo=FALSE, fig.cap="SSB of the two models and their average">>=
 flqs <- lapply(stks, ssb)
 flqs <- lapply(flqs, iterMedians)
-xyplot(data~year, groups=qname, data=flqs, type="l", main="SSB of the two models and their average")
+xyplot(data~year, groups=qname, data=flqs, type="l")
 @
 
-<<figure=TRUE,fig.pos="H",echo=FALSE>>=
-plot(stks, main="Stock summaries of the two models and their average")
+<<modav, echo=FALSE, fig.cap="Stock summaries of the two models and their average">>=
+plot(stks)
 @
 
 \end{document}
