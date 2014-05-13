@@ -45,14 +45,14 @@
 
 \title{Assessment for All initiative(a4a) \\ Stock assessment and management advice methods \\ DRAFT}
 
-%\author[1]{Ernesto Jardim}
-%\author[2]{Colin Millar}
-%\author[1]{Finlay Scott}
-%\author[1]{Iago Mosqueira}
-%\author[1]{Chato Osio}
-%\affil[1]{European Commission, Joint Research Centre, IPSC / Maritime Affairs Unit, 21027 Ispra (VA), Italy}
-%\affil[2]{Marine Scotland Freshwater Laboratory, Faskally, Pitlochry, Perthshire PH16 5LB, UK}
-%\affil[*]{Corresponding author \href{mailto:ernesto.jardim@jrc.ec.europa.eu}{ernesto.jardim@jrc.ec.europa.eu}}
+\author[1]{Ernesto Jardim}
+\author[2]{Colin Millar}
+\author[1]{Finlay Scott}
+\author[1]{Iago Mosqueira}
+\author[1]{Chato Osio}
+\affil[1]{European Commission, Joint Research Centre, IPSC / Maritime Affairs Unit, 21027 Ispra (VA), Italy}
+\affil[2]{Marine Scotland Freshwater Laboratory, Faskally, Pitlochry, Perthshire PH16 5LB, UK}
+\affil[*]{Corresponding author \href{mailto:ernesto.jardim@jrc.ec.europa.eu}{ernesto.jardim@jrc.ec.europa.eu}}
 
 \maketitle
 \tableofcontents
