@@ -46,7 +46,7 @@
 \title{Assessment for All initiative(a4a) \\ Stock assessment and management advice methods \\ DRAFT}
 
 \author[1]{Ernesto Jardim}
-\author[2]{Colin Millar}
+\author[1,2]{Colin Millar}
 \author[1]{Finlay Scott}
 \author[1]{Iago Mosqueira}
 \author[1]{Chato Osio}
@@ -60,6 +60,13 @@
 
 \section{Introduction}
 
+<<knitr_opts, echo=FALSE, message=FALSE, warning=FALSE>>=
+css = eclipse_theme(43)
+thm = knit_theme$get(css)
+knit_theme$set(thm)
+opts_chunk$set(dev='png', cache=TRUE, fig.align='center', warning=FALSE, message=FALSE, dev="png", dev.args=list(type="cairo"), dpi=96, highlight=TRUE, background='#F2F2F2', fig.lp="fig:", fig.pos="H")
+@
+
 \subsection{Background}
 
 (This section is based on \href{http://icesjms.oxfordjournals.org/content/early/2014/04/03/icesjms.fsu050.abstract}{Jardim, et.al, 2014})
@@ -70,7 +77,7 @@ For example, in Europe the 2009 revision of the Data Collection Regulation (EU, 
 
 Recognizing that the context above required new methodological developments, the European Commission Joint Research Centre (JRC) started its ‘Assessment for All’ Initiative (\initiative{a4a}), with the aim to develop, test, and distribute methods to assess a large numbers of stocks in an operational time frame, and to build the necessary capacity/expertise on stock assessment and advice provision. 
 
-The long-term strategy of \initiative{a4a} is to increase the number of stock assessments by reducing the workload required to run each analysis and by bringing more scientists/analysts into fisheries management advice. The first is achieved by developing a working framework with the methods required to run all the analysis a stock assessment needs, as well as developing methods to deal with recognized bottlenecks, \emph{e.g.} model averaging to deal with model selection (\href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Millar, et.al, 2014}). Such an approach should make the model exploration and selection processes easier, as well as decreasing the burden of moving between software platforms. The second can be achieved by making the analysis more intuitive, thereby attracting more experts to join stock assessment teams.
+The long-term strategy of \initiative{a4a} is to increase the number of stock assessments while simultaneously promoting the inclusion of the major sources of uncertainty in scientific advice. Our aim is to reduce the required workload by developing a software framework with the methods required to run the analysis a stock assessment needs, including methods to deal with recognized bottlenecks, \emph{e.g.} model averaging to deal with model selection (\href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Millar, et.al, 2014}). Moreover, we aim to make the analysis more intuitive, thereby attracting more experts to join stock assessment teams. Having more scientists/analysts working in fisheries management advice will increase the human resource basis, which is currently recognized to be limited. Regarding the former, \initiative{a4a} promotes a risk analysis approach to scientific advice through a wider usage of Operating Model/MSE approaches. We're focused on developing methods that can deal with the most common settings these type of analysis require, and creating the conditions for scientists to develop their own methods. Our expectation is that having a common framework, with clear data structures and workflows, will promote research in this area and make it simpler to implement and share methods.
 
 To achieve these objectives, the Initiative identified a series of tasks, which were or are being carried out, namely:
 \begin{itemize}
@@ -107,7 +114,7 @@ The 'moderate data stock' constitutes the entry level of our analysis. It has at
 
 \subsubsection{The stock assessment framework}
 
-The stock assessment model framework is a non-linear catch-at-age model implemented in \pkg{R}/\pkg{FLR}/\pkg{ADMB} that can be applied rapidly to a wide range of situations with low parametrization requirements. Later we'll come back to these characteristics and it's application (Section~\ref{sec:running_assessments}).
+The stock assessment model framework is a non-linear catch-at-age model implemented in \pkg{R}/\pkg{FLR}/\pkg{ADMB} that can be applied rapidly to a wide range of situations with low parametrization requirements. Later we'll come back to these characteristics and it's application (Section~\ref{sec:sca}).
 
 \subsubsection{MSE}
 
@@ -123,14 +130,18 @@ These courses are open to all participants and don't have an attendance fee.
 
 \subsection{The \initiative{a4a} approach to stock assessment and management advice}
 
-The approach presented here is split into 4 steps: (i) converting length data to age data using a growth model, (ii) modelling natural mortality, (iii) assessing the stock, and (iv) MSE\footnote{Under development, to be released with version 2.0, scheduled for the fourth quarter of 2014}.
+As stated before, one of the main objectives of \initiative{a4a} is to promote a risk type of analysis, so that scientific advice provides policy and decision makers a perspective of the uncertainty existing on stock assessments and its propagation into the scenarios being analyzed.
+
+The sources of uncertainty implemented so far are related with the processes of growth, natural mortality and reproduction (stock-recruitment); and with the estimation of population abundance and fishing mortality by the stock assessment model. In all cases the framework can include sampling error.
+
+The approach is split into 4 steps: (i) converting length data to age data using a growth model (Section~\ref{sec:l2a}), (ii) modeling natural mortality (Section~\ref{sec:M}), (iii) assessing the stock (Section~\ref{sec:sca}), and (iv) MSE\footnote{Under development, to be released with version 2.0, scheduled for the fourth quarter of 2014}.
 
 These steps may be followed in sequence or independently, depending on the user's preferences. All that is needed is to use the objects provided by the previous step and provide the objects required by the next, so that data flows between steps smoothly. One can make the analogy with building with Lego, where for each layer the builder may use the pieces provided by a particular boxset, or make use of pieces from other boxsets. Figure \ref{fig:inout} shows the process, including the class of the objects that carry the data (in black).
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{./inout}
-\caption{In/out process of the \initiative{a4a} approach. The boxes in black represent the classes of the objects that carry the information for each step and out of each step.}
+\caption{In/out process of the \initiative{a4a} approach. The boxes in black represent the classes of the objects that carry the information in and out of each step.}
 \label{fig:inout}
 \end{figure}
 
@@ -140,36 +151,52 @@ In Steps 1 and 2 there is no fitting of growth models or natural mortality model
 
 Note that an environment like the one distributed by \initiative{a4a} promotes the exploration of different models for each process, giving the analyst a lot of flexibility. It also opens the possibility to efficiently include distinct models in the analysis. For example, a stock assessment using two growth, or several models for natural mortality could be performed. Our suggestion to streamline the assessment process is to combine the final outcomes using model averaging (\href{http://icesjms.oxfordjournals.org/content/early/2014/03/31/icesjms.fsu043.abstract}{Miller, et. al, 2014}). Other solutions may be implemented, like scenario analysis, etc. What is important is to keep the data flowing smoothly and the models clear. R (\href{http://www.R-project.org/}{R Core Team, 2014}) and \pkg{FLR} (\href{http://icesjms.oxfordjournals.org/content/64/4/640.abstract}{Kell, et.al, 200}) provide powerful platforms for this approach.
 
-\subsection{Loading libraries, data and defining some useful functions}
+\subsection{How to read this document}
 
-<<knitr_opts, echo=FALSE, message=FALSE, warning=FALSE>>=
-css = eclipse_theme(43)
-thm = knit_theme$get(css)
-knit_theme$set(thm)
-opts_chunk$set(dev='png', cache=TRUE, fig.align='center', warning=FALSE, message=FALSE, dev="png", dev.args=list(type="cairo"), dpi=96, highlight=TRUE, background='#F2F2F2', fig.lp="fig:", fig.pos="H")
+The target audience for this document are readers with some experience in R and some background on stock assessment.
+
+The document explains the approach being developed by \initiative{a4a} for fish stock assessment and scientific advice. It presents a mixture of text and code, where the first explains the concepts behind the methods, while the last shows how these can be run with the software provided. Moreover, having the code allows the reader to copy/paste and replicate the analysis presented here.
+
+The sections and subsections are as independent as possible, so it can be used as a reference document for the \pkg{FLa4a}. 
+
+Section~\ref{sec:in} deals with reading and preparing data in \pkg{FLR} objects, which constitute the basic dataset for stock assessment with length structured models. This section is independent from \pkg{FLa4a} and relies mostly on \R and \pkg{reshape}.
+
+Sections~\ref{sec:l2a},\ref{sec:M} and \ref{sec:sca} are related with \pkg{FLa4a} and describe the concepts described in the previous section.
+
+Finally, this document is a work in progress and will be updated and released often.
+
+\subsubsection{Loading libraries, data and defining some useful functions}
+
+To run the \pkg{FLa4a} methods the reader will need to install the package and its dependencies and load them, together with a couple of other packages. Some datsets are distributed with the package and as such need to be loaded too. A set of auxiliary functions are also required, to avoid having long and repetitive code.
+
+<<eval=FALSE>>=
+# from CRAN
+install.packages(c("copula","triangle"))
+# from FLR
+install.packages(c("FLCore", "FLa4a"), repos="http://flr-project.org/R")
 @
 
 <<load_libraries, message=FALSE, warning=FALSE>>=
+# libraries
 library(FLa4a)
 library(XML)
 library(reshape2)
 library(diagram)
+# datasets
 data(ple4)
 data(ple4.indices)
 data(rfLen)
 @
 
 <<trans_funcs, message=FALSE, warning=FALSE>>=
-# functions for transforming the data
-
-# quant 2 quant
+# recode Gadget's length categories
 qt2qt <- function(object, id=5, split="-"){
 	qt <- object[,id]
 	levels(qt) <- unlist(lapply(strsplit(levels(qt), split=split), "[[", 2))
 	as.numeric(as.character(qt))
 }
 
-# check import and massage
+# function to check import and do some massage
 cim <- function(object, n, wt, hrv="missing"){
 	v <- object[sample(1:nrow(object), 1),]
 	c1 <- c(n[as.character(v$V5),as.character(v$V1),1,as.character(v$V2)]==v$V6)
@@ -182,7 +209,7 @@ cim <- function(object, n, wt, hrv="missing"){
 	}
 }
 
-# and a plot for later
+# plot for S4 data structures with diagram
 plotS4 <- function(object, linktext="typeof", main="S4 class", ...){
 	args <- list(...)
 	obj <- getClass(as.character(object))
@@ -202,25 +229,24 @@ plotS4 <- function(object, linktext="typeof", main="S4 class", ...){
 
 @
 
-\section{Reading files and building \pkg{FLR} objects}
+\section{Reading files and building \pkg{FLR} objects}\label{sec:in}
 
-For this document we'll use the plaice in ICES area IV dataset, provided by \pkg{FLR}, and a length-based simulated dataset based on red fish, using \href{http://www.hafro.is/gadget}{\pkg{Gadget}}, provided by Daniel Howell (Institute of Marine Research, Norway).
-
-In this section we read in the \pkg{Gadget} data files, and transform them into \pkg{FLR} objects.
-
-First we read in the files as data frames and recode some variables.
+For this document we'll use the plaice in ICES area IV dataset, provided by \pkg{FLR}, and a length-based simulated dataset based on red fish, using \href{http://www.hafro.is/gadget}{\pkg{Gadget}}, provided by Daniel Howell (Institute of Marine Research, Norway). In this section we'll read in the \pkg{Gadget} data files, and transform them into \pkg{FLR} objects, by first reading the files as data frames, recode some variables and finally creating \pkg{FLR} objects. Note that the following code assumes that the files are in the working directory.
 
 <<read_gadget_files>>=
 # catch
-cth.orig <- read.table("data/catch.len", skip=5)
+cth.orig <- read.table("catch.len", skip=5)
+
+# check the format of the files
+head(cth.orig)
 
 # stock
-stk.orig <- read.table("data/red.len", skip=4)
+stk.orig <- read.table("red.len", skip=4)
 
 # surveys
-idx.orig <- read.table("data/survey.len", skip=5)
-idxJmp.orig <- read.table("data/jump.survey.len", skip=5)
-idxTrd.orig <- read.table("data/tend.survey.len", skip=5)
+idx.orig <- read.table("survey.len", skip=5)
+idxJmp.orig <- read.table("jump.survey.len", skip=5)
+idxTrd.orig <- read.table("tend.survey.len", skip=5)
 
 # Recode the length categories into something usable
 
@@ -236,7 +262,7 @@ idxJmp.orig[,5] <- qt2qt(idxJmp.orig)
 idxTrd.orig[,5] <- qt2qt(idxTrd.orig)
 @
 
-Then we reshape the data frames into six dimensional arrays using \code{cast()} from package \pkg{reshape2}.
+Then we reshape the data frames into six dimensional arrays using \code{cast()} from package \pkg{reshape2}. Note that the columns names are \code{V\#} due to the importing method, which will have to be used in the formula argument to \code{acast}.
 
 <<cast_data>>=
 # catch
@@ -317,16 +343,6 @@ cim(idxJmp.orig, idxJmp.n, idxJmp.wt, idxJmp.hrv)
 cim(idxTrd.orig, idxTrd.n, idxTrd.wt, idxTrd.hrv)
 @
 
-%#------------------------------------------------------------------------------
-%# contents
-%#------------------------------------------------------------------------------
-
-%# length-weight relationship is a bit odd ...
-%xyplot(data~len|year, groups=season, data=cth.wt/cth.n, type="l")
-
-%# length-weight relationship is a bit odd ...
-%xyplot(data~len|year, groups=season, data=stk.wt, type="l")
-
 Finally, we make \pkg{FLR} objects from the data.
 
 <<make_FLR_objects>>=
@@ -348,7 +364,7 @@ effort(rfTrawlTrd.idx)[] <- 100
 @
 
 \pagebreak
-\section{Converting from length to age based data}
+\section{Converting from length to age based data}\label{sec:l2a}
 
 The \initiative{a4a} stock assessment framework is based on age dynamics. Therefore, to use length information it must be processed before it can be used in an assessment. The rationale is that the processing should give the analyst the flexibility to use a range of sources of information, \emph{e.g.} literature or online databases, to grab information about the species growth model and the uncertainty about the model parameters.
 
@@ -387,7 +403,7 @@ predict(vbObj, len=5:10+0.5)
 predict(vbObj, t=5:10+0.5)
 @
 
-\subsection{Adding parameter uncertainty with a multivariate normal distribution}
+\subsection{Adding uncertainty to growth parameters with a multivariate normal distribution}
 
 Uncertainty in the growth model is introduced through the inclusion of parameter uncertainty.
 This is done by making use of the parameter variance-covariance matrix (the \code{vcov} slot of the \class{a4aGr} class) and assuming a distribution. The numbers in the variance-covariance matrix could come from the parameter uncertainty from fitting the growth model parameters.
@@ -465,7 +481,7 @@ Growth curves for the 1000 iterations can be seen in Figure~\ref{fig:plot_mv_gro
 boxplot(t(predict(vbNorm, t=0:50+0.5)))
 @
 
-\subsection{Adding parameter uncertainty with a multivariate triangle distribution}
+\subsection{Adding uncertainty to growth parameters with a multivariate triangle distribution}
 \label{sec:growth_triangle_cop}
 
 One alternative to using a normal distribution is to use a \href{http://en.wikipedia.org/wiki/Triangle\_distribution}{triangle distribution}. We use the package \href{http://cran.r-project.org/web/packages/triangle/index.html}{\pkg{triangle}}, where this distribution is parametrized using the minimum, maximum and median values. This can be very attractive if the analyst needs to scrape information from the web or literature and perform some kind of meta-analysis.
@@ -512,9 +528,9 @@ boxplot(t(predict(vbTri, t=0:20+0.5)))
 
 Remember that the above examples use a variance-covariance matrix that we essentially made up. An alternative would be to scrape the entire growth parameters dataset from Fishbase and compute the shape of the variance-covariance matrix yourself.
 
-\subsection{Adding parameter uncertainty with copulas}
+\subsection{Adding uncertainty to growth parameters with statistical copulas}
 
-A more general approach to adding parameter uncertainty is to make use of statistical copulas\footnote{\url{http://en.wikipedia.org/wiki/Copula\_\%28probability\_theory\%29}} and marginal distributions of choice. This is possible with the \code{mvrcop()} function borrowed from the package \href{http://cran.r-project.org/web/packages/copula/}{\pkg{copula}}. The example below keeps the same parameters and changes only the copula type and family but a lot more can be done. Check the package \pkg{copula} for more information. 
+A more general approach to adding parameter uncertainty is to make use of \href{http://www.encyclopediaofmath.org/index.php/Copula}{statistical copulas} and marginal distributions of choice. This is possible with the \code{mvrcop()} function borrowed from the package \href{http://cran.r-project.org/web/packages/copula/}{\pkg{copula}}. The example below keeps the same parameters and changes only the copula type and family but a lot more can be done. Check the package \pkg{copula} for more information. 
 
 % Needs more explanation
 
@@ -532,7 +548,7 @@ splom(data.frame(t(params(vbCop)@.Data)), pch=".")
 boxplot(t(predict(vbCop, t=0:20+0.5)))
 @
 
-\subsection{The \code{l2a()} method}
+\subsection{Converting from length to age based data - the \code{l2a()} method}
 
 After introducing uncertainty in the growth model through the parameters it's time to transform the length-based dataset into an age-based dataset. The method that deals with this process is \code{l2a()}. The implementation of this method for the \class{FLQuant} class is the main workhorse. There are two other implementations, for the \class{FLStock} and \class{FLIndex} classes, which are mainly wrappers that call the \class{FLQuant} method several times.
 
@@ -566,8 +582,7 @@ aIdx <- l2a(rfTrawl.idx, vbTriSmall)
 When converting with \code{l2a()} all lengths above Linf are converted to the maximum age, as there is no information in the growth model about how to deal with individuals larger than Linf. 
 
 \pagebreak
-\section{Natural mortality}
-\label{sec:natmort}
+\section{Natural mortality}\label{sec:M}
 
 In the \initiative{a4a} natural mortality is dealt with as an external parameter to the stock assessment model. The rationale to modelling natural mortality is similar to that of growth: one should be able to grab information from a range of sources and feed it into the assessment.
 
@@ -645,7 +660,7 @@ m3 <- a4aM(shape=shape3, level=level3, trend=trend3)
 m3
 @
 
-\subsection{Adding multivariate normal parameter uncertainty}
+\subsection{Adding uncertainty to natural mortality parameters with a multivariate normal distribution}
 
 Uncertainty on natural mortality is added through uncertainty on the parameters.
 
@@ -679,7 +694,7 @@ m4 <- a4aM(shape=shape4, level=mvrnorm(100, level4), trend=mvrnorm(100, trend4))
 
 %Note: How to include ageing error ???
 
-\subsection{Adding parameter uncertainty with copulas}
+\subsection{Adding uncertainty to natural mortality parameters with statistical copulas}
 
 We can also use copulas to add parameter uncertainty to the natural mortality model, similar to the way we use them for the growth model in Section \ref{sec:growth_triangle_cop}. As stated above these processes make use of the methods implemented for the \class{FLModelSim} class.
 
@@ -727,7 +742,7 @@ m5 <- m4
 shape(m5) <- mgis2
 @
 
-\subsection{The "m" method}
+\subsection{Computing natural mortality time series - the "m" method}
 
 Now that we have set up the natural mortality \class{a4aM} model and added parameter uncertainty to each component, we are ready to generate the \class{FLQuant} of natural mortality. For that we need the \code{m()} method.
 
@@ -825,8 +840,7 @@ bwplot(data~factor(age)|year, data=m(m4, nao=as.numeric(nao[,as.character(2000:2
 @
 
 \pagebreak
-\section{Running assessments}
-\label{sec:running_assessments}
+\section{Running assessments}\label{sec:sca}
 
 In the \initiative{a4a} assessment model, the model structure is defined by submodels, which are the different parts of a statistical catch at age model that require structural assumptions.
 
@@ -977,7 +991,7 @@ plotS4("submodel", lwd = 1, box.lwd = 2, cex.txt = 0.8, box.size = 0.1, box.type
 
 For example, all the parameters required so simulate a time-series of mean F trends is contained in the \code{stkmodel} slot, which is a class of type \class{a4aStkParams}. This class contains the relevant submodels (see later), their parameters \code{params} and the joint covariance matrix \code{vcov} for all stock related parameters.
 
-\subsection{The sca method - statistical catch-at-age}
+\subsection{The statistical catch-at-age stock assessment framework - the \code{sca} method}
 
 The \code{sca()} method used in the previous section with the default settings, can be parametrized to control other features of the stock assessment framework. The most interesting ones are the submodels for $F$, $Q$ and $R$. 
 
@@ -1174,7 +1188,7 @@ flqs <- FLQuants(fac=stock.n(fit)[1], smo=stock.n(fit1)[1], ric=stock.n(fit2)[1]
 xyplot(data~year, groups=qname, data=flqs, type="l", auto.key=list(points=FALSE, lines=TRUE, columns=3))
 @
 
-\subsection{The a4aSCA method - advanced features}
+\subsection{The statistical catch-at-age stock assessment framework advanced features - the \code{a4aSCA} method}
 
 A more advanced method for stock assessment can be used through the \code{a4aSCA()} method. This method gives access to the submodels for $N1$, $\sigma^2_{ay}$ and $I_{ays}$ as well as arguments to get the ADMB files, etc. Check the manual pages with \code{?a4aSCA} for more information. This method has 'assessment' as the default value for the \code{fit} argument, which means that the hessian is going to be computed and all the information about the parameters will be returned by default. Note that the default models of each submodel can be accessed with
 
@@ -1433,8 +1447,7 @@ The World Conference on Stock Assessment Methods (\href{http://www.ices.dk/news-
 nits <- 25
 fit <- a4aSCA(ple4, ple4.indices[1]) 
 stk <- ple4 + fit
-set.seed(1234)
-fits <- simulate(fit, nits)
+fits <- simulate(fit, nits, 1234)
 stks <- ple4 + fits 
 idxs <- ple4.indices[1]
 index(idxs[[1]]) <- index(fits)[[1]]
@@ -1469,13 +1482,12 @@ data(ple4.indices)
 nits <- 25
 fit <- a4aSCA(ple4, ple4.indices[1]) 
 stk <- ple4 + fit
-set.seed(1234)
-fits <- simulate(fit, nits)
+fits <- simulate(fit, nits, 1234)
 stks <- ple4 + fits 
 idxs <- ple4.indices[1]
 index(idxs[[1]]) <- index(fits)[[1]]
 library(parallel)
-options(mc.cores=4)
+options(mc.cores=3)
 lst <- mclapply(split(1:nits, 1:nits), function(x){
 	out <- try(a4aSCA(iter(stks, x), FLIndices(iter(idxs[[1]], x)), fit="MP")) 
 	if(is(out, "try-error")) NULL else out
@@ -1495,6 +1507,43 @@ stks3 <- FLStocks(orig=stk, sim=stks, fitsim=stks2)
 
 <<wcsampar, echo=FALSE, fig.cap="Replicating the stock assessment model (WCSAM approach) using parallel computing">>=
 plot(stks3)
+@
+
+\subsection{Mimicking other stock assessment models}
+
+Mimicking other stock assessment models is relevant for the implementation of MSEs, when the analyst is interested in comparing the performance of HCRs based on inputs from distinct stock assessment models. 
+
+WORK IN PROGRESS.
+
+\subsubsection{Separable F model}
+<<>>=
+fmodel <- ~factor(age)+factor(year)
+fit <- sca(ple4, ple4.indices, fmodel=fmodel)
+@
+
+<<sepmod, echo=FALSE, fig.cap="Separable F model">>=
+wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
+@
+
+\subsubsection{VPA/XSA}
+<<>>=
+fmodel <- ~factor(replace(age, age>9, 9))+factor(year)
+qmodel <- list(~factor(age), ~factor(age), ~factor(age))
+fit <- sca(ple4, ple4.indices, fmodel=fmodel, qmodel=qmodel)
+@
+
+<<vpamod, echo=FALSE, fig.cap="VPA/XSA type of model">>=
+wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
+@
+
+\subsubsection{FLSAM}
+<<>>=
+fmod <- ~ factor(age) + s(year, k=10, by = breakpts(age, 1.5:10))
+fit <- sca(ple4, ple4.indices, fmod)
+@
+
+<<sammod, echo=FALSE, fig.cap="SAM type of model">>=
+wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
 @
 
 \subsection{Model averaging}
