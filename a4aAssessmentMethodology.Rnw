@@ -916,27 +916,28 @@ qqmath(res)
 
 To inspect the summaries (Fbar, SSB, catch and recruitment) of the fit the user may add the fit to the original stock object, using the method \code{+} and plot the result (Figure~\ref{fig:summ}).
 
-<<summ, fig.cap="Stock summary">>=
+<<summ, fig.cap="Stock summary for Plaice in ICES area IV, recruits, SSB (Stock Spawning Biomass), catch (catch and landings) and harvest (fishing mortality or F). ">>=
 stk <- ple4 + fit
 plot(stk)
 @
 
 In more detail, one can plot a 3D representation of fishing mortality (Figure~\ref{fig:F}),
 
-<<F,fig.cap="Fishing mortality">>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(stk)), drape = TRUE, screen = list(x = -90, y=-45))
+<<F,fig.cap="3D contour plot of estimated fishing mortality at age and year">>=
+library(plot3D)
+persp3D( z = harvest(fit)[drop=TRUE], x= as.numeric(dimnames(harvest(fit))[[1]]), y= as.numeric(dimnames(harvest(fit))[[2]]) , expand = 0.9, space = 0.3, along = "xy",colkey = list( side=1, width = 0.9, length = 0.4, cex.axis = 0.8), box = TRUE, col.var=harvest(fit)[drop=TRUE] , zlab="Fishing mortality", ylab="Year", xlab="Age")
 @
 
-population abundance (Figure~\ref{fig:N}), 
+population abundance (Figure~\ref{fig:N}), which is not estimated but that comes from the raw data and is thus displaid as a 3D ribbon, 
 
-<<N, fig.cap="Population abundance">>=
-wireframe(data ~ age + year, data = as.data.frame(stock.n(stk)), drape = TRUE, screen = list(x = -90, y=-45))
+<<N, fig.cap="Population abundance by age and year">>=
+  ribbon3D( z = stock.n(fit)[drop=TRUE], x= as.numeric(dimnames(stock.n(fit))[[1]]), y= as.numeric(dimnames(stock.n(fit))[[2]]) , expand = 0.9, space = 0.1, along = "x", colkey = list( side=1, width = 0.9, length = 0.4, cex.axis = 0.8), main="Population Abundance" , box = TRUE, col.var=stock.n(fit)[drop=TRUE],   zlab="Stock Numbers", ylab="Year", xlab="Age")
 @
 
 or catch-at-age (Figure~\ref{fig:C}).
 
-<<C, fig.cap="Catches">>=
-wireframe(data ~ age + year, data = as.data.frame(catch.n(stk)), drape = TRUE)
+<<C, fig.cap="Catches at age by year">>=
+ ribbon3D( z = catch.n(fit)[drop=TRUE], x= as.numeric(dimnames(catch.n(fit))[[1]]), y= as.numeric(dimnames(catch.n(fit))[[2]]) , expand = 0.9, space = 0.3, along = "x", colkey = list( side=1, width = 0.9, length = 0.4, cex.axis = 0.8),box = TRUE, col.var=catch.n(fit)[drop=TRUE] , zlab="Catch at age (tons)", ylab="Year", xlab="Age")
 @
 
 \subsection{Data structures}
