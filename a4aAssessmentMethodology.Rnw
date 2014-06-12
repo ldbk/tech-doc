@@ -898,19 +898,19 @@ res <- residuals(fit, ple4, ple4.indices)
 
 Figure~\ref{fig:res} shows a scatterplot of residuals by age and survey, with a smoother to guide (or mis-guide ...) your visual analysis.
 
-<<res, fig.cap="Standardized residuals">>=
+<<res, fig.cap="Standardized residuals for survey (SNS, BTS-Tridens and BTS_Isis) and for catch numbers (catch.n), each panel is coded by age class (1:10), dots represent standardized residuals and lines is a simple fitted smoother.">>=
 plot(res, main="Residuals")
 @
 
 The common bubble plot by year and age for each survey are shown in Figure~\ref{fig:bub}. 
 
-<<bub, fig.cap="Bubbles plot of standardized residuals.">>=
+<<bub, fig.cap="Bubbles plot of standardized residuals for survey (SNS, BTS-Tridens and BTS_Isis) and for catch numbers (catch.n).">>=
 bubbles(res)
 @
 
 Finally, Figure~\ref{fig:qq} shows a quantile-quantile plot to assess how well do the residuals match the normal distribution.
 
-<<qq, fig.cap="Quantile-quantile plot of standardized residuals.">>=
+<<qq, fig.cap="Quantile-quantile plot of standardized residuals for survey (SNS, BTS-Tridens and BTS_Isis) and for catch numbers (catch.n), each panel is coded by age class (1:10), dots represent standardized residuals.">>=
 qqmath(res)
 @
 
