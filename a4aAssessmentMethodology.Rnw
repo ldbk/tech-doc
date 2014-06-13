@@ -1025,13 +1025,13 @@ For example, all the parameters required so simulate a time-series of mean F tre
 
 \subsection{The statistical catch-at-age stock assessment framework - the \code{sca} method}
 
-The \code{sca()} method used in the previous section with the default settings, can be parametrized to control other features of the stock assessment framework. The most interesting ones are the submodels for $F$, $Q$ and $R$. 
+The statistical catch at age (\code{sca()}) method used in the previous section with the default settings, can be parametrized to control other features of the stock assessment framework. The most interesting ones are the submodels for fishing mortality ($F$), catchability ($Q$) and recruitment ($R$). 
 
 An important argument for \code{sca()} is the type of fit, which controls if a full assessment will be performed or a management procedure type of assessment. The argument is called \code{fit} and can have the values 'assessment' for a full assessemt or 'MP' for a simpler assessment. By default \code{sca()} uses \code{fit='MP'}. 
 
 We'll start by looking at the submodel for $F$, then $Q$ and finally $R$.
 
-Please note that each of these model \emph{forms} have not been tuned to the data. The degrees of freedom of each model can be better tuned to the data by using model selection procedures such as AIC or BIC, etc.
+Please note that each of these model \emph{forms} have not been tuned to the data. The degrees of freedom of each model can be better tuned to the data by using model selection procedures such as Akaike Information Criterion (AIC) or Bayesian Information Criterion (BIC), etc.
 
 \subsubsection{Fishing mortality submodel}
 
@@ -1050,11 +1050,11 @@ fit <- sca(stock = ple4, indices = ple4.indices[1], fmodel=fmod, qmodel=qmod, sr
 wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45), zlab="F")
 @
 
-Next we may make things a bit more interesting by using an (unpenalised) thin plate spline, where we'll borrow the method \code{s()} provided by package \href{http://cran.r-project.org/web/packages/mgcv/}{\pkg{mgcv}}. We're using the North Sea Plaice data again, and since it has 10 ages we will use a simple rule of thumb that the spline should have fewer than $\frac{10}{2} = 5$ degrees of freedom, and so we opt for 4 degrees of freedom. We will also do the same for year and model the change in F through time as a smoother with 20 degrees of freedom. Note that this is still a separable model, it's a smoothed version of the previous model (Figure~\ref{fig:sep2}).
+Next we may make things a bit more interesting by using an (unpenalised) thin plate spline, where we'll borrow the smoothing splines method (\code{s()}) provided by package \href{http://cran.r-project.org/web/packages/mgcv/}{\pkg{mgcv}}. We're using the North Sea Plaice data again, and since it has 10 ages we will use a simple rule of thumb that the spline should have fewer than $\frac{10}{2} = 5$ degrees of freedom, and so we opt for 4 degrees of freedom. We will also do the same for year and model the change in F through time as a smoother with 20 degrees of freedom. Note that this is still a separable model, it's a smoothed version of the previous model (Figure~\ref{fig:sep2}).
 
 <<>>=
 fmod <- ~ s(age, k=4) + s(year, k = 20)
-fit1 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
+fit1 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod) # notice that you can specify the submodels without the argument, as an ex you don't need fmodel=fmod, but the order should be respected
 @
 
 <<sep2, echo=FALSE, fig.cap="Fishing mortality smoothed separable model">>=
@@ -1072,7 +1072,7 @@ fit3 <- sca(ple4, ple4.indices[1], fmod, qmod, srmod)
 wireframe(data ~ age + year, data = as.data.frame(harvest(fit3)), drape = TRUE, screen = list(x = -90, y=-45), zlab="F")
 @
 
-In the last examples the Fs are linked across age and time.  What if we want to free up a specific age class because in the residuals we see a consistent pattern.  This can happen, for example, if the spatial distribution of juveniles is disconnected to the distribution of adults.  The fishery focuses on the adult fish, and therefore the the F on young fish is a function of the distribution of the juveniles and could deserve a specific model. This can be achieved by adding a component for the year effect on age 1 (Figure~\ref{fig:age1}).
+In the last examples the fishing mortalities (Fs') are linked across age and time.  What if we want to free up a specific age class because in the residuals we see a consistent pattern.  This can happen, for example, if the spatial distribution of juveniles is disconnected to the distribution of adults.  The fishery focuses on the adult fish, and therefore the the F on young fish is a function of the distribution of the juveniles and could deserve a specific model. This can be achieved by adding a component for the year effect on age 1 (Figure~\ref{fig:age1}).
 
 <<>>=
 fmod <- ~ te(age, year, k = c(4,20)) + s(year, k = 5, by = as.numeric(age==1))
@@ -1087,7 +1087,7 @@ wireframe(data ~ age + year, data = as.data.frame(harvest(fit4)), drape = TRUE, 
 
 The catchability submodel is set up the same way as the $F$ submodel and the tools available are the same. The only difference is that the submodel is set up as a list of formulas, where each formula relates with one abundance index.
 
-We'll start by fixing the $F$ and $R$ models and compute the fraction of the year the index relates to, which will allows us to compute catchability at age and year. 
+We'll start by fixing the $F$ and $R$ models and compute the fraction of the year the index relates to, which will allow us to compute catchability at age and year. 
 
 <<>>=
 fmod <- ~ factor(age) + factor(year)
@@ -1232,9 +1232,6 @@ xyplot(data~year, groups=qname, data=flqs, type="l", auto.key=list(points=FALSE,
 A more advanced method for stock assessment can be used through the \code{a4aSCA()} method. This method gives access to the submodels for $N1$, $\sigma^2_{ay}$ and $I_{ays}$ as well as arguments to get the ADMB files, etc. Check the manual pages with \code{?a4aSCA} for more information. This method has 'assessment' as the default value for the \code{fit} argument, which means that the hessian is going to be computed and all the information about the parameters will be returned by default. Note that the default models of each submodel can be accessed with
 
 <<>>=
-#fmodel <- ~ s(age, k=4) + s(year, k = 20)
-#qmodel <- list( ~ s(age, k=4) + year)
-#srmodel <- ~s(year, k=20)
 fit <- a4aSCA(ple4, ple4.indices[1]) 
 submodels(fit)
 @
@@ -1396,7 +1393,8 @@ fit <- sca(ple4, ple4.indices, fmod)
 @
 
 <<rep, echo=FALSE, fig.cap="F-at-age fixed above age 5">>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
+
+persp3D( z = harvest(fit)[drop=TRUE], x= as.numeric(dimnames(harvest(fit))[[1]]), y= as.numeric(dimnames(harvest(fit))[[2]]) , expand = 0.9, space = 0.3, along = "xy",colkey = list( side=4, width = 0.9, length = 0.4, cex.axis = 0.8), box = TRUE, col.var=harvest(fit)[drop=TRUE] , zlab="Fishing mortality", ylab="Year", xlab="Age", theta=55, phi = 10)
 @
 
 In the next case we'll use the \code{breakpts()} to split the time series at 1990, although keeping the same shape in both periods, a thin plate spline with 3 knots (Figure~\ref{fig:brk}).
@@ -1407,7 +1405,8 @@ fit <- sca(ple4, ple4.indices, fmod)
 @
 
 <<brk, echo=FALSE, fig.cap="F-at-age in two periods using in both cases a thin plate spline with 3 knots">>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
+
+persp3D( z = harvest(fit)[drop=TRUE], x= as.numeric(dimnames(harvest(fit))[[1]]), y= as.numeric(dimnames(harvest(fit))[[2]]) , expand = 0.9, space = 0.3, along = "xy",colkey = list( side=4, width = 0.9, length = 0.4, cex.axis = 0.8), box = TRUE, col.var=harvest(fit)[drop=TRUE] , zlab="Fishing mortality", ylab="Year", xlab="Age", theta=55, phi = 10)
 @
 
 More complicated models can be built with these tools. For example, Figure~\ref{fig:ageind} shows a model where the age effect is modelled as a smoother (the same thin plate spline) throughout years but independent from each other.
@@ -1418,7 +1417,7 @@ fit <- sca(ple4, ple4.indices, fmod)
 @
 
 <<ageind, echo=FALSE, fig.cap="F-at-age as thin plate spline with 3 knots for each age">>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
+persp3D( z = harvest(fit)[drop=TRUE], x= as.numeric(dimnames(harvest(fit))[[1]]), y= as.numeric(dimnames(harvest(fit))[[2]]) , expand = 0.9, space = 0.3, along = "xy",colkey = list( side=4, width = 0.9, length = 0.4, cex.axis = 0.8), box = TRUE, col.var=harvest(fit)[drop=TRUE] , zlab="Fishing mortality", ylab="Year", xlab="Age", theta=55, phi = 10)
 @
 
 \subsubsection{Propagate natural mortality uncertainty}
@@ -1555,7 +1554,8 @@ fit <- sca(ple4, ple4.indices, fmodel=fmodel)
 @
 
 <<sepmod, echo=FALSE, fig.cap="Separable F model">>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
+persp3D( z = harvest(fit)[drop=TRUE], x= as.numeric(dimnames(harvest(fit))[[1]]), y= as.numeric(dimnames(harvest(fit))[[2]]) , expand = 0.9, space = 0.3, along = "xy",colkey = list( side=4, width = 0.9, length = 0.4, cex.axis = 0.8), box = TRUE, col.var=harvest(fit)[drop=TRUE] , zlab="Fishing mortality", ylab="Year", xlab="Age", theta=55, phi = 10)
+
 @
 
 \subsubsection{VPA/XSA}
@@ -1566,7 +1566,7 @@ fit <- sca(ple4, ple4.indices, fmodel=fmodel, qmodel=qmodel)
 @
 
 <<vpamod, echo=FALSE, fig.cap="VPA/XSA type of model">>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
+persp3D( z = harvest(fit)[drop=TRUE], x= as.numeric(dimnames(harvest(fit))[[1]]), y= as.numeric(dimnames(harvest(fit))[[2]]) , expand = 0.9, space = 0.3, along = "xy",colkey = list( side=4, width = 0.9, length = 0.4, cex.axis = 0.8), box = TRUE, col.var=harvest(fit)[drop=TRUE] , zlab="Fishing mortality", ylab="Year", xlab="Age", theta=55, phi = 10)
 @
 
 \subsubsection{FLSAM}
@@ -1576,7 +1576,7 @@ fit <- sca(ple4, ple4.indices, fmod)
 @
 
 <<sammod, echo=FALSE, fig.cap="SAM type of model">>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(fit)), drape = TRUE, screen = list(x = -90, y=-45))
+persp3D( z = harvest(fit)[drop=TRUE], x= as.numeric(dimnames(harvest(fit))[[1]]), y= as.numeric(dimnames(harvest(fit))[[2]]) , expand = 0.9, space = 0.3, along = "xy",colkey = list( side=4, width = 0.9, length = 0.4, cex.axis = 0.8), box = TRUE, col.var=harvest(fit)[drop=TRUE] , zlab="Fishing mortality", ylab="Year", xlab="Age", theta=55, phi = 10)
 @
 
 \subsection{Model averaging}
