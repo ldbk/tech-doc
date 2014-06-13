@@ -182,6 +182,7 @@ library(FLa4a)
 library(XML)
 library(reshape2)
 library(diagram)
+library(plot3D)
 # datasets
 data(ple4)
 data(ple4.indices)
@@ -894,27 +895,27 @@ fit <- sca(ple4, ple4.indices)
 
 To inspect the stock assessment summary constituted of trends of fishing mortality (harvest), spawning stock biomass (SSB), catch and recruits, the user may add the \code{a4aFit} object to the original \code{FLStock} object using the \code{+} method and plot the result (Figure~\ref{fig:summ}).
 
-<<summ, fig.cap="Stock summary">>=
+<<summ, fig.cap="Stock summary for Plaice in ICES area IV, recruits, SSB (Stock Spawning Biomass), catch (catch and landings) and harvest (fishing mortality or F).">>=
 stk <- ple4 + fit
 plot(stk)
 @
 
 In more detail, one can plot a 3D representation of fishing mortality (Figure~\ref{fig:F}),
 
-<<F,fig.cap="Fishing mortality">>=
-wireframe(data ~ age + year, data = as.data.frame(harvest(stk)), drape = TRUE, screen = list(x = -90, y=-45))
+<<F, fig.cap="3D contour plot of estimated fishing mortality at age and year">>=
+persp3D(z=harvest(fit)[drop=TRUE], x=as.numeric(dimnames(harvest(fit))[[1]]), y=as.numeric(dimnames(harvest(fit))[[2]]), expand = 0.9, space = 0.3, along = "xy", colkey = list(side=1, width = 0.9, length = 0.4, cex.axis = 0.8), box = TRUE, col.var=harvest(fit)[drop=TRUE], zlab="Fishing mortality", ylab="Year", xlab="Age")
 @
 
-population abundance (Figure~\ref{fig:N}), 
+population abundance (Figure~\ref{fig:N}) is displaid as a 3D ribbon, 
 
-<<N, fig.cap="Population abundance">>=
-wireframe(data ~ age + year, data = as.data.frame(stock.n(stk)), drape = TRUE, screen = list(x = -90, y=-45))
+<<N, fig.cap="Population abundance by age and year">>=
+ribbon3D( z = stock.n(fit)[drop=TRUE], x= as.numeric(dimnames(stock.n(fit))[[1]]), y= as.numeric(dimnames(stock.n(fit))[[2]]) , expand = 0.9, space = 0.1, along = "x", colkey = list( side=1, width = 0.9, length = 0.4, cex.axis = 0.8), main="Population Abundance" , box = TRUE, col.var=stock.n(fit)[drop=TRUE],   zlab="Stock Numbers", ylab="Year", xlab="Age")
 @
 
-or catch-at-age (Figure~\ref{fig:C}).
+as well as catch-at-age (Figure~\ref{fig:C}).
 
-<<C, fig.cap="Catches">>=
-wireframe(data ~ age + year, data = as.data.frame(catch.n(stk)), drape = TRUE)
+<<C, fig.cap="Catches in number of individuals by age and year">>=
+ribbon3D( z = catch.n(fit)[drop=TRUE], x= as.numeric(dimnames(catch.n(fit))[[1]]), y= as.numeric(dimnames(catch.n(fit))[[2]]) , expand = 0.9, space = 0.3, along = "x", colkey = list( side=1, width = 0.9, length = 0.4, cex.axis = 0.8),box = TRUE, col.var=catch.n(fit)[drop=TRUE] , zlab="Catch at age (tons)", ylab="Year", xlab="Age")
 @
 
 \subsection{Diagnostics}
@@ -929,19 +930,19 @@ res <- residuals(fit, ple4, ple4.indices)
 
 Figure~\ref{fig:res} shows a scatterplot of residuals by age and survey, with a smoother to guide (or mis-guide ...) your visual analysis.
 
-<<res, fig.cap="Standardized log residuals of catch and abundance indices.">>=
+<<res, fig.cap="Standardized residuals for abundance indices (SNS, BTS Tridens and BTS Isis) and for catch numbers (catch.n). Each panel is coded by age class, dots represent standardized residuals and lines a simple smoother.">>=
 plot(res)
 @
 
 The common bubble plot by year and age for each survey are shown in Figure~\ref{fig:bub}. It shows the same information as Figure~\ref{fig:res} but in a multivariate perspective.
 
-<<bub, fig.cap="Bubbles plot of standardized log residuals of catch and abundance indices.">>=
+<<bub, fig.cap="Bubbles plot of standardized residuals for abundance indices (SNS, BTS Tridens and BTS Isis) and for catch numbers (catch.n).">>=
 bubbles(res)
 @
 
 Figure~\ref{fig:qq} shows a quantile-quantile plot to assess how well do the residuals match the normal distribution.
 
-<<qq, fig.cap="Quantile-quantile plot of standardized log residuals of catch and abundance indices.">>=
+<<qq, fig.cap="Quantile-quantile plot of standardized residuals for abundance indices (SNS, BTS Tridens and BTS Isis) and for catch numbers (catch.n). Each panel is coded by age class, dots represent standardized residuals and lines the normal distribution quantiles.">>=
 qqmath(res)
 @
 
@@ -962,7 +963,7 @@ retro <- ra(ple4, ple4.indices, 5)
 plot(retro)
 @
 
-Additionally, it's possible to get the summary of the minimization performed by ADMB with the method \code{fitSumm()}, as well as the AIC and BIC with the methods \code{AIC()} or \code{BIC}.
+To get information about the likelihood fit the method \code{fitSumm()} will extract information about likelihood, number of parameters, etc, and the methods \code{AIC()} and \code{BIC()} will compute the information criteria.
 
 <<>>=
 fitSumm(fit)
