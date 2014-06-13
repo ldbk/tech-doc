@@ -189,6 +189,18 @@ data(ple4.indices)
 data(rfLen)
 @
 
+<<echo=FALSE, message=FALSE, warning=FALSE>>=
+setGeneric("wireframe", useAsDefault=wireframe)
+setMethod("wireframe", c("formula","FLQuant"), function(x, data, ...){
+
+	args <- list(...)
+	args$x <- x
+	args$data <- as.data.frame(data)
+	do.call("wireframe", args)
+
+})
+@
+
 <<trans_funcs, message=FALSE, warning=FALSE>>=
 # recode Gadget's length categories
 qt2qt <- function(object, id=5, split="-"){
@@ -571,7 +583,7 @@ dim(cth.n)
 In the previous example, the \class{FLQuant} object that was sliced (\code{catch.n(rfLen.stk)}) had only one iteration. This iteration was sliced by each of the iterations in the growth model. It is possible for the \class{FLQuant} object to have the same number of iterations as the growth model, in which case each iteration of the \class{FLQuant} and the growth model are used together. It is also possible for the growth model to have only one iteration while the \class{FLQuant} object has many iterations. The same growth model is then used for each of the \class{FLQuant} iterations. As with all \pkg{FLR} objects, the general rule is \emph{one or n} iterations.
 
 
-As well as converting one \class{FLQuant} at a time, we can convert entire \class{FLStock} and \class{FLIndex} objects. In these cases the individual \class{FLQuant} slots of those classes are converted from length-based to age-based. As mentioned above, the aggregation method depends on the type of values the slots contain. The abundance slots (\code{*.n}, such as \code{stock.n}) are summed. The \code{*.wt}, \code{m}, \code{mat}, \code{harvest.spwn} and \code{m.spwn} slots of an \class{FLStock} object are averaged. The \code{index}, \code{catch.wt}, \code{index.var}, \code{sel.pattern} and \code{index.q} slots of an \class{FLIndex} object are averaged\footnote{Still working on l2a for index. Not all of these slots can be averaged}.
+As well as converting one \class{FLQuant} at a time, we can convert entire \class{FLStock} and \class{FLIndex} objects. In these cases the individual \class{FLQuant} slots of those classes are converted from length-based to age-based. As mentioned above, the aggregation method depends on the type of values the slots contain. The abundance slots (\code{*.n}, such as \code{stock.n}) are summed. The \code{*.wt}, \code{m}, \code{mat}, \code{harvest.spwn} and \code{m.spwn} slots of an \class{FLStock} object are averaged. The \code{index}, \code{catch.wt}, \code{index.var}, \code{sel.pattern} and \code{index.q} slots of an \class{FLIndex} object are averaged.
 
 The method for \class{FLStock} classes takes an additional argument for the plusgroup.
 
@@ -1393,8 +1405,7 @@ fit <- sca(ple4, ple4.indices, fmod)
 @
 
 <<rep, echo=FALSE, fig.cap="F-at-age fixed above age 5">>=
-
-persp3D( z = harvest(fit)[drop=TRUE], x= as.numeric(dimnames(harvest(fit))[[1]]), y= as.numeric(dimnames(harvest(fit))[[2]]) , expand = 0.9, space = 0.3, along = "xy",colkey = list( side=4, width = 0.9, length = 0.4, cex.axis = 0.8), box = TRUE, col.var=harvest(fit)[drop=TRUE] , zlab="Fishing mortality", ylab="Year", xlab="Age", theta=55, phi = 10)
+wireframe(data ~ age + year, data = harvest(fit), drape = TRUE, screen = list(x = -90, y=-45), zlab="F")
 @
 
 In the next case we'll use the \code{breakpts()} to split the time series at 1990, although keeping the same shape in both periods, a thin plate spline with 3 knots (Figure~\ref{fig:brk}).
@@ -1405,8 +1416,7 @@ fit <- sca(ple4, ple4.indices, fmod)
 @
 
 <<brk, echo=FALSE, fig.cap="F-at-age in two periods using in both cases a thin plate spline with 3 knots">>=
-
-persp3D( z = harvest(fit)[drop=TRUE], x= as.numeric(dimnames(harvest(fit))[[1]]), y= as.numeric(dimnames(harvest(fit))[[2]]) , expand = 0.9, space = 0.3, along = "xy",colkey = list( side=4, width = 0.9, length = 0.4, cex.axis = 0.8), box = TRUE, col.var=harvest(fit)[drop=TRUE] , zlab="Fishing mortality", ylab="Year", xlab="Age", theta=55, phi = 10)
+wireframe(data ~ age + year, data = harvest(fit), drape = TRUE, screen = list(x = -90, y=-45), zlab="F")
 @
 
 More complicated models can be built with these tools. For example, Figure~\ref{fig:ageind} shows a model where the age effect is modelled as a smoother (the same thin plate spline) throughout years but independent from each other.
@@ -1417,7 +1427,18 @@ fit <- sca(ple4, ple4.indices, fmod)
 @
 
 <<ageind, echo=FALSE, fig.cap="F-at-age as thin plate spline with 3 knots for each age">>=
-persp3D( z = harvest(fit)[drop=TRUE], x= as.numeric(dimnames(harvest(fit))[[1]]), y= as.numeric(dimnames(harvest(fit))[[2]]) , expand = 0.9, space = 0.3, along = "xy",colkey = list( side=4, width = 0.9, length = 0.4, cex.axis = 0.8), box = TRUE, col.var=harvest(fit)[drop=TRUE] , zlab="Fishing mortality", ylab="Year", xlab="Age", theta=55, phi = 10)
+wireframe(data ~ age + year, data = harvest(fit), drape = TRUE, screen = list(x = -90, y=-45), zlab="F")
+@
+
+A quite complex model that implements a cohort effect can be set through the following formula. Figure~\ref{fig:coh} shows the resulting fishing mortality. Note that in this case we end up with a variable F pattern over time, but rather than using 4 * 10 = 40 parameters, it uses, 4 + 10 + 10 = 24.
+
+<<>>=
+fmodel <- ~ s(age, k = 4) + s(pmax(year - age, 1957), k = 10) + s(year, k = 10)
+fit <- sca(ple4, ple4.indices, fmodel=fmodel) 
+@
+
+<<coh, echo=FALSE, fig.cap="F-at-age with a cohort effect.">>=
+wireframe(data ~ age + year, data = harvest(fit), drape = TRUE, screen = list(x = -90, y=-45), zlab="F")
 @
 
 \subsubsection{Propagate natural mortality uncertainty}
@@ -1554,29 +1575,28 @@ fit <- sca(ple4, ple4.indices, fmodel=fmodel)
 @
 
 <<sepmod, echo=FALSE, fig.cap="Separable F model">>=
-persp3D( z = harvest(fit)[drop=TRUE], x= as.numeric(dimnames(harvest(fit))[[1]]), y= as.numeric(dimnames(harvest(fit))[[2]]) , expand = 0.9, space = 0.3, along = "xy",colkey = list( side=4, width = 0.9, length = 0.4, cex.axis = 0.8), box = TRUE, col.var=harvest(fit)[drop=TRUE] , zlab="Fishing mortality", ylab="Year", xlab="Age", theta=55, phi = 10)
-
+wireframe(data ~ age + year, data = harvest(fit), drape = TRUE, screen = list(x = -90, y=-45), zlab="F")
 @
 
 \subsubsection{VPA/XSA}
 <<>>=
-fmodel <- ~factor(replace(age, age>9, 9))+factor(year)
+fmodel <- ~factor(replace(age, age>9, 9))+factor(year)+factor(age):factor(year)
 qmodel <- list(~factor(age), ~factor(age), ~factor(age))
 fit <- sca(ple4, ple4.indices, fmodel=fmodel, qmodel=qmodel)
 @
 
 <<vpamod, echo=FALSE, fig.cap="VPA/XSA type of model">>=
-persp3D( z = harvest(fit)[drop=TRUE], x= as.numeric(dimnames(harvest(fit))[[1]]), y= as.numeric(dimnames(harvest(fit))[[2]]) , expand = 0.9, space = 0.3, along = "xy",colkey = list( side=4, width = 0.9, length = 0.4, cex.axis = 0.8), box = TRUE, col.var=harvest(fit)[drop=TRUE] , zlab="Fishing mortality", ylab="Year", xlab="Age", theta=55, phi = 10)
+wireframe(data ~ age + year, data = harvest(fit), drape = TRUE, screen = list(x = -90, y=-45), zlab="F")
 @
 
 \subsubsection{FLSAM}
 <<>>=
-fmod <- ~ factor(age) + s(year, k=10, by = breakpts(age, 1.5:10))
+fmod <- ~ factor(age) + s(year, k=10, by = breakpts(age, c(1.5:8,10))) + factor(age == 10)
 fit <- sca(ple4, ple4.indices, fmod)
 @
 
 <<sammod, echo=FALSE, fig.cap="SAM type of model">>=
-persp3D( z = harvest(fit)[drop=TRUE], x= as.numeric(dimnames(harvest(fit))[[1]]), y= as.numeric(dimnames(harvest(fit))[[2]]) , expand = 0.9, space = 0.3, along = "xy",colkey = list( side=4, width = 0.9, length = 0.4, cex.axis = 0.8), box = TRUE, col.var=harvest(fit)[drop=TRUE] , zlab="Fishing mortality", ylab="Year", xlab="Age", theta=55, phi = 10)
+wireframe(data ~ age + year, data = harvest(fit), drape = TRUE, screen = list(x = -90, y=-45), zlab="F")
 @
 
 \subsection{Model averaging}
