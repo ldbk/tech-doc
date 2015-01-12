@@ -37,7 +37,6 @@
 \newcommand{\E}[1]{\text{E}\left[#1\right]}
 \newcommand{\Var}[1]{\text{Var}\left[#1\right]}
 
-
 %----------------------------------------------------------------------------------
 
 \begin{document}
@@ -877,22 +876,42 @@ There are two basic types of assessments available in \initiative{a4a}: the mana
 The statistical catch at age model is based on the well known Baranov catch equation
 
 \begin{equation*}
-e^{\E{\log C}} = \frac{\mathbf{F}}{\mathbf{F}+M}\left(1 - e^{-\mathbf{F}-M}\right) \mathbf{R}e^{-\sum \mathbf{F} + M}
+e^{\E{\log C_{ay}}} = \frac{\mathbf{F_{ay}}}{\mathbf{F_{ay}}+M_{ay}}\left(1 - e^{-(\mathbf{F_{ay}}+M_{ay})}\right) \mathbf{R_{a=0,y}}e^{-\sum (\mathbf{F_{ay}} + M_{ay})}
 \end{equation*}
 
-and the survival equation
+and the common survey/index catchability 
 
 \begin{equation*}
-e^{\E{\log I}} = \mathbf{Q} \mathbf{R}e^{-\sum \mathbf{F} + M}
+e^{\E{\log I_{ay}}} = \mathbf{Q_{ay}} \mathbf{R_{a=0,y}}e^{-\sum (\mathbf{F_{ay}} + M_{ay})}
 \end{equation*}
 
 where 
 
 \begin{equation*}
-\Var{\log C_{ay}} = \mathbf{\sigma^2_{ay}} \qquad \Var{\log I_{ays}} = \mathbf{\tau^2_{ays}}
+C_{ay} \sim LogNormal(\E{\log C_{ay}}, \mathbf{\sigma^2_{ay}}) \qquad I \sim LogNormal(\E{\log I_{ay}}, \mathbf{\tau^2_{ay}})
 \end{equation*}
 
-In these equations $M$ is natural mortality, $F$ fishing mortality, $R$ recruitment, $Q$ survey catchability and $C$ catch. All these variables are defined by age groups, although in the formula the indices were removed for better readability.
+The likelihood is defined by 
+
+\begin{equation*}
+\hat{\ell}_C = \sum_{ay}(w^{(c)}_{ay}\ \hat{\ell}_N(log \hat{C}_{ay}, \hat{\sigma}^2_{ay};\ \log C_{ay})) 
+\end{equation*}
+
+\begin{equation*}
+\hat{\ell}_I = \sum_s \sum_{ay}(w^{(s)}_{ays}\ \hat{\ell}_N(log \hat{I}_{ays}, \hat{\tau}_{ays}^2;\ \log I_{ays}))
+\end{equation*}
+
+\begin{equation*}
+\hat{\ell} = \hat{\ell}_C + \hat{\ell}_I
+\end{equation*}
+
+If there's a S/R model it's likelihood will be added
+
+\begin{equation*}
+\hat{\ell}_{SR} = \sum_y( \hat{\ell}_N(log \tilde{R}_y, \phi_y^2;\ \log \hat{R}_y))
+\end{equation*}
+
+In these equations $M$ is natural mortality, $F$ fishing mortality, $R$ recruitment, $Q$ survey catchability, $C$ catch and $\hat{\ell}$ is the negative log-likelihood of a normal distribution. All these variables are defined by age groups, although in the formula the indices were removed for better readability.
  
 The quantities $\log{F}$, $\log{Q}$, $\log{R}$, $\log{observation\,variances}$ and $\log{ initial\,age\,structure}$ (in bold in the equations above), need to be given a form, which is done using linear models. Recruitment is a special case. It is modelled as a fixed variance random effect, using the hard coded models Ricker, Beverton Holt, smooth hockeystick or geometric mean, which can use linear models for their parameters $\log{a}$ or $\log{b}$, where relevant. As an alternative the $\log{R}$ submodel can use a linear model like the other submodels 
 
@@ -1188,12 +1207,12 @@ wireframe(data ~ age + year, data = as.data.frame(qhat), drape = TRUE, screen = 
 
 \subsubsection{Catchability submodel for age aggregated indices}
 
-The previous section was focused on age disaggregated indices, but age aggregated indices (CPUE, biomass, DEPM, etc) may also be used to tune the total biomass of the population. In these cases the \code{index}  slot of the class{FLIndex} is a vector and the age dimension must have one single element called "all". Note that in this case the qmodel should be set without age factors, although it can have a "year" component and covariates if needed.
+The previous section was focused on age disaggregated indices, but age aggregated indices (CPUE, biomass, DEPM, etc) may also be used to tune the total biomass of the population. In these cases a slightly different class for the index must be used, the \class{FLIndexBiomass}, which uses a vector \code{index} with the age dimension called "all". Note that in this case the qmodel should be set without age factors, although it can have a "year" component and covariates if needed. An interesting feature with biomass indices is the age range they refer to can be specified.
 
 <<>>=
 # creating an index (note the name of the first dimension element)
 dnms <- list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])
-bioidx <- FLIndex(FLQuant(NA, dimnames=dnms))
+bioidx <- FLIndexBiomass(FLQuant(NA, dimnames=dnms))
 index(bioidx) <- stock(ple4)*0.001
 index(bioidx) <- index(bioidx)*exp(rnorm(index(bioidx), sd=0.1))
 range(bioidx)[c("startf","endf")] <- c(0,0)
@@ -1208,6 +1227,29 @@ fit <- sca(ple4, FLIndices(bioidx), qmodel=list(~1))
 The same methods that are applied to age disaggregated indices apply here, see standardized log residuals in Figure~\ref{fig:resbio}. It's also possible to mix several indices of both types.
 
 <<resbio, fig.cap="Catchability residuals for a biomass index">>=
+plot(residuals(fit, ple4, FLIndices(bioidx)))
+@
+
+An example where the biomass index refers only to age 2 to 4 (for example a CPUE that targets these particular ages).
+
+<<>>=
+# creating the index
+dnms <- list(age="all", year=range(ple4)["minyear"]:range(ple4)["maxyear"])
+bioidx <- FLIndexBiomass(FLQuant(NA, dimnames=dnms))
+# but now use only ages 2:4
+index(bioidx) <- tsb(ple4[ac(2:4)])*0.001
+index(bioidx) <- index(bioidx)*exp(rnorm(index(bioidx), sd=0.1))
+range(bioidx)[c("startf","endf")] <- c(0,0)
+# to pass this information to the model one needs to specify an age range
+range(bioidx)[c("min","max")] <- c(2,4)
+
+# fitting the model
+fit <- sca(ple4, FLIndices(bioidx), qmodel=list(~1))
+@
+
+And once more residuals can be a good dignostics (Figure~\ref{fig:resbio2}).
+
+<<resbio2, fig.cap="Catchability residuals for a biomass index">>=
 plot(residuals(fit, ple4, FLIndices(bioidx)))
 @
 
@@ -1534,7 +1576,7 @@ fit1 <- sca(stk, ple4.indices)
 And compare the two results (Figure~\ref{fig:mprop}). It's quite easy to run these kind of tests and a large part of our effort is to create the tools to do so. 
 
 <<mprop, echo=FALSE, fig.cap="Stock summary for two M models">>=
-plot(FLStocks(munc=propagate(ple4, 25)+fit1, m02=ple4+fit))
+plot(FLStocks(munc=propagate(ple4, 25)+fit1, m02=ple4+fit), key=TRUE)
 @
 
 %\subsubsection{Likelihood profiling - ToDo}
@@ -1574,7 +1616,7 @@ sfit <- a4aSCA(stks, idxs, fit="MP")
 @
 
 <<wcsam, echo=FALSE, fig.cap="Replicating the stock assessment model (WCSAM approach)">>=
-plot(FLStocks(orig=stk, sim=stks, fitsim=stks+sfit))
+plot(FLStocks(orig=stk, sim=stks, fitsim=stks+sfit), key=TRUE)
 @
 
 \subsubsection{Parallel computing}
@@ -1613,7 +1655,7 @@ stks3 <- FLStocks(orig=stk, sim=stks, fitsim=stks2)
 @
 
 <<wcsampar, echo=FALSE, fig.cap="Replicating the stock assessment model (WCSAM approach) using parallel computing">>=
-plot(stks3)
+plot(stks3, key=TRUE)
 @
 
 %\subsection{Mimicking other stock assessment models- WORK IN PROGRESS}
@@ -1660,7 +1702,7 @@ xyplot(data~year, groups=qname, data=flqs, type="l")
 @
 
 <<modav, echo=FALSE, fig.cap="Stock summaries of the two models and their average">>=
-plot(stks)
+plot(stks, key=TRUE)
 @
 
 \end{document}
